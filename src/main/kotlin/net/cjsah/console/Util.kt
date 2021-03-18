@@ -1,51 +1,41 @@
 package net.cjsah.console
 
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.*
 import net.cjsah.console.exceptions.JsonFileParameterException
-import org.hydev.logger.HyLogger
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
-import java.io.IOException
+import java.io.*
 
-class Util {
+object Util {
     /**
      * json解析器
-     */
-    val GSON : Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create()
-
-    /**
      *
+     * @see Gson
      */
-    val LOGGER = HyLogger("MiraiBotConsole")
+    val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
      * 从json文件获取json内容
-     * @param file 文件地址
-     * @return 解析出来的json内容
+     *
+     * @param file [File] 文件地址
+     * @return [JsonElement] 解析出来的json内容
+     *
+     * @see JsonElement
      */
-    fun file2Json(file : File) {
+    fun file2Json(file : File): JsonElement {
         if (!file.isFile || !file.name.endsWith(".json")) {
             throw JsonFileParameterException("Please pass in a json parameter")
         }else {
-            try {
-                BufferedReader(FileReader(file)).use { reader ->
-                    JSON.add(
-                        file_name.substring(0, file_name.length - 5), GSON.fromJson<JsonObject>(
-                            reader,
-                            JsonObject::class.java
-                        )
-                    )
-                }
-            } catch (e: IOException) {
-                logger.error("Failed to load config file $json_file")
-                e.printStackTrace()
-            }
-
+            return GSON.fromJson(file.readText())
         }
+    }
 
+    /**
+     * 把json写入文件中
+     *
+     * @param json Json数据
+     * @param file 要写入的文件
+     */
+    fun json2File(json: JsonElement, file: File) {
+        file.writeText(GSON.toJson(json))
     }
 }
