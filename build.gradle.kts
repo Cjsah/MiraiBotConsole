@@ -1,10 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
+
 plugins {
     kotlin("jvm") version "1.4.31"
     id("net.mamoe.kotlin-jvm-blocking-bridge") version "1.10.3"
 }
 
 group = "net.cjsah"
-version = "1.0-SNAPSHOT"
+version = "0.1-dev1"
 
 repositories {
     mavenCentral()
@@ -20,4 +22,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
     implementation("com.github.HyDevelop:HyConfigLib:3.1.52")
+}
+
+tasks.withType(KotlinJvmCompile::class.java) {
+    kotlinOptions.jvmTarget = "1.8"
 }

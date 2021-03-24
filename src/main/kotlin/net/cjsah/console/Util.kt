@@ -1,10 +1,15 @@
 package net.cjsah.console
 
-import com.github.salomonbrys.kotson.fromJson
-import com.google.gson.*
-import net.cjsah.console.exceptions.JsonFileParameterException
-import java.io.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
 
+@Suppress("unused")
 object Util {
     /**
      * json解析器
@@ -14,28 +19,27 @@ object Util {
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
-     * 从json文件获取json内容
-     *
-     * @param file [File] 文件地址
-     * @return [JsonElement] 解析出来的json内容
-     *
-     * @see JsonElement
+     * 文件下载
      */
-    fun file2Json(file : File): JsonElement {
-        if (!file.isFile || !file.name.endsWith(".json")) {
-            throw JsonFileParameterException("Please pass in a json parameter")
-        }else {
-            return GSON.fromJson(file.readText())
+    private val downloads = HashMap<String, File>()
+    private val downloadThread = Thread {
+        downloads.entries.removeIf {
+            try {
+                val huc = URL(it.key).openConnection() as HttpURLConnection
+                huc.connect()
+                huc.inputStream.use { input ->
+                    BufferedOutputStream(FileOutputStream(it.value)).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            }catch (e: Exception) {
+                e.printStackTrace()
+            }
+            true
         }
     }
-
-    /**
-     * 把json写入文件中
-     *
-     * @param json Json数据
-     * @param file 要写入的文件
-     */
-    fun json2File(json: JsonElement, file: File) {
-        file.writeText(GSON.toJson(json))
+    fun download(url: String, file: File) {
+        downloads[url] = file
+        if (!downloadThread.isAlive) downloadThread.start()
     }
 }

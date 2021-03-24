@@ -1,4 +1,4 @@
-package net.cjsah.console.exceptions
+package net.cjsah.console
 
 class JsonFileParameterException(message: String?): Exception(message) {
 }
