@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile
-
 plugins {
     kotlin("jvm") version "1.4.31"
     id("net.mamoe.kotlin-jvm-blocking-bridge") version "1.10.3"
@@ -24,6 +22,11 @@ dependencies {
     implementation("com.github.HyDevelop:HyConfigLib:3.1.52")
 }
 
-tasks.withType(KotlinJvmCompile::class.java) {
-    kotlinOptions.jvmTarget = "1.8"
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }

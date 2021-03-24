@@ -10,7 +10,7 @@ object ConsoleCommand {
         return map
     }
 
-    fun run(command: String?) {
+    internal fun run(command: String?) {
         command?.let {
             this.commands.getOrDefault(it, null)?.run()
         }

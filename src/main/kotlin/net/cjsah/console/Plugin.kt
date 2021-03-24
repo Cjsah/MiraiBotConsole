@@ -8,10 +8,22 @@ import java.io.File
 
 @Suppress("unused")
 abstract class Plugin(
+    /**
+     * 插件名
+     */
     val pluginName: String,
+    /**
+     * 插件版本
+     */
     val pluginVersion: String,
+    /**
+     * 是否有配置文件
+     */
     val hasConfig: Boolean,
-    val pluginAuthors: List<String>?
+    /**
+     * 插件作者
+     */
+    val pluginAuthors: List<String>
 ) {
     lateinit var bot: Bot
 

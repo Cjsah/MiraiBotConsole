@@ -36,7 +36,7 @@ object Console {
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
             plugin.onPluginStart()
             loadingPlugins.add(plugin)
-            plugin.logger.log("插件已启动!")
+            logger.log("${plugin.pluginName} ${plugin.pluginVersion} 插件已启动!")
         }
     }
 
@@ -44,7 +44,7 @@ object Console {
         GlobalScope.launch {
             plugin.onPluginStop()
             loadingPlugins.remove(plugin)
-            plugin.logger.log("插件已关闭!")
+            logger.log("${plugin.pluginName} 插件已关闭!")
         }
     }
 
@@ -95,7 +95,6 @@ suspend fun main() {
     }.alsoLogin()
 
     if (Console.bot.isOnline) logger.log("登录成功")
-    BotThread.run()
     registerEvents(Console.bot)
     logger.log("控制台初始化完成")
     logger.log("正在加载插件...")
@@ -114,8 +113,6 @@ private fun startListener() {
     Console.unloadAllPlugins()
 
     Console.bot.close()
-
-    BotThread.stop()
 }
 
 private fun registerEvents(bot: Bot) {

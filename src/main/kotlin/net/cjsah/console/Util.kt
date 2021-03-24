@@ -2,7 +2,6 @@ package net.cjsah.console
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.*
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -23,19 +22,17 @@ object Util {
     /**
      * 文件下载
      */
-    fun download(url: String, file: File) = runBlocking {
-        thread(name = "BotDownloadService") {
-            try {
-                val huc = URL(url).openConnection() as HttpURLConnection
-                huc.connect()
-                huc.inputStream.use { input ->
-                    BufferedOutputStream(FileOutputStream(file)).use { output ->
-                        input.copyTo(output)
-                    }
+    fun download(url: String, file: File) = thread(name = "BotDownloadService") {
+        try {
+            val huc = URL(url).openConnection() as HttpURLConnection
+            huc.connect()
+            huc.inputStream.use { input ->
+                BufferedOutputStream(FileOutputStream(file)).use { output ->
+                    input.copyTo(output)
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
