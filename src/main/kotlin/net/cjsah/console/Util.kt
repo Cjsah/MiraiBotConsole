@@ -23,16 +23,18 @@ object Util {
      * 文件下载
      */
     fun download(url: String, file: File) = thread(name = "BotDownloadService") {
-        try {
-            val huc = URL(url).openConnection() as HttpURLConnection
-            huc.connect()
-            huc.inputStream.use { input ->
-                BufferedOutputStream(FileOutputStream(file)).use { output ->
-                    input.copyTo(output)
+        if (!file.exists()) {
+            try {
+                val huc = URL(url).openConnection() as HttpURLConnection
+                huc.connect()
+                huc.inputStream.use { input ->
+                    BufferedOutputStream(FileOutputStream(file)).use { output ->
+                        input.copyTo(output)
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 }

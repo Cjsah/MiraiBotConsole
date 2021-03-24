@@ -3,7 +3,7 @@ package net.cjsah.console
 object ConsoleCommand {
     private val commands = initCommand()
 
-    private fun initCommand(): Map<String, Command> {
+    private fun initCommand(): HashMap<String, Command> {
         val map = HashMap<String, Command>()
         map["stop"] = Command { Console.stopConsole = true }
         map["reload"] = Command { Console.reloadAllPlugins() }
@@ -16,7 +16,8 @@ object ConsoleCommand {
         }
     }
 
-    fun registerCommand() {
-
+    @Suppress("unused")
+    fun registerCommand(name: String, command: Command) {
+        commands[name] = command
     }
 }

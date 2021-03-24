@@ -201,7 +201,8 @@ private suspend fun sendLogger(prefix: String, content: String, messageChain: Me
 }
 
 private suspend fun downloadImageFile(image: Image): String {
-    val imageDirection = File(Files.IMAGES.file, LocalDateTime.now().toLocalDate().toString())
+    val date = LocalDateTime.now().toLocalDate()
+    val imageDirection = File(Files.IMAGES.file, "${date.year}-${if (date.monthValue < 10) "0" else ""}${date.monthValue}")
     val imageFile = image.imageId.replace("""[{}]""".toRegex(), "")
     if (!imageDirection.exists()) imageDirection.mkdirs()
     Util.download(image.queryUrl(), File(imageDirection, imageFile))
