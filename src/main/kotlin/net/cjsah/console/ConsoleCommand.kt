@@ -15,4 +15,8 @@ object ConsoleCommand {
             this.commands.getOrDefault(it, null)?.run()
         }
     }
+
+    fun registerCommand() {
+
+    }
 }
