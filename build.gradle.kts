@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "net.cjsah"
-version = "0.1-dev1"
+version = "0.1-dev2"
 
 repositories {
     mavenCentral()

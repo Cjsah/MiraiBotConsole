@@ -1,23 +1,23 @@
 package net.cjsah.console
 
-import java.lang.Thread.sleep
-import kotlin.concurrent.thread
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object BotThread {
-    private lateinit var t: Thread
-    private var stop = false
+    private var running = false
 
     fun run() {
-        stop = false
-        t = thread(isDaemon = true, name = "BotConsole", priority = 3) {
-            while (!stop) {
+        this.running = true
+        GlobalScope.launch {
+            while (running) {
 
-                sleep(1000)
+                delay(500)
             }
         }
     }
 
     fun stop() {
-        stop = true
+        this.running = false
     }
 }

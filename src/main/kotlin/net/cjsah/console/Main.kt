@@ -1,6 +1,8 @@
 package net.cjsah.console
 
 import com.google.common.collect.Lists
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
@@ -21,43 +23,50 @@ import java.net.URLClassLoader
 import java.time.LocalDateTime
 import java.util.jar.JarFile
 
+@Suppress("unused")
 object Console {
     lateinit var bot: Bot
     var stopConsole = false
     val logger = HyLogger("控制台")
     private val loadingPlugins = mutableListOf<Plugin>()
 
-    private suspend fun loadPlugin(plugin: Plugin) {
-        plugin.bot = this.bot
-        if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
-        plugin.onPluginStart()
-        this.loadingPlugins.add(plugin)
-        plugin.logger.log("插件已启动!")
+    private fun loadPlugin(plugin: Plugin) {
+        GlobalScope.launch {
+            plugin.bot = bot
+            if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
+            plugin.onPluginStart()
+            loadingPlugins.add(plugin)
+            plugin.logger.log("插件已启动!")
+        }
     }
 
-    private suspend fun unloadPlugin(plugin: Plugin) {
-        plugin.onPluginStop()
-        loadingPlugins.remove(plugin)
-        plugin.logger.log("插件已关闭!")
+    private fun unloadPlugin(plugin: Plugin) {
+        GlobalScope.launch {
+            plugin.onPluginStop()
+            loadingPlugins.remove(plugin)
+            plugin.logger.log("插件已关闭!")
+        }
     }
 
-    private suspend fun reloadPlugin(plugin: Plugin) {
+    private fun reloadPlugin(plugin: Plugin) {
         unloadPlugin(plugin)
         loadPlugin(plugin)
     }
 
-    suspend fun reloadAllPlugins() {
+    fun reloadAllPlugins() {
+        logger.log("正在重载所有插件...")
         unloadAllPlugins()
         loadAllPlugins()
+        logger.log("所有插件已重载完成")
     }
 
-    suspend fun loadAllPlugins() {
+    fun loadAllPlugins() {
         getPluginJars().forEach {
             getPlugin(it)?.let { plugin -> loadPlugin(plugin) }
         }
     }
 
-    suspend fun unloadAllPlugins() {
+    fun unloadAllPlugins() {
         loadingPlugins.forEach {
             unloadPlugin(it)
         }
@@ -95,16 +104,16 @@ suspend fun main() {
 
     startListener()
 
-    logger.log("机器人已关闭!")
+    logger.log("控制台退出...")
 }
 
-private suspend fun startListener() {
+private fun startListener() {
+    Console.logger.log("控制台启动完成")
     while (!Console.stopConsole) ConsoleCommand.run(readLine())
 
     Console.unloadAllPlugins()
 
     Console.bot.close()
-    Console.logger.log("QQ已登出")
 
     BotThread.stop()
 }
@@ -205,17 +214,18 @@ private suspend fun downloadImageFile(image: Image): String {
 private fun initFiles(config: AccountConfig): Boolean {
     var init = false
     Files.values().forEach {
-        if (!it.file.exists()) {
-            if (it.isDirectory) it.file.mkdirs()
-            else it.file.createNewFile()
-        }
         if (it == Files.ACCOUNT && !it.file.exists()) {
             with(config) {
+                it.file.createNewFile()
                 set("account", "QQ")
                 set("password", "密码")
                 save()
                 init = true
             }
+        }
+        if (!it.file.exists()) {
+            if (it.isDirectory) it.file.mkdirs()
+            else it.file.createNewFile()
         }
     }
     return init

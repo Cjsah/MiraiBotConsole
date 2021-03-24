@@ -1,8 +1,5 @@
 package net.cjsah.console
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
 import org.hydev.logger.foreground
