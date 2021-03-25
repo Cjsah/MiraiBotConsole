@@ -24,6 +24,8 @@ import java.net.URLClassLoader
 import java.time.LocalDateTime
 import java.util.jar.JarFile
 
+// ***本程序部分代码借鉴于小神***
+
 @Suppress("unused")
 object Console {
     lateinit var bot: Bot
