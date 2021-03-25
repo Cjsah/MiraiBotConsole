@@ -1,5 +1,6 @@
 package net.cjsah.bot.console
 
+import cc.moecraft.yaml.HyConfig
 import com.google.common.collect.Lists
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,6 +62,24 @@ object Console {
     }
 }
 
+internal class AccountConfig : HyConfig(Files.ACCOUNT.file, false, true) {
+    override fun save(): Boolean {
+        return try {
+            save(this.configFile)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+}
+
+internal enum class Files(file: String, val isDirectory: Boolean) {
+    ACCOUNT("account.yml", false),
+    PLUGINS("plugins", true),
+    IMAGES("images", true);
+
+    val file: File = File(file)
+}
 
 suspend fun main() {
     val logger = Console.logger
