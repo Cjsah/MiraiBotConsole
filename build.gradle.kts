@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.4.31"
     id("net.mamoe.kotlin-jvm-blocking-bridge") version "1.10.3"
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    maven
 }
 
 group = "net.cjsah"
@@ -35,5 +36,11 @@ tasks {
 tasks.withType<Jar> {
     manifest {
         attributes(Pair("Main-Class", "net.cjsah.console.MainKt"))
+    }
+}
+
+buildscript {
+    dependencies {
+
     }
 }
