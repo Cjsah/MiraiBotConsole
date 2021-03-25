@@ -6,7 +6,6 @@ object ConsoleCommand {
     private fun initCommand(): HashMap<String, Command> {
         val map = HashMap<String, Command>()
         map["stop"] = Command { Console.stopConsole = true }
-        map["reload"] = Command { Console.reloadAllPlugins() }
         return map
     }
 

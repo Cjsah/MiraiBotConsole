@@ -48,18 +48,6 @@ object Console {
         }
     }
 
-    private fun reloadPlugin(plugin: Plugin) {
-        unloadPlugin(plugin)
-        loadPlugin(plugin)
-    }
-
-    fun reloadAllPlugins() {
-        logger.log("正在重载所有插件...")
-        unloadAllPlugins()
-        loadAllPlugins()
-        logger.log("所有插件已重载完成")
-    }
-
     fun loadAllPlugins() {
         getPluginJars().forEach {
             getPlugin(it)?.let { plugin -> loadPlugin(plugin) }
