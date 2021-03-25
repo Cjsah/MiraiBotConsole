@@ -82,19 +82,4 @@ abstract class Plugin(
         file.writeText(Util.GSON.toJson(json))
         return json
     }
-
-    /**
-     * 保存yml格式配置文件
-     */
-    fun saveConfig(config: HyConfig) {
-        config.save()
-    }
-
-    /**
-     * 保存json格式配置文件
-     */
-    fun saveConfig(name: String, config: JsonElement) {
-        File(pluginDir, name).writeText(Util.GSON.toJson(config))
-    }
-
 }
