@@ -5,8 +5,8 @@ plugins {
     maven
 }
 
-group = "net.cjsah"
-version = "0.1-dev2"
+group = "net.cjsah.bot.console"
+version = "0.2"
 
 repositories {
     mavenCentral()
@@ -18,10 +18,10 @@ dependencies {
     val miraiVersion = "2.4.2"
     api("net.mamoe", "mirai-core-api", miraiVersion)
     runtimeOnly("net.mamoe", "mirai-core", miraiVersion)
-    implementation("org.hydev:HyLogger:2.1.0.378")
-    implementation("com.google.code.gson:gson:2.8.5")
-    implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
-    implementation("com.github.HyDevelop:HyConfigLib:3.1.52")
+    api("org.hydev:HyLogger:2.1.0.378")
+    api("com.google.code.gson:gson:2.8.5")
+    api("com.github.salomonbrys.kotson:kotson:2.5.0")
+    api("com.github.HyDevelop:HyConfigLib:3.1.52")
 }
 
 tasks {
@@ -36,11 +36,5 @@ tasks {
 tasks.withType<Jar> {
     manifest {
         attributes(Pair("Main-Class", "net.cjsah.console.MainKt"))
-    }
-}
-
-buildscript {
-    dependencies {
-
     }
 }

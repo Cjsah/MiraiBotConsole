@@ -1,4 +1,4 @@
-package net.cjsah.console
+package net.cjsah.bot.console
 
 object ConsoleCommand {
     private val commands = initCommand()
@@ -12,7 +12,7 @@ object ConsoleCommand {
 
     internal fun run(command: String?) {
         command?.let {
-            this.commands.getOrDefault(it, null)?.run()
+            commands.getOrDefault(it, null)?.run()
         }
     }
 

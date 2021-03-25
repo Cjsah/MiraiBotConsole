@@ -1,4 +1,4 @@
-package net.cjsah.console
+package net.cjsah.bot.console
 
 import com.google.common.collect.Lists
 import kotlinx.coroutines.GlobalScope

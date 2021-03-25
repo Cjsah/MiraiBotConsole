@@ -1,4 +1,4 @@
-package net.cjsah.console
+package net.cjsah.bot.console
 
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
