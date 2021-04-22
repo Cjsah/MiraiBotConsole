@@ -13,6 +13,7 @@ class TestPlugin : Plugin(
     listOf("Cjsah")
 ) {
     override suspend fun onPluginStart() {
+        logger.log("test")
     }
 
     override suspend fun onPluginStop() { }

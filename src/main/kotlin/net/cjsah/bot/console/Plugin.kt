@@ -31,8 +31,14 @@ abstract class Plugin(
      */
     val pluginAuthors: List<String>
 ) {
+    /**
+     * Bot
+     */
     lateinit var bot: Bot
 
+    /**
+     * logger日志输出
+     */
     val logger = HyLogger("${Color(204, 255, 51).foreground()}$pluginName")
 
     /**

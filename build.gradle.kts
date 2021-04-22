@@ -1,13 +1,12 @@
 plugins {
     kotlin("jvm") version "1.4.31"
-    id("net.mamoe.kotlin-jvm-blocking-bridge") version "1.10.3"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     maven
 }
 
 group = "net.cjsah.bot.console"
-version = "1.1"
-val miraiCoreVersion = "2.4.2"
+version = "1.2"
+val miraiCoreVersion = "2.6.2"
 
 repositories {
     mavenCentral()

@@ -50,7 +50,6 @@ suspend fun main() {
 
     if (Console.bot.isOnline) logger.log("登录成功")
     ConsoleEvents.registerEvents(Console.bot)
-    logger.log("控制台初始化完成")
     logger.log("正在加载插件...")
     Console.loadAllPlugins()
     logger.log("插件加载完成")
@@ -61,7 +60,7 @@ suspend fun main() {
 }
 
 private fun startListener() {
-    Console.logger.log("控制台启动完成")
+    Console.logger.log("控制台已启动")
     while (!Console.stopConsole) ConsoleCommand.run(readLine())
 
     Console.unloadAllPlugins()

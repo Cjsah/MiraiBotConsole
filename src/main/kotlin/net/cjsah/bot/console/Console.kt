@@ -16,7 +16,7 @@ object Console {
     lateinit var bot: Bot
     var stopConsole = false
     val logger = HyLogger("控制台")
-    private val loadingPlugins = mutableListOf<Plugin>()
+    private val loadedPlugins = mutableListOf<Plugin>()
     private val consolePlugins = mutableListOf<Plugin>()
 
     fun loadPlugin(plugin: Plugin) = runBlocking {
@@ -24,7 +24,7 @@ object Console {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
             plugin.onPluginStart()
-            loadingPlugins.add(plugin)
+            loadedPlugins.add(plugin)
             logger.log("${plugin.pluginName} ${plugin.pluginVersion} 插件已启动!")
         }
     }
@@ -42,7 +42,7 @@ object Console {
     }
 
     fun unloadAllPlugins() {
-        loadingPlugins.removeIf { plugin ->
+        loadedPlugins.removeIf { plugin ->
             unloadPlugin(plugin)
             true
         }
