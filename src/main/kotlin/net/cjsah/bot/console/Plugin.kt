@@ -44,15 +44,12 @@ abstract class Plugin(
     /**
      * 插件启动
      */
-    open suspend fun onPluginStart() {
-    }
+    abstract suspend fun onPluginStart()
 
     /**
      * 插件关闭
      */
-    open suspend fun onPluginStop() {
-
-    }
+    abstract suspend fun onPluginStop()
 
     /**
      * 获取yml格式配置文件
