@@ -55,7 +55,7 @@ abstract class Plugin(
     /**
      * 插件关闭
      */
-    abstract suspend fun onPluginStop()
+    open suspend fun onPluginStop() {}
 
     /**
      * 获取yml格式配置文件
