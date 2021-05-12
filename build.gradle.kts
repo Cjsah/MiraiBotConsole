@@ -5,8 +5,8 @@ plugins {
 }
 
 group = "net.cjsah.bot.console"
-version = "1.4"
-val miraiCoreVersion = "2.6.2"
+version = "1.5"
+val miraiCoreVersion = "2.6.4"
 
 repositories {
     mavenCentral()
