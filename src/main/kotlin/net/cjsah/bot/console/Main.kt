@@ -4,6 +4,8 @@ import cc.moecraft.yaml.HyConfig
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.ANDROID_PAD
+import org.hydev.logger.HyLoggerConfig
+import org.hydev.logger.appenders.ColorCompatibility
 import java.io.File
 
 // ***本程序部分代码借鉴于小神***
@@ -29,6 +31,7 @@ internal enum class Files(file: String, val isDirectory: Boolean) {
 
 suspend fun main() {
     System.setProperty("mirai.no-desktop", "")
+    if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
     val config = AccountConfig()
     if (initFiles(config)) {
