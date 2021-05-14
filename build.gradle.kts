@@ -33,22 +33,8 @@ tasks {
 }
 
 tasks.withType<Jar> {
+    from("LICENSE")
     manifest {
         attributes(Pair("Main-Class", "net.cjsah.bot.console.MainKt"))
-    }
-}
-
-sourceSets {
-    getting {
-        plugins {
-            id("net.mamoe.kotlin-jvm-blocking-bridge") version "1.10.3"
-        }
-
-        dependencies {
-            api("org.hydev:HyLogger:2.1.0.378")
-            api("com.google.code.gson:gson:2.8.5")
-            api("com.github.salomonbrys.kotson:kotson:2.5.0")
-            api("com.github.HyDevelop:HyConfigLib:3.1.52")
-        }
     }
 }
