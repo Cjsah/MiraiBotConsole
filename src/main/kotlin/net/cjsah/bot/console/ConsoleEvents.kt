@@ -7,6 +7,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.Voice
 import org.hydev.logger.HyLogger
 import org.hydev.logger.format.AnsiColor
 import java.io.File

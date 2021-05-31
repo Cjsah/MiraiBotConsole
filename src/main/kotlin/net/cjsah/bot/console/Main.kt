@@ -1,6 +1,7 @@
 package net.cjsah.bot.console
 
 import cc.moecraft.yaml.HyConfig
+import net.cjsah.bot.console.command.SourceType
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.ANDROID_PAD
@@ -64,7 +65,7 @@ suspend fun main() {
 
 private fun startListener() {
     Console.logger.log("控制台已启动")
-    while (!Console.stopConsole) ConsoleCommand.run(readLine())
+    while (!Console.stopConsole) readLine()?.let { Commands.runCommand(it, SourceType.CONSOLE, null) }
 
     Console.unloadAllPlugins()
 

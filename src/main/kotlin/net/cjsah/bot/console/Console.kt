@@ -17,15 +17,14 @@ object Console {
     var stopConsole = false
     val logger = HyLogger("控制台")
     private val loadedPlugins = mutableListOf<Plugin>()
-    private val consolePlugins = mutableListOf<Plugin>()
 
-    fun loadPlugin(plugin: Plugin) = runBlocking {
+    fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
             plugin.onPluginStart()
             loadedPlugins.add(plugin)
-            logger.log("${plugin.pluginName} ${plugin.pluginVersion} 插件已启动!")
+            if (log) logger.log("${plugin.pluginName} ${plugin.pluginVersion} 插件已启动!")
         }
     }
 
@@ -37,20 +36,19 @@ object Console {
     }
 
     fun loadAllPlugins() {
+        loadPlugin(ConsolePlugin(), false)
         getPluginJars().forEach { pluginFile -> getPlugin(pluginFile)?.let { plugin -> loadPlugin(plugin) } }
-        consolePlugins.forEach { plugin -> loadPlugin(plugin) }
     }
 
     fun unloadAllPlugins() {
         loadedPlugins.removeIf { plugin ->
-            unloadPlugin(plugin)
-            true
+            if (plugin is ConsolePlugin) {
+                false
+            }else {
+                unloadPlugin(plugin)
+                true
+            }
         }
-    }
-
-    @Suppress("unused")
-    fun addConsolePlugin(plugin: Plugin) {
-        consolePlugins.add(plugin)
     }
 
     private fun getPluginJars(): List<File> {
