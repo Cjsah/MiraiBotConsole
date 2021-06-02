@@ -4,69 +4,25 @@ package net.cjsah.bot.console.command
 
 import net.cjsah.bot.console.command.exceptions.CommandException
 
-class StringReader(private val string: String) : ImmutableStringReader {
+class StringReader(private val string: String) : StringReaderProvider {
     private val SYNTAX_ESCAPE = '\\'
     private val SYNTAX_DOUBLE_QUOTE = '"'
     private val SYNTAX_SINGLE_QUOTE = '\''
 
     private var cursor: Int = 0
-    override fun getString(): String {
-        return string
-    }
+
+    fun read() = string[cursor++]
+
+    fun isAllowedNumber(c: Char) = c in '0'..'9' || c == '.' || c == '-'
+
+    fun isQuotedStringStart(c: Char) = c == SYNTAX_DOUBLE_QUOTE || c == SYNTAX_SINGLE_QUOTE
 
     fun setCursor(cursor: Int) {
         this.cursor = cursor
     }
 
-    override fun getRemainingLength(): Int {
-        return string.length - cursor
-    }
-
-    override fun getTotalLength(): Int {
-        return string.length
-    }
-
-    override fun getCursor(): Int {
-        return cursor
-    }
-
-    override fun getRead(): String {
-        return string.substring(0, cursor)
-    }
-
-    override fun getRemaining(): String {
-        return string.substring(cursor)
-    }
-
-    override fun canRead(length: Int): Boolean {
-        return cursor + length <= string.length
-    }
-
-    override fun canRead(): Boolean {
-        return canRead(1)
-    }
-
-    override fun peek(): Char {
-        return string.toCharArray()[cursor]
-    }
-
-    override fun peek(offset: Int): Char {
-        return string.toCharArray()[cursor + offset]
-    }
-
-    fun read(): Char {
-        return string[cursor++]
-    }
-
     fun skip() {
         cursor++
-    }
-    fun isAllowedNumber(c: Char): Boolean {
-        return c in '0'..'9' || c == '.' || c == '-'
-    }
-
-    fun isQuotedStringStart(c: Char): Boolean {
-        return c == SYNTAX_DOUBLE_QUOTE || c == SYNTAX_SINGLE_QUOTE
     }
 
     fun skipWhitespace() {
@@ -235,4 +191,23 @@ class StringReader(private val string: String) : ImmutableStringReader {
         skip()
     }
 
+    override fun getString() = string
+
+    override fun getRemainingLength() = string.length - cursor
+
+    override fun getTotalLength() = string.length
+
+    override fun getCursor() = cursor
+
+    override fun getRead() = string.substring(0, cursor)
+
+    override fun getRemaining() = string.substring(cursor)
+
+    override fun canRead(length: Int) = cursor + length <= string.length
+
+    override fun canRead() = canRead(1)
+
+    override fun peek() = string.toCharArray()[cursor]
+
+    override fun peek(offset: Int) = string.toCharArray()[cursor + offset]
 }

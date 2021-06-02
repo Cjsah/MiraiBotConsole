@@ -5,7 +5,7 @@ import net.cjsah.bot.console.command.exceptions.CommandException
 
 fun interface Command<S> {
     @Throws(CommandException::class)
-    fun run(context: CommandContext<S>?): Int
+    fun run(context: CommandContext<S>?)
 
     companion object {
         const val SINGLE_SUCCESS = 1

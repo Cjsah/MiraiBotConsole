@@ -56,7 +56,7 @@ abstract class CommandNode<S>(
         }
     }
 
-    protected abstract fun isValidInput(input: String?): Boolean
+    protected abstract fun isValidInput(input: String): Boolean
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

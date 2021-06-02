@@ -23,7 +23,7 @@ abstract class ArgumentBuilder<S, T : ArgumentBuilder<S, T>> {
         return arguments.getChildren()
     }
 
-    fun executes(command: Command<S>): T {
+    fun executes(command: Command<S>?): T {
         this.command = command
         return getThis()
     }

@@ -1,6 +1,6 @@
 package net.cjsah.bot.console.command
 
-interface ImmutableStringReader {
+interface StringReaderProvider {
     fun getString(): String
 
     fun getRemainingLength(): Int

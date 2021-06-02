@@ -1,13 +1,10 @@
 package net.cjsah.bot.console
 
 import com.google.common.collect.Lists
-import net.cjsah.bot.console.command.ArgumentBuilder
-import net.cjsah.bot.console.command.CommandException
 import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.SourceType
 import net.cjsah.bot.console.command.argument.RequiredArgumentType
 import net.mamoe.mirai.contact.User
-import java.util.stream.Collector
 import java.util.stream.Collectors
 
 object Commands {
@@ -28,9 +25,9 @@ object Commands {
                 }
                 argument = argument!!.getNext(it, source)
             }
-            argument?.runCommand(source) ?: throw CommandException.UNKNOWN_COMMAND
-        }catch (e: CommandException.UnknownCommandException) {
-            e.message?.let { Console.logger.log(it) }
+//            argument?.runCommand(source) ?: throw CommandException.UNKNOWN_COMMAND
+//        }catch (e: CommandException.UnknownCommandException) {
+//            e.message?.let { Console.logger.log(it) }
         }catch (e: Exception) {
             e.printStackTrace()
         }

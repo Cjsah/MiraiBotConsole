@@ -4,7 +4,7 @@ public class CommandException extends Exception {
 
     public static final int CONTEXT_AMOUNT = 10;
     public static boolean ENABLE_COMMAND_STACK_TRACES = true;
-    public static BuiltInExceptionProvider BUILT_IN_EXCEPTIONS = new BuiltInExceptions();
+    public static BuiltExceptions BUILT_IN_EXCEPTIONS = new BuiltExceptions();
 
     private final CommandExceptionType type;
     private final String message;

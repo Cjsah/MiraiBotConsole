@@ -3,6 +3,7 @@ package net.cjsah.bot.console.command.tree
 import net.cjsah.bot.console.command.Command
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
+import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.exceptions.CommandException
 import java.util.*
@@ -13,21 +14,16 @@ class LiteralCommandNode<S>(
     command: Command<S>?,
     requirement: Predicate<S>
 ) : CommandNode<S>(command, requirement) {
-    private val literalLowerCase = literal.toLowerCase(Locale.ROOT)
 
-    fun getLiteral(): String {
-        return literal
-    }
+    fun getLiteral() = literal
 
-    override fun getName(): String {
-        return literal
-    }
+    override fun getName() = literal
 
     override fun parse(reader: StringReader, contextBuilder: CommandContextBuilder<S>) {
         val start: Int = reader.getCursor()
         val end: Int = parse(reader)
         if (end > -1) {
-            contextBuilder.withNode(this, StringRange.between(start, end))
+            contextBuilder.withNode(this, IntRange(start, end))
             return
         }
 
@@ -40,7 +36,7 @@ class LiteralCommandNode<S>(
             val end = start + literal.length
             if (reader.getString().substring(start, end).equals(literal)) {
                 reader.setCursor(end)
-                if (!reader.canRead() || reader.peek() === ' ') {
+                if (!reader.canRead() || reader.peek() == ' ') {
                     return end
                 } else {
                     reader.setCursor(start)
@@ -50,15 +46,18 @@ class LiteralCommandNode<S>(
         return -1
     }
 
-    override fun isValidInput(input: String?): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun isValidInput(input: String) = parse(StringReader(input)) > -1
+
 
     override fun createBuilder(): ArgumentBuilder<S, *> {
-        TODO("Not yet implemented")
+        val builder: LiteralArgumentBuilder<S> = LiteralArgumentBuilder.literal(literal)
+        builder.requires(getRequirement())
+        if (getCommand() != null) {
+            builder.executes(getCommand())
+        }
+        return builder
+
     }
 
-    override fun getSortedKey(): String {
-        TODO("Not yet implemented")
-    }
+    override fun getSortedKey() = literal
 }
