@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package net.cjsah.bot.console
 
 import cc.moecraft.yaml.HyConfig
@@ -5,6 +7,8 @@ import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import net.cjsah.bot.console.command.ArgumentBuilder
+import net.cjsah.bot.console.command.SourceType
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
 import org.hydev.logger.foreground
@@ -13,7 +17,7 @@ import java.io.File
 import java.util.function.Consumer
 
 @Suppress("unused")
-abstract class Plugin(
+abstract class Plugin<T>(
     /**
      * 插件名
      */
@@ -71,7 +75,6 @@ abstract class Plugin(
         }
         config.load()
         return config
-
     }
 
     /**
@@ -84,5 +87,12 @@ abstract class Plugin(
         default.accept(json)
         file.writeText(Util.GSON.toJson(json))
         return json
+    }
+
+    /**
+     * 注册命令
+     */
+    fun commandRegister(type: SourceType, builder: ArgumentBuilder) {
+        Commands.register(type, this, builder)
     }
 }

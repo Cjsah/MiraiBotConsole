@@ -16,9 +16,9 @@ object Console {
     lateinit var bot: Bot
     var stopConsole = false
     val logger = HyLogger("控制台")
-    private val loadedPlugins = mutableListOf<Plugin>()
+    private val loadedPlugins = mutableListOf<Plugin<*>>()
 
-    fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
+    fun loadPlugin(plugin: Plugin<*>, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
@@ -28,7 +28,7 @@ object Console {
         }
     }
 
-    fun unloadPlugin(plugin: Plugin) = runBlocking {
+    fun unloadPlugin(plugin: Plugin<*>) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.onPluginStop()
             logger.log("${plugin.pluginName} 插件已关闭!")
@@ -59,20 +59,21 @@ object Console {
         return jars
     }
 
-    private fun getPlugin(jar: File): Plugin? {
+    private fun getPlugin(jar: File): Plugin<*>? {
         return try {
             val ucl = URLClassLoader(arrayOf(URL("jar:${jar.toURI().toURL()}!/")))
 
             Class.forName(JarFile(jar).manifest.mainAttributes.getValue("Plugin-Class")!!, true, ucl)
-                .getDeclaredConstructor().newInstance() as Plugin
+                .getDeclaredConstructor().newInstance() as Plugin<*>
 
         }catch (e: Exception) {
             val logger = Console.logger
             when (e) {
                 is NullPointerException -> logger.warning("找不到插件 ${jar.name} 启动入口点, 请在插件中设置Plugin-Main启动入口")
                 is ClassNotFoundException -> logger.warning("找不到插件 ${jar.name} 启动入口点, 请正确设置插件Plugin-Main启动入口")
-                else -> logger.warning("插件 ${jar.name} 无法加载")
+                else -> logger.warning("插件 ${jar.name} 加载发生未知错误")
             }
+            logger.error("插件 ${jar.name} 加载失败")
             null
         }
     }

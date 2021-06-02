@@ -3,7 +3,7 @@ package net.cjsah.bot.console.command
 import net.cjsah.bot.console.command.argument.RequiredArgumentType
 import net.cjsah.bot.console.command.argument.LiteralArgumentType
 
-class CommandManager {
+object CommandManager {
 
     fun literal(literal: String): ArgumentBuilder = ArgumentBuilder(LiteralArgumentType(literal))
 

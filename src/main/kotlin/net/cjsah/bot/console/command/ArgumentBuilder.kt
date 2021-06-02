@@ -5,6 +5,7 @@ import java.util.Collections
 import java.util.function.Predicate
 import kotlin.collections.ArrayList
 
+@Deprecated("")
 class ArgumentBuilder(val target: ArgumentType) {
     private val arguments: Collection<ArgumentBuilder> = Collections.emptyList()
     private var requirement: Predicate<CommandSource> = Predicate<CommandSource> { true }
@@ -23,9 +24,9 @@ class ArgumentBuilder(val target: ArgumentType) {
         return getThis()
     }
 
-    fun getNext(content: String): ArgumentBuilder? {
+    fun getNext(content: String, source: CommandSource): ArgumentBuilder? {
         this.arguments.forEach {
-            if (it.target.isThisCommand(content)) return it
+            if (it.target.isThisCommand(content) && it.isRequirement(source)) return it
         }
         return null
     }
@@ -41,7 +42,7 @@ class ArgumentBuilder(val target: ArgumentType) {
 
     fun isRequirement(source: CommandSource) = this.requirement.test(source)
 
-    interface Command {
+    fun interface Command {
         fun run(context: CommandSource)
     }
 }
