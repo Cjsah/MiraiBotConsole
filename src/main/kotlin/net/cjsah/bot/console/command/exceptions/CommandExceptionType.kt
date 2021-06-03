@@ -1,4 +1,3 @@
 package net.cjsah.bot.console.command.exceptions
 
-interface CommandExceptionType {
-}
+interface CommandExceptionType

@@ -1,25 +1,25 @@
 package net.cjsah.bot.console.command.tree
 
 import net.cjsah.bot.console.command.Command
+import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.exceptions.CommandException
-import java.util.*
 import java.util.function.Predicate
 
-class LiteralCommandNode<S>(
+class LiteralCommandNode(
     private val literal: String,
-    command: Command<S>?,
-    requirement: Predicate<S>
-) : CommandNode<S>(command, requirement) {
+    command: Command?,
+    requirement: Predicate<CommandSource>
+) : CommandNode(command, requirement) {
 
     fun getLiteral() = literal
 
     override fun getName() = literal
 
-    override fun parse(reader: StringReader, contextBuilder: CommandContextBuilder<S>) {
+    override fun parse(reader: StringReader, contextBuilder: CommandContextBuilder) {
         val start: Int = reader.getCursor()
         val end: Int = parse(reader)
         if (end > -1) {
@@ -27,7 +27,7 @@ class LiteralCommandNode<S>(
             return
         }
 
-        throw CommandException.BUILT_IN_EXCEPTIONS.literalIncorrect().createWithContext(reader, literal)
+        throw CommandException.BUILT_EXCEPTIONS.literalIncorrect().createWithContext(reader, literal)
     }
 
     private fun parse(reader: StringReader): Int {
@@ -49,8 +49,8 @@ class LiteralCommandNode<S>(
     override fun isValidInput(input: String) = parse(StringReader(input)) > -1
 
 
-    override fun createBuilder(): ArgumentBuilder<S, *> {
-        val builder: LiteralArgumentBuilder<S> = LiteralArgumentBuilder.literal(literal)
+    override fun createBuilder(): ArgumentBuilder<*> {
+        val builder = LiteralArgumentBuilder.literal(literal)
         builder.requires(getRequirement())
         if (getCommand() != null) {
             builder.executes(getCommand())

@@ -9,6 +9,10 @@ class StringReader(private val string: String) : StringReaderProvider {
     private val SYNTAX_DOUBLE_QUOTE = '"'
     private val SYNTAX_SINGLE_QUOTE = '\''
 
+    constructor(reader: StringReader) : this(reader.string) {
+        this.cursor = reader.cursor
+    }
+
     private var cursor: Int = 0
 
     fun read() = string[cursor++]
@@ -39,13 +43,13 @@ class StringReader(private val string: String) : StringReaderProvider {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedInt().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedInt().createWithContext(this)
         }
         return try {
             number.toInt()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidInt().createWithContext(this, number)
+            throw CommandException.BUILT_EXCEPTIONS.readerInvalidInt().createWithContext(this, number)
         }
     }
 
@@ -57,13 +61,13 @@ class StringReader(private val string: String) : StringReaderProvider {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedLong().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedLong().createWithContext(this)
         }
         return try {
             number.toLong()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidLong().createWithContext(this, number)
+            throw CommandException.BUILT_EXCEPTIONS.readerInvalidLong().createWithContext(this, number)
         }
     }
 
@@ -75,13 +79,13 @@ class StringReader(private val string: String) : StringReaderProvider {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedDouble().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedDouble().createWithContext(this)
         }
         return try {
             number.toDouble()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidDouble().createWithContext(this, number)
+            throw CommandException.BUILT_EXCEPTIONS.readerInvalidDouble().createWithContext(this, number)
         }
     }
 
@@ -93,13 +97,13 @@ class StringReader(private val string: String) : StringReaderProvider {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedFloat().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedFloat().createWithContext(this)
         }
         return try {
             number.toFloat()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidFloat().createWithContext(this, number)
+            throw CommandException.BUILT_EXCEPTIONS.readerInvalidFloat().createWithContext(this, number)
         }
     }
 
@@ -122,7 +126,7 @@ class StringReader(private val string: String) : StringReaderProvider {
         }
         val next = peek()
         if (!isQuotedStringStart(next)) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedStartOfQuote().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedStartOfQuote().createWithContext(this)
         }
         skip()
         return readStringUntil(next)
@@ -141,7 +145,7 @@ class StringReader(private val string: String) : StringReaderProvider {
                         false
                     } else {
                         setCursor(getCursor() - 1)
-                        throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidEscape()
+                        throw CommandException.BUILT_EXCEPTIONS.readerInvalidEscape()
                             .createWithContext(this, c.toString())
                     }
                 }
@@ -150,7 +154,7 @@ class StringReader(private val string: String) : StringReaderProvider {
                 else -> result.append(c)
             }
         }
-        throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedEndOfQuote().createWithContext(this)
+        throw CommandException.BUILT_EXCEPTIONS.readerExpectedEndOfQuote().createWithContext(this)
     }
 
     @Throws(CommandException::class)
@@ -171,14 +175,14 @@ class StringReader(private val string: String) : StringReaderProvider {
         val start = cursor
         val value = readString()
         if (value.isEmpty()) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedBool().createWithContext(this)
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedBool().createWithContext(this)
         }
         return when (value) {
             "true" -> true
             "false" -> false
             else -> {
                 cursor = start
-                throw CommandException.BUILT_IN_EXCEPTIONS.readerInvalidBool().createWithContext(this, value)
+                throw CommandException.BUILT_EXCEPTIONS.readerInvalidBool().createWithContext(this, value)
             }
         }
     }
@@ -186,7 +190,7 @@ class StringReader(private val string: String) : StringReaderProvider {
     @Throws(CommandException::class)
     fun expect(c: Char) {
         if (!canRead() || peek() != c) {
-            throw CommandException.BUILT_IN_EXCEPTIONS.readerExpectedSymbol().createWithContext(this, c.toString())
+            throw CommandException.BUILT_EXCEPTIONS.readerExpectedSymbol().createWithContext(this, c.toString())
         }
         skip()
     }

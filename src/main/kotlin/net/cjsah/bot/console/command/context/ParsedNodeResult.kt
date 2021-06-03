@@ -2,7 +2,7 @@ package net.cjsah.bot.console.command.context
 
 import net.cjsah.bot.console.command.StringReader
 
-class ParsedResult<T>(val start: Int, val end: Int, val result: T) {
+class ParsedNodeResult<T>(private val start: Int, private val end: Int, val result: T) {
     fun getNode(reader: StringReader): String {
         return reader.getString().substring(start, end)
     }

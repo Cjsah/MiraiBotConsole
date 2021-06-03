@@ -16,7 +16,7 @@ import java.io.File
 import java.util.function.Consumer
 
 @Suppress("unused")
-abstract class Plugin<T>(
+abstract class Plugin(
     /**
      * 插件名
      */
@@ -91,7 +91,7 @@ abstract class Plugin<T>(
     /**
      * 注册命令
      */
-    fun commandRegister(type: SourceType, builder: ArgumentBuilder) {
-        Commands.register(type, this, builder)
-    }
+//    fun commandRegister(type: SourceType, builder: ArgumentBuilder) {
+//        Commands.register(type, this, builder)
+//    }
 }

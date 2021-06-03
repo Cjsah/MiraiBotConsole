@@ -4,16 +4,16 @@ import net.cjsah.bot.console.command.arguments.ArgumentType
 import net.cjsah.bot.console.command.tree.ArgumentCommandNode
 import net.cjsah.bot.console.command.tree.CommandNode
 
-class RequiredArgumentBuilder<S, T>(val name: String, val type: ArgumentType<T>) : ArgumentBuilder<S, RequiredArgumentBuilder<S, T>>() {
+class RequiredArgumentBuilder<T>(val name: String, val type: ArgumentType<T>) : ArgumentBuilder<RequiredArgumentBuilder<T>>() {
 
     companion object {
-        fun <S, T> argument(name: String, type: ArgumentType<T>) = RequiredArgumentBuilder<S, T>(name, type)
+        fun <T> argument(name: String, type: ArgumentType<T>) = RequiredArgumentBuilder(name, type)
     }
 
     override fun getThis() = this
 
-    override fun build(): CommandNode<S> {
-        val result: ArgumentCommandNode<S, T> = ArgumentCommandNode(name, type, getCommand(), getRequirement())
+    override fun build(): CommandNode {
+        val result: ArgumentCommandNode<T> = ArgumentCommandNode(name, type, getCommand(), getRequirement())
 
         for (argument in getArguments()) {
             result.addChild(argument)

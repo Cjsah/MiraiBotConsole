@@ -3,11 +3,7 @@ package net.cjsah.bot.console.command
 import net.cjsah.bot.console.command.context.CommandContext
 import net.cjsah.bot.console.command.exceptions.CommandException
 
-fun interface Command<S> {
+fun interface Command {
     @Throws(CommandException::class)
-    fun run(context: CommandContext<S>?)
-
-    companion object {
-        const val SINGLE_SUCCESS = 1
-    }
+    fun run(context: CommandContext)
 }

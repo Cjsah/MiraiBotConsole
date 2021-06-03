@@ -1,108 +1,70 @@
 package net.cjsah.bot.console.command.context
 
 import net.cjsah.bot.console.command.Command
+import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.Dispatcher
 import net.cjsah.bot.console.command.tree.CommandNode
+import kotlin.math.max
+import kotlin.math.min
 
-class CommandContextBuilder<S>(
-    private val dispatcher: Dispatcher<S>,
-    private var source: S,
-    private val rootNode: CommandNode<S>,
+class CommandContextBuilder(
+    private val dispatcher: Dispatcher,
+    private var source: CommandSource,
+    private val rootNode: CommandNode,
     start: Int
 ) {
-    private val arguments = LinkedHashMap<String, ParsedResult<*>>()
-    private val nodes = ArrayList<ParsedNode<S>>()
-    private var command: Command<S>? = null
-    private var child: CommandContextBuilder<S>? = null
+    private val arguments = LinkedHashMap<String, ParsedNodeResult<*>>()
+    private val nodes = ArrayList<ParsedNode>()
+    private var command: Command? = null
+    private var child: CommandContextBuilder? = null
     private var range: IntRange = IntRange(start, start)
 
-    fun withSource(source: S): CommandContextBuilder<S> {
+    fun withSource(source: CommandSource): CommandContextBuilder {
         this.source = source
         return this
     }
 
-    fun withArgument(name: String, argument: ParsedResult<*>): CommandContextBuilder<S> {
+    fun withArgument(name: String, argument: ParsedNodeResult<*>): CommandContextBuilder {
         arguments[name] = argument
         return this
     }
 
-    fun withCommand(command: Command<S>): CommandContextBuilder<S> {
+    fun withCommand(command: Command?): CommandContextBuilder {
         this.command = command
         return this
     }
 
-    fun withNode(node: CommandNode<S>, range: IntRange): CommandContextBuilder<S> {
+    fun withNode(node: CommandNode, range: IntRange): CommandContextBuilder {
         nodes.add(ParsedNode(node, range))
-        this.range = StringRange.encompassing(this.range, range)
-        modifier = node.getRedirectModifier()
-        forks = node.isFork()
+        this.range = encompassing(this.range, range)
         return this
     }
 
-    fun copy(): CommandContextBuilder<S>? {
-        val copy: CommandContextBuilder<S> = CommandContextBuilder(dispatcher, source, rootNode, range.getStart())
+    fun copy(): CommandContextBuilder {
+        val copy = CommandContextBuilder(dispatcher, source, rootNode, range.first)
         copy.command = command
         copy.arguments.putAll(arguments)
         copy.nodes.addAll(nodes)
         copy.child = child
         copy.range = range
-        copy.forks = forks
         return copy
     }
 
-    fun withChild(child: CommandContextBuilder<S>?): CommandContextBuilder<S>? {
+    fun withChild(child: CommandContextBuilder?): CommandContextBuilder {
         this.child = child
         return this
     }
 
-    fun getLastChild(): CommandContextBuilder<S>? {
-        var result: CommandContextBuilder<S>? = this
-        while (result!!.getChild() != null) {
+    fun getLastChild(): CommandContextBuilder? {
+        var result: CommandContextBuilder? = this
+        while (result?.getChild() != null) {
             result = result.getChild()
         }
         return result
     }
 
-    fun build(input: String?): CommandContext<S>? {
-        return CommandContext(
-            source,
-            input,
-            arguments,
-            command,
-            rootNode,
-            nodes,
-            range,
-            if (child == null) null else child!!.build(input),
-            modifier,
-            forks
-        )
-    }
-
-    fun findSuggestionContext(cursor: Int): SuggestionContext<S>? {
-        if (range.getStart() <= cursor) {
-            return if (range.getEnd() < cursor) {
-                if (child != null) {
-                    child!!.findSuggestionContext(cursor)
-                } else if (!nodes.isEmpty()) {
-                    val last: ParsedCommandNode<S> = nodes[nodes.size - 1]
-                    SuggestionContext(last.getNode(), last.getRange().getEnd() + 1)
-                } else {
-                    SuggestionContext(rootNode, range.getStart())
-                }
-            } else {
-                var prev: CommandNode<S>? = rootNode
-                for (node in nodes) {
-                    val nodeRange: StringRange = node.getRange()
-                    if (nodeRange.getStart() <= cursor && cursor <= nodeRange.getEnd()) {
-                        return SuggestionContext(prev, nodeRange.getStart())
-                    }
-                    prev = node.getNode()
-                }
-                checkNotNull(prev) { "Can't find node before cursor" }
-                SuggestionContext(prev, range.getStart())
-            }
-        }
-        throw IllegalStateException("Can't find node before cursor")
+    fun build(input: String): CommandContext {
+        return CommandContext(source, input, arguments, command, rootNode, nodes, range, child?.build(input))
     }
 
     fun getSource() = source
@@ -120,5 +82,7 @@ class CommandContextBuilder<S>(
     fun getDispatcher() = dispatcher
 
     fun getRange() = range
+
+    private fun encompassing(a: IntRange, b: IntRange) = IntRange(min(a.first, b.first), max(a.last, b.last))
 
 }
