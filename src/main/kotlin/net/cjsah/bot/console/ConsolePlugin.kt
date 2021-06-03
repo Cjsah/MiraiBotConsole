@@ -1,10 +1,9 @@
 package net.cjsah.bot.console
 
-import net.cjsah.bot.console.Console.stopConsole
 import net.cjsah.bot.console.command.CommandManager
 import net.cjsah.bot.console.command.SourceType
 
-class ConsolePlugin: Plugin<ConsolePlugin>(
+class ConsolePlugin private constructor(): Plugin(
     "ConsolePlugin",
     "0.0.1",
     false,
@@ -12,11 +11,12 @@ class ConsolePlugin: Plugin<ConsolePlugin>(
 ) {
 
     companion object {
-        internal lateinit var thisPlugin: ConsolePlugin
+        private val plugin = ConsolePlugin()
+        fun get() = plugin
     }
-
     override suspend fun onPluginStart() {
-        thisPlugin = this
-        commandRegister(SourceType.CONSOLE, CommandManager.literal("stop").executes { stopConsole = true })
+        CommandManager.dispatcher.register(SourceType.CONSOLE, CommandManager.literal("stop").executes {
+            Console.stopConsole = true
+        })
     }
 }

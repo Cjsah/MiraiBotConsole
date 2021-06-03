@@ -38,7 +38,7 @@ object Util {
     }
 
     fun getPermission(user: User): Permission {
-
+        return Permission.ADMIN
     }
 
 }

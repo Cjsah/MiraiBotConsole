@@ -1,11 +1,15 @@
 import net.cjsah.bot.console.*
+import net.cjsah.bot.console.command.CommandManager
+import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.SourceType
+import net.cjsah.bot.console.command.exceptions.Para0CommandException
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.utils.BotConfiguration
 import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.appenders.ColorCompatibility
 
 fun main() {
+    throw Para0CommandException("").create()
     System.setProperty("mirai.no-desktop", "")
     if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
@@ -28,7 +32,7 @@ fun main() {
     logger.log("控制台退出...")
 }
 private fun startListener() {
-    while (!Console.stopConsole) readLine()?.let { Commands.runCommand(it, SourceType.CONSOLE, null) }
+    while (!Console.stopConsole) readLine()?.let { CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
 
     Console.unloadAllPlugins()
 }

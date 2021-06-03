@@ -42,7 +42,7 @@ class Dispatcher {
     }
 
     @Throws(CommandException::class)
-    fun execute(input: String, source: CommandSource): Int {
+    internal fun execute(input: String, source: CommandSource): Int {
         return execute(StringReader(input), source)
     }
 
@@ -109,7 +109,7 @@ class Dispatcher {
         return parseNodes(root, command, context)
     }
 
-    private fun parseNodes(node: RootCommandNode, originalReader: StringReader, contextSoFar: CommandContextBuilder): ParseResults {
+    private fun parseNodes(node: CommandNode, originalReader: StringReader, contextSoFar: CommandContextBuilder): ParseResults {
         val source: CommandSource = contextSoFar.getSource()
         var errors: MutableMap<CommandNode, CommandException>? = null
         var potentials: MutableList<ParseResults>? = null
@@ -174,40 +174,6 @@ class Dispatcher {
     }
 
     fun getRoots() = roots
-
-    fun getPath(target: CommandNode): Collection<String> {
-        val nodes: MutableList<List<CommandNode>> = ArrayList()
-        addPaths(root, nodes, ArrayList())
-        for (list in nodes) {
-            if (list[list.size - 1] === target) {
-                val result: MutableList<String> = ArrayList(list.size)
-                for (node in list) {
-                    if (node !== root) result.add(node.getName())
-                }
-                return result
-            }
-        }
-        return emptyList()
-    }
-
-    fun findNode(path: Collection<String>): CommandNode? {
-        var node: CommandNode? = root
-        for (name in path) {
-            node = node!!.getChild(name)
-            if (node == null) return null
-        }
-        return node
-    }
-
-    private fun addPaths(node: CommandNode, result: MutableList<List<CommandNode>>, parents: List<CommandNode>) {
-        arrayOf(parents)
-        val current: List<CommandNode> = ArrayList(parents)
-        (current as ArrayList).add(node)
-        result.add(current)
-        for (child in node.getChildren()) {
-            addPaths(child, result, current)
-        }
-    }
 
     fun interface ResultConsumer {
         fun onCommandComplete(context: CommandContext, success: Boolean, result: Int)

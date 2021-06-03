@@ -1,6 +1,8 @@
 package net.cjsah.bot.console
 
 import cc.moecraft.yaml.HyConfig
+import net.cjsah.bot.console.command.CommandManager
+import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.SourceType
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
@@ -65,7 +67,7 @@ suspend fun main() {
 
 private fun startListener() {
     Console.logger.log("控制台已启动")
-    while (!Console.stopConsole) readLine()?.let { Commands.runCommand(it, SourceType.CONSOLE, null) }
+    while (!Console.stopConsole) readLine()?.let { CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
 
     Console.unloadAllPlugins()
 

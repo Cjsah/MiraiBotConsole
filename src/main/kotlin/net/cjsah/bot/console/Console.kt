@@ -16,9 +16,9 @@ object Console {
     lateinit var bot: Bot
     var stopConsole = false
     val logger = HyLogger("控制台")
-    private val loadedPlugins = mutableListOf<Plugin<*>>()
+    private val loadedPlugins = mutableListOf<Plugin>()
 
-    fun loadPlugin(plugin: Plugin<*>, log: Boolean = true) = runBlocking {
+    fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
@@ -28,7 +28,7 @@ object Console {
         }
     }
 
-    fun unloadPlugin(plugin: Plugin<*>) = runBlocking {
+    fun unloadPlugin(plugin: Plugin) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.onPluginStop()
             logger.log("${plugin.pluginName} 插件已关闭!")
@@ -36,7 +36,7 @@ object Console {
     }
 
     fun loadAllPlugins() {
-        loadPlugin(ConsolePlugin(), false)
+        loadPlugin(ConsolePlugin.get(), false)
         getPluginJars().forEach { pluginFile -> getPlugin(pluginFile)?.let { plugin -> loadPlugin(plugin) } }
     }
 
@@ -59,12 +59,12 @@ object Console {
         return jars
     }
 
-    private fun getPlugin(jar: File): Plugin<*>? {
+    private fun getPlugin(jar: File): Plugin? {
         return try {
             val ucl = URLClassLoader(arrayOf(URL("jar:${jar.toURI().toURL()}!/")))
 
             Class.forName(JarFile(jar).manifest.mainAttributes.getValue("Plugin-Class")!!, true, ucl)
-                .getDeclaredConstructor().newInstance() as Plugin<*>
+                .getDeclaredConstructor().newInstance() as Plugin
 
         }catch (e: Exception) {
             val logger = Console.logger

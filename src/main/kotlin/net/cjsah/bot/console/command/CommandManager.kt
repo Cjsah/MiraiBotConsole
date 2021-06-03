@@ -12,4 +12,11 @@ object CommandManager {
 
     fun <T> argument(name: String, type: ArgumentType<T>) = RequiredArgumentBuilder.argument(name, type)
 
+    fun execute(command: String, source: CommandSource) {
+        try {
+            this.dispatcher.execute(command, source)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
