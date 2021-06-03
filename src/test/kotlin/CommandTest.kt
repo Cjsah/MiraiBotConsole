@@ -9,7 +9,6 @@ import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.appenders.ColorCompatibility
 
 fun main() {
-    throw Para0CommandException("").create()
     System.setProperty("mirai.no-desktop", "")
     if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
