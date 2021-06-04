@@ -22,6 +22,7 @@ class ArgumentCommandNode<T>(
 
     override fun getName() = name
 
+    @Throws(CommandException::class)
     override fun parse(reader: StringReader, contextBuilder: CommandContextBuilder) {
         val start = reader.getCursor()
         val result: T = type.parse(reader)
@@ -29,7 +30,6 @@ class ArgumentCommandNode<T>(
 
         contextBuilder.withArgument(name, parsed)
         contextBuilder.withNode(this, parsed.getRange())
-
     }
 
     override fun isValidInput(input: String): Boolean {

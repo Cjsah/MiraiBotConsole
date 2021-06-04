@@ -31,7 +31,7 @@ class BuiltExceptions {
         private val READER_EXPECTED_BOOL = Para0CommandException("Expected bool")
         private val READER_EXPECTED_SYMBOL = Para1CommandException { symbol -> "Expected '$symbol'" }
 
-        private val DISPATCHER_UNKNOWN_COMMAND = Para0CommandException("Unknown command")
+        private val DISPATCHER_UNKNOWN_COMMAND = Para0CommandException("Unknown Command")
         private val DISPATCHER_UNKNOWN_ARGUMENT = Para0CommandException("Incorrect argument for command")
         private val DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR = Para0CommandException("Expected whitespace to end one argument, but found trailing data")
         private val DISPATCHER_PARSE_EXCEPTION = Para1CommandException { message -> "Could not parse command: $message" }

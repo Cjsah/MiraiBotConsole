@@ -34,6 +34,7 @@ internal enum class Files(file: String, val isDirectory: Boolean) {
 
 suspend fun main() {
     System.setProperty("mirai.no-desktop", "")
+    HyLoggerConfig.appenders[0] = LogAppender()
     if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
     val config = AccountConfig()

@@ -26,10 +26,6 @@ abstract class CommandNode(
         return children.values
     }
 
-    fun getChild(name: String): CommandNode? {
-        return children[name]
-    }
-
     open fun canUse(source: CommandSource): Boolean {
         return requirement.test(source)
     }

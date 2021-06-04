@@ -37,23 +37,19 @@ class Dispatcher {
         return build
     }
 
-    fun setConsumer(consumer: ResultConsumer) {
-        this.consumer = consumer
-    }
-
     @Throws(CommandException::class)
     internal fun execute(input: String, source: CommandSource): Int {
         return execute(StringReader(input), source)
     }
 
     @Throws(CommandException::class)
-    fun execute(input: StringReader, source: CommandSource): Int {
+    private fun execute(input: StringReader, source: CommandSource): Int {
         val parse: ParseResults = parse(input, source)
         return execute(parse)
     }
 
     @Throws(CommandException::class)
-    fun execute(parse: ParseResults): Int {
+    private fun execute(parse: ParseResults): Int {
         if (parse.getReader().canRead()) {
             when {
                 parse.getExceptions().size == 1 -> throw parse.getExceptions().values.iterator().next()
@@ -101,14 +97,14 @@ class Dispatcher {
         return result
     }
 
-    fun parse(command: String, source: CommandSource) = parse(StringReader(command), source)
-
+    @Throws(CommandException::class)
     private fun parse(command: StringReader, source: CommandSource): ParseResults {
         val root = roots[source.source]!!
         val context = CommandContextBuilder(this, source, root, command.getCursor())
         return parseNodes(root, command, context)
     }
 
+    @Throws(CommandException::class)
     private fun parseNodes(node: CommandNode, originalReader: StringReader, contextSoFar: CommandContextBuilder): ParseResults {
         val source: CommandSource = contextSoFar.getSource()
         var errors: MutableMap<CommandNode, CommandException>? = null
@@ -172,8 +168,6 @@ class Dispatcher {
         }
         return ParseResults(contextSoFar, originalReader, errors ?: emptyMap())
     }
-
-    fun getRoots() = roots
 
     fun interface ResultConsumer {
         fun onCommandComplete(context: CommandContext, success: Boolean, result: Int)

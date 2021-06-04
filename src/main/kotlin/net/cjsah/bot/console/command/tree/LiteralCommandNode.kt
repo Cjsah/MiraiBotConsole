@@ -19,6 +19,7 @@ class LiteralCommandNode(
 
     override fun getName() = literal
 
+    @Throws(CommandException::class)
     override fun parse(reader: StringReader, contextBuilder: CommandContextBuilder) {
         val start: Int = reader.getCursor()
         val end: Int = parse(reader)

@@ -10,6 +10,7 @@ import org.hydev.logger.appenders.ColorCompatibility
 
 fun main() {
     System.setProperty("mirai.no-desktop", "")
+    HyLoggerConfig.appenders[0] = LogAppender()
     if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
 
@@ -31,7 +32,8 @@ fun main() {
     logger.log("控制台退出...")
 }
 private fun startListener() {
-    while (!Console.stopConsole) readLine()?.let { CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
+    // 控制台命令
+    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
 
     Console.unloadAllPlugins()
 }

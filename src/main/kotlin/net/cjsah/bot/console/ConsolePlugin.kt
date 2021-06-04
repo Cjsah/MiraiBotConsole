@@ -2,6 +2,7 @@ package net.cjsah.bot.console
 
 import net.cjsah.bot.console.command.CommandManager
 import net.cjsah.bot.console.command.SourceType
+import net.cjsah.bot.console.events.CommandRegistration
 
 class ConsolePlugin private constructor(): Plugin(
     "ConsolePlugin",
@@ -15,8 +16,12 @@ class ConsolePlugin private constructor(): Plugin(
         fun get() = plugin
     }
     override suspend fun onPluginStart() {
-        CommandManager.dispatcher.register(SourceType.CONSOLE, CommandManager.literal("stop").executes {
+        CommandRegistration.EVENT.register(SourceType.CONSOLE, CommandManager.literal("stop").executes {
             Console.stopConsole = true
         })
+
+        CommandRegistration.EVENT.register(SourceType.CONSOLE, CommandManager.literal("a").then(CommandManager.literal("b").then(CommandManager.literal("c").executes {
+            println("abc")
+        })))
     }
 }
