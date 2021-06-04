@@ -1,8 +1,8 @@
 package net.cjsah.bot.console.command
 
 import kotlinx.coroutines.runBlocking
+import net.cjsah.bot.console.Console
 import net.cjsah.bot.console.Permission
-import net.cjsah.bot.console.Plugin
 import net.cjsah.bot.console.Util
 import net.cjsah.bot.console.command.exceptions.CommandException
 import net.cjsah.bot.console.command.exceptions.Para0CommandException
@@ -13,10 +13,7 @@ import org.hydev.logger.LogLevel
 class CommandSource(
     val source: SourceType,
     private val user: User?,
-    private val plugin: Plugin
 ) {
-    val commands = HashMap<String, String>()
-
     fun hasPermission(permission: Permission) = permission.level >= user?.let { Util.getPermission(it).level } ?: 0
 
     @Throws(CommandException::class)
@@ -24,12 +21,11 @@ class CommandSource(
 
     fun sendFeedBack(message: String, consoleMessageLevel: LogLevel = LogLevel.LOG) {
         if (source == SourceType.CONSOLE) {
-            val logger = plugin.logger
             when(consoleMessageLevel) {
-                LogLevel.LOG -> logger.log(message)
-                LogLevel.WARNING -> logger.warning(message)
-                LogLevel.ERROR -> logger.error(message)
-                LogLevel.DEBUG -> logger.debug(message)
+                LogLevel.LOG -> Console.logger.log(message)
+                LogLevel.WARNING -> Console.logger.warning(message)
+                LogLevel.ERROR -> Console.logger.error(message)
+                LogLevel.DEBUG -> Console.logger.debug(message)
             }
         }else runBlocking {
             user!!.sendMessage(message)

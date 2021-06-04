@@ -24,9 +24,5 @@ class CommandException: Exception {
         this.cursor = cursor
     }
 
-    fun getType() = type
-
-    fun getInput() = input
-
     fun getCursor() = cursor
 }

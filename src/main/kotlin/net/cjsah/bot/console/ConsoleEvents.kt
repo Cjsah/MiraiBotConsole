@@ -1,5 +1,8 @@
 package net.cjsah.bot.console
 
+import net.cjsah.bot.console.command.CommandManager
+import net.cjsah.bot.console.command.CommandSource
+import net.cjsah.bot.console.command.SourceType
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.event.GlobalEventChannel
@@ -7,7 +10,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.Voice
+import net.mamoe.mirai.message.data.content
 import org.hydev.logger.HyLogger
 import org.hydev.logger.format.AnsiColor
 import java.io.File
@@ -15,6 +18,11 @@ import java.time.LocalDateTime
 
 object ConsoleEvents {
     fun registerEvents(bot: Bot) {
+        // command
+        GlobalEventChannel.subscribeAlways<MessageEvent> {
+            val msg = this.message.content
+            if (msg.startsWith("/")) CommandManager.execute(msg.substring(1, msg.length), CommandSource(SourceType.USER, this.sender))
+        }
         GlobalEventChannel.subscribeAlways<FriendMessageEvent> {
             sendLogger(
                 "${AnsiColor.GREEN}好友消息",

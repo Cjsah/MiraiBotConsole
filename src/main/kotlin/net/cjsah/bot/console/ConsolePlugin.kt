@@ -15,13 +15,10 @@ class ConsolePlugin private constructor(): Plugin(
         private val plugin = ConsolePlugin()
         fun get() = plugin
     }
+
     override suspend fun onPluginStart() {
         CommandRegistration.EVENT.register(SourceType.CONSOLE, CommandManager.literal("stop").executes {
             Console.stopConsole = true
         })
-
-        CommandRegistration.EVENT.register(SourceType.CONSOLE, CommandManager.literal("a").then(CommandManager.literal("b").then(CommandManager.literal("c").executes {
-            println("abc")
-        })))
     }
 }

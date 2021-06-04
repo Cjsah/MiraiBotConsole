@@ -9,7 +9,6 @@ class ParseResults(
     private val reader: StringReaderProvider,
     private val exceptions: Map<CommandNode, CommandException>
 ) {
-    constructor(context: CommandContextBuilder) : this(context, StringReader(""), emptyMap<CommandNode, CommandException>())
 
     fun getContext() = context
 

@@ -24,7 +24,7 @@ class LiteralCommandNode(
         val start: Int = reader.getCursor()
         val end: Int = parse(reader)
         if (end > -1) {
-            contextBuilder.withNode(this, IntRange(start, end))
+            contextBuilder.withRange(IntRange(start, end))
             return
         }
 

@@ -25,6 +25,7 @@ internal class AccountConfig : HyConfig(Files.ACCOUNT.file, false, true) {
 }
 
 internal enum class Files(file: String, val isDirectory: Boolean) {
+    PERMISSIONS("permissions.json", false),
     ACCOUNT("account.yml", false),
     PLUGINS("plugins", true),
     IMAGES("images", true);
@@ -68,7 +69,8 @@ suspend fun main() {
 
 private fun startListener() {
     Console.logger.log("控制台已启动")
-    while (!Console.stopConsole) readLine()?.let { CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
+    // 控制台命令
+    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null)) }
 
     Console.unloadAllPlugins()
 

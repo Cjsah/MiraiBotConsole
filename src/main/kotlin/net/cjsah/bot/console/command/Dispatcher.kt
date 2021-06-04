@@ -9,7 +9,6 @@ import net.cjsah.bot.console.command.tree.CommandNode
 import net.cjsah.bot.console.command.tree.LiteralCommandNode
 import net.cjsah.bot.console.command.tree.RootCommandNode
 import java.util.*
-import java.util.function.Predicate
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -24,11 +23,7 @@ class Dispatcher {
 
     init {
         roots[SourceType.CONSOLE] = RootCommandNode()
-        roots[SourceType.MEMBER] = RootCommandNode()
-    }
-
-    private fun hasCommand(): Predicate<CommandNode> = Predicate<CommandNode> {
-        it != null && (it.getCommand() != null || it.getChildren().stream().anyMatch(hasCommand()))
+        roots[SourceType.USER] = RootCommandNode()
     }
 
     fun register(type: SourceType, command: LiteralArgumentBuilder): LiteralCommandNode {
@@ -59,24 +54,14 @@ class Dispatcher {
         }
         var result = 0
         var foundCommand = false
-        val command = parse.getReader().getString()
-        val original = parse.getContext().build(command)
+        val original = parse.getContext().build()
         var contexts: List<CommandContext>? = listOf(original)
         var next: ArrayList<CommandContext>? = null
         while (contexts != null) {
             val size = contexts.size
             for (i in 0 until size) {
                 val context = contexts[i]
-                val child = context.getChild()
-                if (child != null) {
-                    if (child.hasNodes()) {
-                        foundCommand = true
-                        if (next == null) {
-                            next = ArrayList(1)
-                        }
-                        next.add(child.copyFor(context.getSource()))
-                    }
-                } else if (context.getCommand() != null) {
+                if (context.getCommand() != null) {
                     foundCommand = true
                     try {
                         context.getCommand()!!.run(context)

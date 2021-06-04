@@ -3,7 +3,7 @@ package net.cjsah.bot.console.command.tree
 import net.cjsah.bot.console.command.Command
 import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.StringReader
-import net.cjsah.bot.console.command.arguments.ArgumentType
+import net.cjsah.bot.console.command.arguments.base.Argument
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.builder.RequiredArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
@@ -13,7 +13,7 @@ import java.util.function.Predicate
 
 class ArgumentCommandNode<T>(
     private val name: String,
-    private val type: ArgumentType<T>,
+    private val type: Argument<T>,
     command: Command?,
     requirement: Predicate<CommandSource>
 ) : CommandNode(command, requirement) {
@@ -29,7 +29,7 @@ class ArgumentCommandNode<T>(
         val parsed: ParsedNodeResult<T> = ParsedNodeResult(start, reader.getCursor(), result)
 
         contextBuilder.withArgument(name, parsed)
-        contextBuilder.withNode(this, parsed.getRange())
+        contextBuilder.withRange(parsed.getRange())
     }
 
     override fun isValidInput(input: String): Boolean {

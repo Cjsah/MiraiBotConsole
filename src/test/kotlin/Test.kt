@@ -33,7 +33,7 @@ fun main() {
 }
 private fun startListener() {
     // 控制台命令
-    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null, ConsolePlugin.get())) }
+    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null)) }
 
     Console.unloadAllPlugins()
 }
