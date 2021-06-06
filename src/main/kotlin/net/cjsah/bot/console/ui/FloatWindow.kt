@@ -1,6 +1,5 @@
 package net.cjsah.bot.console.ui
 
-/*
 
 import javax.swing.*
 import java.awt.*
@@ -20,16 +19,17 @@ object FloatWindow {
         jf.setUndecorated(true) //窗口去边框
         jf.setAlwaysOnTop(true) //设置窗口总在最前
         jf.setBackground(Color(0, 0, 0, 0)) //设置窗口背景为透明色
+
         jf.addMouseListener(object : MouseAdapter() {
             //设置窗口可拖动，添加监听器
-            fun mousePressed(e: MouseEvent) {        //获取点击鼠标时的坐标
+            override fun mousePressed(e: MouseEvent) {        //获取点击鼠标时的坐标
                 mouseAtX = e.getPoint().x
                 mouseAtY = e.getPoint().y
             }
         })
         jf.addMouseMotionListener(object : MouseMotionAdapter() {
             //设置拖拽后，窗口的位置
-            fun mouseDragged(e: MouseEvent) {
+            override fun mouseDragged(e: MouseEvent) {
                 jf.setLocation(e.getXOnScreen() - mouseAtX, e.getYOnScreen() - mouseAtY)
             }
         })
@@ -56,4 +56,3 @@ object FloatWindow {
 }
 
 
- */
