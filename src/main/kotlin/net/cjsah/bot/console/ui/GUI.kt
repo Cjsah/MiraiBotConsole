@@ -1,5 +1,4 @@
 package net.cjsah.bot.console.ui
-/*
 
 import javax.swing.JFrame
 import javax.swing.JTextField
@@ -33,7 +32,7 @@ class GUI {
     private var passwordField: JPasswordField? = null
     fun uiDisplay() {
         frmQq = JFrame()
-        frmQq!!.title = "QQ\u673A\u5668\u4EBA"
+        frmQq!!.title = "MariaBotConsole"
         frmQq!!.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         frmQq!!.setBounds(100, 100, 900, 600)
 
@@ -41,14 +40,14 @@ class GUI {
         frmQq!!.contentPane.add(tabbedPane, BorderLayout.CENTER)
         val console = Panel()
         console.background = Color.LIGHT_GRAY
-        tabbedPane.addTab("\u63A7\u5236\u53F0", null, console, null)
+        tabbedPane.addTab("控制台", null, console, null)
         tabbedPane.setEnabledAt(0, true)
         console.layout = BorderLayout(0, 0)
         command = JTextField()
         console.add(command, BorderLayout.SOUTH)
         command!!.columns = 255
         val log = JPanel()
-        log.border = TitledBorder(null, "\u65E5\u5FD7", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        log.border = TitledBorder(null, "日志", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         console.add(log, BorderLayout.CENTER)
         log.layout = BorderLayout(0, 0)
         val logScrollpane = JScrollPane()
@@ -59,17 +58,17 @@ class GUI {
         logScrollpane.setViewportView(logTextarea)
         val state = JPanel()
         state.border =
-            TitledBorder(null, "\u5728\u7EBF\u72B6\u6001", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+            TitledBorder(null, "在线状态", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         console.add(state, BorderLayout.NORTH)
         state.layout = BorderLayout(0, 0)
-        val stateLabel = JLabel("\u5728\u7EBF")
+        val stateLabel = JLabel("在线")
         state.add(stateLabel, BorderLayout.CENTER)
         val plugin = Panel()
-        tabbedPane.addTab("\u63D2\u4EF6\u7BA1\u7406", null, plugin, null)
+        tabbedPane.addTab("插件管理", null, plugin, null)
         plugin.layout = BorderLayout(0, 0)
         val pluginListPanel = JPanel()
         pluginListPanel.border =
-            TitledBorder(null, "\u63D2\u4EF6\u5217\u8868", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+            TitledBorder(null, "插件列表", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         plugin.add(pluginListPanel, BorderLayout.WEST)
         pluginListPanel.layout = BorderLayout(0, 0)
         val pluginScrollpane = JScrollPane()
@@ -88,21 +87,21 @@ class GUI {
         scrollPane.setViewportView(textArea)
         val ctrlPanel = JPanel()
         ctrlPanel.border =
-            TitledBorder(null, "\u63A7\u5236\u6309\u94AE", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+            TitledBorder(null, "控制按钮", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         readmeCtrlPanel.add(ctrlPanel, BorderLayout.SOUTH)
         ctrlPanel.layout = GridLayout(2, 2, 0, 0)
-        val addButton = JButton("\u6DFB\u52A0\u63D2\u4EF6")
+        val addButton = JButton("添加插件")
         ctrlPanel.add(addButton)
-        val delButton = JButton("\u5220\u9664\u63D2\u4EF6")
+        val delButton = JButton("删除插件")
         ctrlPanel.add(delButton)
-        val reloadButton = JButton("\u91CD\u65B0\u52A0\u8F7D")
+        val reloadButton = JButton("重新加载")
         ctrlPanel.add(reloadButton)
-        val configButton = JButton("\u914D\u7F6E\u6587\u4EF6")
+        val configButton = JButton("配置文件")
         ctrlPanel.add(configButton)
         tabbedPane.setBackgroundAt(1, SystemColor.control)
         tabbedPane.setEnabledAt(1, true)
         val friend = Panel()
-        tabbedPane.addTab("\u8054\u7CFB\u4EBA", null, friend, null)
+        tabbedPane.addTab("联系人", null, friend, null)
         friend.layout = GridLayout(1, 0, 0, 0)
         val friendPanel = JPanel()
         friendPanel.border =
@@ -128,7 +127,7 @@ class GUI {
         groupscroll.setViewportView(grouplist)
         tabbedPane.setBackgroundAt(2, SystemColor.control)
         val config = Panel()
-        tabbedPane.addTab("\u8BBE\u7F6E", null, config, null)
+        tabbedPane.addTab("设置", null, config, null)
         config.layout = BorderLayout(0, 0)
         val accountpanelctrl = JPanel()
         config.add(accountpanelctrl, BorderLayout.CENTER)
@@ -141,13 +140,13 @@ class GUI {
         val exit = JButton("退出")
         ctrlbuttonpanel.add(exit)
         val account = JPanel()
-        account.border = TitledBorder(null, "\u8D26\u6237", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        account.border = TitledBorder(null, "账户", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         config.add(account, BorderLayout.NORTH)
         account.layout = BorderLayout(0, 0)
         val accountinputPanel = JPanel()
         account.add(accountinputPanel, BorderLayout.NORTH)
         accountinputPanel.layout = BorderLayout(0, 0)
-        val accountLabel = JLabel("\u8D26\u6237\uFF1A")
+        val accountLabel = JLabel("账户：")
         accountinputPanel.add(accountLabel, BorderLayout.WEST)
         accountTextfield = JTextField()
         accountinputPanel.add(accountTextfield)
@@ -155,12 +154,12 @@ class GUI {
         val passwordinputPanel = JPanel()
         account.add(passwordinputPanel)
         passwordinputPanel.layout = BorderLayout(0, 0)
-        val passwordLabel = JLabel("\u5BC6\u7801\uFF1A")
+        val passwordLabel = JLabel("密码：")
         passwordinputPanel.add(passwordLabel, BorderLayout.WEST)
         passwordField = JPasswordField()
         passwordField!!.toolTipText = ""
         passwordinputPanel.add(passwordField, BorderLayout.CENTER)
-        val passwordVis = JCheckBox("\u663E\u793A\u5BC6\u7801")
+        val passwordVis = JCheckBox("显示密码")
         passwordinputPanel.add(passwordVis, BorderLayout.SOUTH)
         tabbedPane.setBackgroundAt(3, SystemColor.control)
 
@@ -177,4 +176,5 @@ class GUI {
     }
 }
 
- */
+
+
