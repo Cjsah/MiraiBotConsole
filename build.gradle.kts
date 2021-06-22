@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.cjsah.bot.console"
-version = "1.7"
+version = "1.8"
 val miraiCoreVersion = "2.6.4"
 
 repositories {
