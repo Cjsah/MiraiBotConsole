@@ -1,5 +1,4 @@
-package net.cjsah.bot.console.ui
-/*
+package net.cjsah.bot.console.gui
 
 import javax.swing.JFrame
 import javax.swing.JTextField
@@ -16,16 +15,10 @@ import javax.swing.ListSelectionModel
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import java.awt.*
-/*
-import kotlin.jvm.JvmStatic
-import java.lang.Exception
-import javax.swing.event.*
-*/
 
-/*
-Written by G-Lemon
- */
+// Written by G-Lemon
 
+@Deprecated("wait to update")
 class GUI {
     private var frmQq: JFrame? = null
     private var command: JTextField? = null
@@ -176,5 +169,3 @@ class GUI {
         }
     }
 }
-
- */

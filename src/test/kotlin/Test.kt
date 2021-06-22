@@ -2,7 +2,7 @@ import net.cjsah.bot.console.*
 import net.cjsah.bot.console.command.CommandManager
 import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.SourceType
-import net.cjsah.bot.console.command.exceptions.Para0CommandException
+import net.cjsah.bot.console.gui.MainUI
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.utils.BotConfiguration
 import org.hydev.logger.HyLoggerConfig
@@ -26,6 +26,8 @@ fun main() {
     logger.log("正在加载插件...")
     Console.loadAllPlugins()
     logger.log("插件加载完成")
+
+    MainUI()
 
     startListener()
 
