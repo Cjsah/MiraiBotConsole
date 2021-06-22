@@ -13,25 +13,25 @@ object FloatWindow {
     @kotlin.jvm.JvmStatic
     fun floatWindow() {
         val kit: Toolkit = Toolkit.getDefaultToolkit()
-        val sc: Dimension = kit.getScreenSize()
+        val sc: Dimension = kit.screenSize
         val jf = JFrame()
         jf.setSize(256, 384)
         jf.setLocation(sc.width - 128, sc.height / 3)
-        jf.setUndecorated(true) //窗口去边框
-        jf.setAlwaysOnTop(true) //设置窗口总在最前
-        jf.setBackground(Color(0, 0, 0, 0)) //设置窗口背景为透明色
+        jf.isUndecorated = true //窗口去边框
+        jf.isAlwaysOnTop = true //设置窗口总在最前
+        jf.background = Color(0, 0, 0, 0) //设置窗口背景为透明色
 
         jf.addMouseListener(object : MouseAdapter() {
             //设置窗口可拖动，添加监听器
             override fun mousePressed(e: MouseEvent) {        //获取点击鼠标时的坐标
-                mouseAtX = e.getPoint().x
-                mouseAtY = e.getPoint().y
+                mouseAtX = e.point.x
+                mouseAtY = e.point.y
             }
         })
         jf.addMouseMotionListener(object : MouseMotionAdapter() {
             //设置拖拽后，窗口的位置
             override fun mouseDragged(e: MouseEvent) {
-                jf.setLocation(e.getXOnScreen() - mouseAtX, e.getYOnScreen() - mouseAtY)
+                jf.setLocation(e.xOnScreen - mouseAtX, e.yOnScreen - mouseAtY)
             }
         })
 
@@ -42,16 +42,16 @@ object FloatWindow {
         //按钮添加
         val buttonIcon = ImageIcon("\\src\\main\\resources\\start.png") //实例化图像对象以作为按钮贴图
         val button = JButton(buttonIcon) //将上面的图像对象设置为按钮贴图
-        button.setContentAreaFilled(false) //设置按钮背景透明
-        button.setBorderPainted(false) //去掉按钮边框
+        button.isContentAreaFilled = false //设置按钮背景透明
+        button.isBorderPainted = false //去掉按钮边框
         button.setBounds(0, 256, 256, 128) //设置按钮大小及位置
 
         val p = JPanel()
-        p.setLayout(null)
+        p.layout = null
         p.add(l)
         p.add(button)
-        p.setOpaque(false)
-        jf.getContentPane().add(p)
+        p.isOpaque = false
+        jf.contentPane.add(p)
         jf.show()
     }
 }
