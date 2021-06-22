@@ -1,10 +1,11 @@
-package net.cjsah.bot.console.ui
+package net.cjsah.bot.console.gui
 
 
 import javax.swing.*
 import java.awt.*
 import java.awt.event.*
 
+@Deprecated("wait to update")
 @Suppress("FloatWindows")
 object FloatWindow {
     var mouseAtX = 0
