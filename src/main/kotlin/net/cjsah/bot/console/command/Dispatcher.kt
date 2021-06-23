@@ -5,66 +5,61 @@ import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContext
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.command.source.CommandSource
 import net.cjsah.bot.console.command.tree.CommandNode
 import net.cjsah.bot.console.command.tree.LiteralCommandNode
 import net.cjsah.bot.console.command.tree.RootCommandNode
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class Dispatcher {
     companion object {
         var ARGUMENT_SEPARATOR = ' '
     }
 
-    private val roots = HashMap<SourceType, RootCommandNode>()
+    private val roots = RootCommandNode()
 
     private var consumer = ResultConsumer { _, _, _ -> }
 
-    init {
-        roots[SourceType.CONSOLE] = RootCommandNode()
-        roots[SourceType.USER] = RootCommandNode()
-    }
-
-    fun register(type: SourceType, command: LiteralArgumentBuilder): LiteralCommandNode {
+    fun register(command: LiteralArgumentBuilder): LiteralCommandNode {
         val build: LiteralCommandNode = command.build() as LiteralCommandNode
-        roots[type]!!.addChild(build)
+        roots.addChild(build)
         return build
     }
 
     @Throws(CommandException::class)
-    internal fun execute(input: String, source: CommandSource): Int {
+    internal fun execute(input: String, source: CommandSource<*>): Int {
         return execute(StringReader(input), source)
     }
 
     @Throws(CommandException::class)
-    private fun execute(input: StringReader, source: CommandSource): Int {
+    private fun execute(input: StringReader, source: CommandSource<*>): Int {
         val parse: ParseResults = parse(input, source)
         return execute(parse)
     }
 
     @Throws(CommandException::class)
     private fun execute(parse: ParseResults): Int {
-        if (parse.getReader().canRead()) {
+        if (parse.reader.canRead()) {
             when {
-                parse.getExceptions().size == 1 -> throw parse.getExceptions().values.iterator().next()
-                parse.getContext().getRange().isEmpty() -> throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parse.getReader())
-                else -> throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(parse.getReader())
+                parse.exceptions.size == 1 -> throw parse.exceptions.values.iterator().next()
+                parse.context.getRange().isEmpty() -> throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parse.reader)
+                else -> throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(parse.reader)
             }
         }
         var result = 0
         var foundCommand = false
-        val original = parse.getContext().build()
+        val original = parse.context.build()
         var contexts: List<CommandContext>? = listOf(original)
         var next: ArrayList<CommandContext>? = null
         while (contexts != null) {
             val size = contexts.size
             for (i in 0 until size) {
                 val context = contexts[i]
-                if (context.getCommand() != null) {
+                if (context.command != null) {
                     foundCommand = true
                     try {
-                        context.getCommand()!!.run(context)
+                        context.command.run(context)
                         result += 1
                         consumer.onCommandComplete(context, true, 1)
                     } catch (ex: CommandException) {
@@ -77,21 +72,20 @@ class Dispatcher {
         }
         if (!foundCommand) {
             consumer.onCommandComplete(original, false, 0)
-            throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parse.getReader())
+            throw CommandException.BUILT_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(parse.reader)
         }
         return result
     }
 
     @Throws(CommandException::class)
-    private fun parse(command: StringReader, source: CommandSource): ParseResults {
-        val root = roots[source.source]!!
-        val context = CommandContextBuilder(this, source, root, command.getCursor())
-        return parseNodes(root, command, context)
+    private fun parse(command: StringReader, source: CommandSource<*>): ParseResults {
+        val context = CommandContextBuilder(this, source, roots, command.getCursor())
+        return parseNodes(roots, command, context)
     }
 
     @Throws(CommandException::class)
     private fun parseNodes(node: CommandNode, originalReader: StringReader, contextSoFar: CommandContextBuilder): ParseResults {
-        val source: CommandSource = contextSoFar.getSource()
+        val source: CommandSource<*> = contextSoFar.getSource()
         var errors: MutableMap<CommandNode, CommandException>? = null
         var potentials: MutableList<ParseResults>? = null
         val cursor = originalReader.getCursor()
@@ -134,16 +128,16 @@ class Dispatcher {
         if (potentials != null) {
             if (potentials.size > 1) {
                 potentials.sortWith(Comparator { a, b ->
-                    if (!a.getReader().canRead() && b.getReader().canRead()) {
+                    if (!a.reader.canRead() && b.reader.canRead()) {
                         return@Comparator -1
                     }
-                    if (a.getReader().canRead() && !b.getReader().canRead()) {
+                    if (a.reader.canRead() && !b.reader.canRead()) {
                         return@Comparator 1
                     }
-                    if (a.getExceptions().isEmpty() && b.getExceptions().isNotEmpty()) {
+                    if (a.exceptions.isEmpty() && b.exceptions.isNotEmpty()) {
                         return@Comparator -1
                     }
-                    if (a.getExceptions().isNotEmpty() && b.getExceptions().isEmpty()) {
+                    if (a.exceptions.isNotEmpty() && b.exceptions.isEmpty()) {
                         return@Comparator 1
                     }
                     return@Comparator 0

@@ -7,7 +7,6 @@ import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import net.cjsah.bot.console.command.SourceType
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
 import org.hydev.logger.foreground
@@ -88,10 +87,4 @@ abstract class Plugin(
         return json
     }
 
-    /**
-     * 注册命令
-     */
-//    fun commandRegister(type: SourceType, builder: ArgumentBuilder) {
-//        Commands.register(type, this, builder)
-//    }
 }

@@ -1,16 +1,18 @@
 package net.cjsah.bot.console
 
 import net.cjsah.bot.console.command.CommandManager
-import net.cjsah.bot.console.command.CommandSource
-import net.cjsah.bot.console.command.SourceType
+import net.cjsah.bot.console.command.source.GroupCommandSource
+import net.cjsah.bot.console.command.source.UserCommandSource
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.Member
+import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.content
 import org.hydev.logger.HyLogger
 import org.hydev.logger.format.AnsiColor
 import java.io.File
@@ -20,8 +22,11 @@ object ConsoleEvents {
     fun registerEvents(bot: Bot) {
         // command
         GlobalEventChannel.subscribeAlways<MessageEvent> {
-            val msg = this.message.content
-            if (msg.startsWith("/")) CommandManager.execute(msg.substring(1, msg.length), CommandSource(SourceType.USER, this.sender))
+            val msg = this.message.contentToString()
+            if (msg.startsWith("/")) {
+                if (this.subject is Group) CommandManager.execute(msg.substring(1, msg.length), GroupCommandSource(this.subject as Group, this.sender as Member))
+                else if (this.subject is User) CommandManager.execute(msg.substring(1, msg.length), UserCommandSource(this.sender))
+            }
         }
         GlobalEventChannel.subscribeAlways<FriendMessageEvent> {
             sendLogger(

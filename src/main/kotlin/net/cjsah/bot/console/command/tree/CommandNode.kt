@@ -3,16 +3,16 @@
 package net.cjsah.bot.console.command.tree
 
 import net.cjsah.bot.console.command.Command
-import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.command.source.CommandSource
 import java.util.function.Predicate
 
 abstract class CommandNode(
     private var command: Command?,
-    private val requirement: Predicate<CommandSource>
+    private val requirement: Predicate<CommandSource<*>>
 ) : Comparable<CommandNode> {
     private val children: Map<String, CommandNode> = LinkedHashMap()
     private val literals = LinkedHashMap<String, LiteralCommandNode>()
@@ -26,13 +26,13 @@ abstract class CommandNode(
         return children.values
     }
 
-    open fun canUse(source: CommandSource): Boolean {
+    open fun canUse(source: CommandSource<*>): Boolean {
         return requirement.test(source)
     }
 
     open fun addChild(node: CommandNode) {
         if (node is RootCommandNode) {
-            throw UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode")
+            throw UnsupportedOperationException("无法将 'RootCommandNode' 作为一个子节点添加到其他 'CommandNode'")
         }
         val child = children[node.getName()]
         if (child != null) {
@@ -67,7 +67,7 @@ abstract class CommandNode(
         return 31 * children.hashCode() + if (command != null) command.hashCode() else 0
     }
 
-    fun getRequirement(): Predicate<CommandSource> {
+    fun getRequirement(): Predicate<CommandSource<*>> {
         return requirement
     }
 

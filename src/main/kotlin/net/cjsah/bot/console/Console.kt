@@ -1,24 +1,26 @@
 package net.cjsah.bot.console
 
 import com.google.common.collect.Lists
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
+import org.jetbrains.annotations.TestOnly
 import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 
-@Suppress("MemberVisibilityCanBePrivate")
 object Console {
     lateinit var bot: Bot
     var stopConsole = false
     val logger = HyLogger("控制台")
+    lateinit var permissions: JsonObject
     private val loadedPlugins = mutableListOf<Plugin>()
 
-    fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
+    private fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
@@ -28,7 +30,7 @@ object Console {
         }
     }
 
-    fun unloadPlugin(plugin: Plugin) = runBlocking {
+    private fun unloadPlugin(plugin: Plugin) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.onPluginStop()
             logger.log("${plugin.pluginName} 插件已关闭!")

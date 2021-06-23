@@ -1,8 +1,11 @@
 package net.cjsah.bot.console
 
 import net.cjsah.bot.console.command.CommandManager
-import net.cjsah.bot.console.command.SourceType
+import net.cjsah.bot.console.command.arguments.FriendArgument
+import net.cjsah.bot.console.command.arguments.base.LongArgument
+import net.cjsah.bot.console.command.source.ConsoleCommandSource
 import net.cjsah.bot.console.events.CommandRegistration
+import javax.xml.transform.Source
 
 class ConsolePlugin private constructor(): Plugin(
     "ConsolePlugin",
@@ -17,8 +20,20 @@ class ConsolePlugin private constructor(): Plugin(
     }
 
     override suspend fun onPluginStart() {
-        CommandRegistration.EVENT.register(SourceType.CONSOLE, CommandManager.literal("stop").executes {
+        // stop
+        CommandRegistration.EVENT.register(CommandManager.literal("stop").requires{source ->
+            source is ConsoleCommandSource
+        }.executes {
             Console.stopConsole = true
         })
+
+        // permission
+        CommandRegistration.EVENT.register(CommandManager.literal("permission").requires{source -> source.hasPermission(Permission.ADMIN)}.then(CommandManager.literal("set").then(CommandManager.argument("id", LongArgument.long()).then(CommandManager.literal("user").executes{context ->
+            Util.setPermission(LongArgument.getLong(context, "id"), Permission.USER)
+        }).then(CommandManager.literal("helper").executes{context ->
+            Util.setPermission(LongArgument.getLong(context, "id"), Permission.HELPER)
+        }).then(CommandManager.literal("admin").requires{source -> source.hasPermission(Permission.OWNER)}.executes{context ->
+            Util.setPermission(LongArgument.getLong(context, "id"), Permission.ADMIN)
+        }))))
     }
 }

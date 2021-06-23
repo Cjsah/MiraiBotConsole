@@ -2,42 +2,42 @@ package net.cjsah.bot.console.command.exceptions
 
 class BuiltExceptions {
     companion object {
-        private val DOUBLE_TOO_LOW = Para2CommandException { found, min -> "Double must not be less than $min, found $found" }
-        private val DOUBLE_TOO_HIGH = Para2CommandException { found, max -> "Double must not be more than $max, found $found" }
+        private val DOUBLE_TOO_LOW = Para2CommandException { found, min -> "Double 必须小于 $min, 但是发现了 $found" }
+        private val DOUBLE_TOO_HIGH = Para2CommandException { found, max -> "Double 必须大于 $max, 但是发现了 $found" }
 
-        private val FLOAT_TOO_LOW = Para2CommandException { found, min -> "Float must not be less than $min, found $found" }
-        private val FLOAT_TOO_HIGH = Para2CommandException { found, max -> "Float must not be more than $max, found $found" }
+        private val FLOAT_TOO_LOW = Para2CommandException { found, min -> "Float 必须小于 $min, 但是发现了 $found" }
+        private val FLOAT_TOO_HIGH = Para2CommandException { found, max -> "Float 必须大于 $max, 但是发现了 $found" }
 
-        private val INTEGER_TOO_LOW = Para2CommandException { found, min -> "Integer must not be less than $min, found $found" }
-        private val INTEGER_TOO_HIGH = Para2CommandException { found, max -> "Integer must not be more than $max, found $found" }
+        private val INTEGER_TOO_LOW = Para2CommandException { found, min -> "Integer 必须小于 $min, 但是发现了 $found" }
+        private val INTEGER_TOO_HIGH = Para2CommandException { found, max -> "Integer 必须大于 $max, 但是发现了 $found" }
 
-        private val LONG_TOO_LOW = Para2CommandException { found, min -> "Long must not be less than $min, found $found" }
-        private val LONG_TOO_HIGH = Para2CommandException { found, max -> "Long must not be more than $max, found $found" }
+        private val LONG_TOO_LOW = Para2CommandException { found, min -> "Long 必须小于 $min, 但是发现了 $found" }
+        private val LONG_TOO_HIGH = Para2CommandException { found, max -> "Long 必须大于 $max, 但是发现了 $found" }
 
-        private val LITERAL_INCORRECT = Para1CommandException { expected -> "Expected literal $expected" }
+        private val LITERAL_INCORRECT = Para1CommandException { expected -> "预期 $expected" }
 
-        private val READER_EXPECTED_START_OF_QUOTE = Para0CommandException("Expected quote to start a string")
-        private val READER_EXPECTED_END_OF_QUOTE = Para0CommandException("Unclosed quoted string")
-        private val READER_INVALID_ESCAPE = Para1CommandException { character -> "Invalid escape sequence '$character' in quoted string" }
-        private val READER_INVALID_BOOL = Para1CommandException { value -> "Invalid bool, expected true or false but found '$value'" }
-        private val READER_INVALID_INT = Para1CommandException { value -> "Invalid integer '$value'" }
-        private val READER_EXPECTED_INT = Para0CommandException("Expected integer")
-        private val READER_INVALID_LONG = Para1CommandException { value -> "Invalid long '$value'" }
-        private val READER_EXPECTED_LONG = Para0CommandException("Expected long")
-        private val READER_INVALID_DOUBLE = Para1CommandException { value -> "Invalid double '$value'" }
-        private val READER_EXPECTED_DOUBLE = Para0CommandException("Expected double")
-        private val READER_INVALID_FLOAT = Para1CommandException { value -> "Invalid float '$value'" }
-        private val READER_EXPECTED_FLOAT = Para0CommandException("Expected float")
-        private val READER_EXPECTED_BOOL = Para0CommandException("Expected bool")
-        private val READER_EXPECTED_SYMBOL = Para1CommandException { symbol -> "Expected '$symbol'" }
+        private val READER_EXPECTED_START_OF_QUOTE = Para0CommandException("字符串预期以引号开始")
+        private val READER_EXPECTED_END_OF_QUOTE = Para0CommandException("字符串未以引号闭合")
+        private val READER_INVALID_ESCAPE = Para1CommandException { character -> "在字符串中的转义 '$character' 无效" }
+        private val READER_INVALID_BOOL = Para1CommandException { value -> "无效的 Bool, 预期为 'true' 或 'false' 但是发现了 '$value'" }
+        private val READER_INVALID_INT = Para1CommandException { value -> "无效的 integer '$value'" }
+        private val READER_EXPECTED_INT = Para0CommandException("无效的 integer")
+        private val READER_INVALID_LONG = Para1CommandException { value -> "无效的 long '$value'" }
+        private val READER_EXPECTED_LONG = Para0CommandException("无效的 long")
+        private val READER_INVALID_DOUBLE = Para1CommandException { value -> "无效的 double '$value'" }
+        private val READER_EXPECTED_DOUBLE = Para0CommandException("无效的 double")
+        private val READER_INVALID_FLOAT = Para1CommandException { value -> "无效的 float '$value'" }
+        private val READER_EXPECTED_FLOAT = Para0CommandException("无效的 float")
+        private val READER_EXPECTED_BOOL = Para0CommandException("无效的 bool")
+        private val READER_EXPECTED_SYMBOL = Para1CommandException { symbol -> "无效的 '$symbol'" }
 
-        private val DISPATCHER_UNKNOWN_COMMAND = Para0CommandException("Unknown Command")
-        private val DISPATCHER_UNKNOWN_ARGUMENT = Para0CommandException("Incorrect argument for command")
-        private val DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR = Para0CommandException("Expected whitespace to end one argument, but found trailing data")
-        private val DISPATCHER_PARSE_EXCEPTION = Para1CommandException { message -> "Could not parse command: $message" }
+        private val DISPATCHER_UNKNOWN_COMMAND = Para0CommandException("未知指令")
+        private val DISPATCHER_UNKNOWN_ARGUMENT = Para0CommandException("参数错误 / 没有权限")
+        private val DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR = Para0CommandException("需要空格来结束一个参数，但发现尾随数据 ")
+        private val DISPATCHER_PARSE_EXCEPTION = Para1CommandException { message -> "无法解析命令: '$message'" }
 
-        private val GROUP_NOT_FOUND = Para1CommandException { group -> "The group $group was not found in this bot"}
-        private val FRIEND_NOT_FOUND = Para1CommandException { friend -> "The friend $friend was not found in this bot"}
+        private val GROUP_NOT_FOUND = Para1CommandException { group -> "机器人并没有加入此群组 '$group'"}
+        private val FRIEND_NOT_FOUND = Para1CommandException { friend -> "机器人并没有此好友 '$friend'"}
     }
 
     fun doubleTooLow() = DOUBLE_TOO_LOW

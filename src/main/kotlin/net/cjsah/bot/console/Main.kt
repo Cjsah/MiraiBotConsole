@@ -1,9 +1,12 @@
 package net.cjsah.bot.console
 
 import cc.moecraft.yaml.HyConfig
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import net.cjsah.bot.console.command.CommandManager
-import net.cjsah.bot.console.command.CommandSource
-import net.cjsah.bot.console.command.SourceType
+import net.cjsah.bot.console.command.source.ConsoleCommandSource
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.ANDROID_PAD
@@ -34,7 +37,7 @@ internal enum class Files(file: String, val isDirectory: Boolean) {
 }
 
 suspend fun main() {
-    System.setProperty("mirai.no-desktop", "")
+//    System.setProperty("mirai.no-desktop", "")
     HyLoggerConfig.appenders[0] = LogAppender()
     if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
     val logger = Console.logger
@@ -44,6 +47,8 @@ suspend fun main() {
         logger.log("请在${config.configFile.name}中填入你的QQ号和密码后重启Bot")
         return
     }
+
+    Console.permissions = Gson().fromJson(Files.PERMISSIONS.file.readText())
 
     config.load()
     logger.log("登录账号: ${config.getLong("account")}")
@@ -70,7 +75,7 @@ suspend fun main() {
 private fun startListener() {
     Console.logger.log("控制台已启动")
     // 控制台命令
-    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, CommandSource(SourceType.CONSOLE, null)) }
+    while (!Console.stopConsole) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource(Console)) }
 
     Console.unloadAllPlugins()
 
@@ -88,8 +93,15 @@ private fun initFiles(config: AccountConfig): Boolean {
                 save()
                 init = true
             }
-        }
-        if (!it.file.exists()) {
+        }else if (it == Files.PERMISSIONS && !it.file.exists()) {
+            val json = JsonObject()
+            json.add("owner", JsonArray())
+            json.add("admin", JsonArray())
+            json.add("helper", JsonArray())
+            it.file.createNewFile()
+            it.file.writeText(Util.GSON.toJson(json))
+            println("ok")
+        }else if (!it.file.exists()) {
             if (it.isDirectory) it.file.mkdirs()
             else it.file.createNewFile()
         }

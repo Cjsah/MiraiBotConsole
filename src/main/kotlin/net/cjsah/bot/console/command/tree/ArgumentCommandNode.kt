@@ -1,7 +1,6 @@
 package net.cjsah.bot.console.command.tree
 
 import net.cjsah.bot.console.command.Command
-import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.arguments.base.Argument
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
@@ -9,13 +8,14 @@ import net.cjsah.bot.console.command.builder.RequiredArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.context.ParsedNodeResult
 import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.command.source.CommandSource
 import java.util.function.Predicate
 
 class ArgumentCommandNode<T>(
     private val name: String,
     private val type: Argument<T>,
     command: Command?,
-    requirement: Predicate<CommandSource>
+    requirement: Predicate<CommandSource<*>>
 ) : CommandNode(command, requirement) {
 
     fun getType() = type

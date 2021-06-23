@@ -1,18 +1,18 @@
 package net.cjsah.bot.console.command.tree
 
 import net.cjsah.bot.console.command.Command
-import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.command.source.CommandSource
 import java.util.function.Predicate
 
 class LiteralCommandNode(
     private val literal: String,
     command: Command?,
-    requirement: Predicate<CommandSource>
+    requirement: Predicate<CommandSource<*>>
 ) : CommandNode(command, requirement) {
 
     fun getLiteral() = literal
@@ -35,7 +35,7 @@ class LiteralCommandNode(
         val start: Int = reader.getCursor()
         if (reader.canRead(literal.length)) {
             val end = start + literal.length
-            if (reader.getString().substring(start, end).equals(literal)) {
+            if (reader.getString().substring(start, end) == literal) {
                 reader.setCursor(end)
                 if (!reader.canRead() || reader.peek() == ' ') {
                     return end

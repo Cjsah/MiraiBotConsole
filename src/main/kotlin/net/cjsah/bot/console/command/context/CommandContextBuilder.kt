@@ -1,15 +1,15 @@
 package net.cjsah.bot.console.command.context
 
 import net.cjsah.bot.console.command.Command
-import net.cjsah.bot.console.command.CommandSource
 import net.cjsah.bot.console.command.Dispatcher
+import net.cjsah.bot.console.command.source.CommandSource
 import net.cjsah.bot.console.command.tree.CommandNode
 import kotlin.math.max
 import kotlin.math.min
 
 class CommandContextBuilder(
     private val dispatcher: Dispatcher,
-    private var source: CommandSource,
+    private val source: CommandSource<*>,
     private val rootNode: CommandNode,
     start: Int
 ) {
@@ -41,7 +41,7 @@ class CommandContextBuilder(
     }
 
     fun build(): CommandContext {
-        return CommandContext(arguments, command)
+        return CommandContext(arguments, source, command)
     }
 
     fun getSource() = source
