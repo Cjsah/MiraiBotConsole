@@ -1,12 +1,12 @@
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package net.cjsah.bot.console
+package net.cjsah.bot.console.plugin
 
 import cc.moecraft.yaml.HyConfig
-import com.github.salomonbrys.kotson.fromJson
-import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import net.cjsah.bot.console.Files
+import net.cjsah.bot.console.util.Util
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
 import org.hydev.logger.foreground
@@ -63,28 +63,14 @@ abstract class Plugin(
      * 获取yml格式配置文件
      */
     fun getYamlConfig(name: String, default: Consumer<HyConfig>): HyConfig {
-        val file = File(pluginDir, name)
-        val config = HyConfig(file, false, true)
-        if (!file.exists()) {
-            config.let {
-                default.accept(it)
-                it.save()
-            }
-        }
-        config.load()
-        return config
+        return Util.getYaml(File(pluginDir, name), default)
     }
 
     /**
      * 获取json格式配置文件
      */
     fun getJsonConfig(name: String, default: Consumer<JsonObject>): JsonElement {
-        val file = File(pluginDir, name)
-        if (file.exists()) return Gson().fromJson(file.readText())
-        val json = JsonObject()
-        default.accept(json)
-        file.writeText(Util.GSON.toJson(json))
-        return json
+        return Util.getJson(File(pluginDir, name), default)
     }
 
 }

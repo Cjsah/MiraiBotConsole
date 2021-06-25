@@ -1,4 +1,4 @@
-package net.cjsah.bot.console.command.exceptions
+package net.cjsah.bot.console.exceptions
 
 import net.cjsah.bot.console.command.StringReaderProvider
 import java.util.function.Function

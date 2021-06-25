@@ -2,7 +2,7 @@ package net.cjsah.bot.console.command.source
 
 import kotlinx.coroutines.runBlocking
 import net.cjsah.bot.console.Permission
-import net.cjsah.bot.console.Util
+import net.cjsah.bot.console.util.Util
 import net.mamoe.mirai.contact.User
 import org.hydev.logger.LogLevel
 

@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package net.cjsah.bot.console
 
 import com.google.common.collect.Lists
@@ -5,22 +7,76 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import net.cjsah.bot.console.command.CommandManager
+import net.cjsah.bot.console.command.source.ConsoleCommandSource
+import net.cjsah.bot.console.plugin.ConsolePlugin
+import net.cjsah.bot.console.plugin.Plugin
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.BotFactory
+import net.mamoe.mirai.alsoLogin
+import net.mamoe.mirai.utils.BotConfiguration
 import org.hydev.logger.HyLogger
-import org.jetbrains.annotations.TestOnly
 import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 import java.util.jar.JarFile
+import kotlin.concurrent.thread
 
 object Console {
-    lateinit var bot: Bot
-    var stopConsole = false
+    private lateinit var bot: Bot
     val logger = HyLogger("控制台")
     lateinit var permissions: JsonObject
+    private lateinit var listener: Thread
     private val loadedPlugins = mutableListOf<Plugin>()
+    private var exit = false
 
-    private fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
+    internal fun start(id: Long, password: String, login: Boolean = true) {
+        if (login) logger.log("登录账号: $id")
+
+        bot = BotFactory.newBot(id, password) {
+            fileBasedDeviceInfo("$id.json")
+            noBotLog()
+            noNetworkLog()
+            enableContactCache()
+            protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
+        }
+
+        runBlocking {
+            if (login) bot.alsoLogin()
+        }
+
+        if (login) {
+            if (bot.isOnline) logger.log("登录成功")
+            else throw RuntimeException("登陆失败")
+        }
+        ConsoleEvents.register(bot)
+        logger.log("正在加载插件...")
+        loadAllPlugins()
+        logger.log("插件加载完成")
+
+        listener = thread(name = "控制台监控") {
+            while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource(Console)) }
+        }
+
+        logger.log("控制台已启动")
+
+    }
+
+    fun stop() {
+        this.exit = true
+
+        unloadAllPlugins()
+
+        bot.close()
+
+        logger.log("控制台退出...")
+    }
+
+    fun getBot(): Bot {
+        return bot
+    }
+
+    fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.bot = bot
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
@@ -30,19 +86,19 @@ object Console {
         }
     }
 
-    private fun unloadPlugin(plugin: Plugin) = runBlocking {
+    fun unloadPlugin(plugin: Plugin) = runBlocking {
         withContext(Dispatchers.IO) {
             plugin.onPluginStop()
             logger.log("${plugin.pluginName} 插件已关闭!")
         }
     }
 
-    fun loadAllPlugins() {
+    private fun loadAllPlugins() {
         loadPlugin(ConsolePlugin.get(), false)
         getPluginJars().forEach { pluginFile -> getPlugin(pluginFile)?.let { plugin -> loadPlugin(plugin) } }
     }
 
-    fun unloadAllPlugins() {
+    private fun unloadAllPlugins() {
         loadedPlugins.removeIf { plugin ->
             if (plugin is ConsolePlugin) {
                 false

@@ -1,4 +1,4 @@
-package net.cjsah.bot.console
+package net.cjsah.bot.console.util
 
 import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.LogLevel

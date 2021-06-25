@@ -1,4 +1,4 @@
-package net.cjsah.bot.console.command.exceptions
+package net.cjsah.bot.console.exceptions
 
 class BuiltExceptions {
     companion object {

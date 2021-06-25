@@ -1,9 +1,14 @@
-package net.cjsah.bot.console
+package net.cjsah.bot.console.util
 
+import cc.moecraft.yaml.HyConfig
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import net.cjsah.bot.console.Console
+import net.cjsah.bot.console.Files
+import net.cjsah.bot.console.Permission
 import net.mamoe.mirai.contact.User
 import java.io.BufferedOutputStream
 import java.io.File
@@ -11,6 +16,7 @@ import java.io.FileOutputStream
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.function.Consumer
 import kotlin.concurrent.thread
 
 @Suppress("unused")
@@ -88,6 +94,26 @@ object Util {
         }
         Files.PERMISSIONS.file.writeText(GSON.toJson(json))
         Console.logger.log("已将 $id 设为 ${permission.name.toLowerCase()}")
+    }
+
+    fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {
+        val config = HyConfig(file, false, true)
+        if (!file.exists()) {
+            config.let {
+                default.accept(it)
+                it.save()
+            }
+        }
+        config.load()
+        return config
+    }
+
+    fun getJson(file: File, default: Consumer<JsonObject>): JsonElement {
+        if (file.exists()) return GSON.fromJson(file.readText())
+        val json = JsonObject()
+        default.accept(json)
+        file.writeText(GSON.toJson(json))
+        return json
     }
 
 }

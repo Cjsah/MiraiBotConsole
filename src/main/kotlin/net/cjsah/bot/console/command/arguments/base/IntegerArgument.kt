@@ -4,7 +4,7 @@ package net.cjsah.bot.console.command.arguments.base
 
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.context.CommandContext
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 
 class IntegerArgument private constructor(private val min: Int, private val max: Int) : Argument<Int> {
 
