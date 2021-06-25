@@ -1,7 +1,7 @@
 package net.cjsah.bot.console.command
 
 import net.cjsah.bot.console.command.context.CommandContextBuilder
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.tree.CommandNode
 
 class ParseResults(

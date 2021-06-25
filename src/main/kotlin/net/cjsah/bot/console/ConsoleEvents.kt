@@ -3,6 +3,7 @@ package net.cjsah.bot.console
 import net.cjsah.bot.console.command.CommandManager
 import net.cjsah.bot.console.command.source.GroupCommandSource
 import net.cjsah.bot.console.command.source.UserCommandSource
+import net.cjsah.bot.console.util.Util
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
@@ -19,7 +20,7 @@ import java.io.File
 import java.time.LocalDateTime
 
 object ConsoleEvents {
-    fun registerEvents(bot: Bot) {
+    fun register(bot: Bot) {
         // command
         GlobalEventChannel.subscribeAlways<MessageEvent> {
             val msg = this.message.contentToString()

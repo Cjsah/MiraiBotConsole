@@ -4,7 +4,7 @@ import net.cjsah.bot.console.Console
 import net.cjsah.bot.console.command.arguments.base.Argument
 import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.builder.RequiredArgumentBuilder
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
 
 object CommandManager {

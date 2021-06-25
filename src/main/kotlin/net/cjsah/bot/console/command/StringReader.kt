@@ -2,7 +2,7 @@
 
 package net.cjsah.bot.console.command
 
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 
 class StringReader(private val string: String) : StringReaderProvider {
     private val SYNTAX_ESCAPE = '\\'

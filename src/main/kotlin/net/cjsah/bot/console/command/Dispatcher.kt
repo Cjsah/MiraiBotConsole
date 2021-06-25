@@ -4,7 +4,7 @@ import net.cjsah.bot.console.command.Dispatcher.ResultConsumer
 import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContext
 import net.cjsah.bot.console.command.context.CommandContextBuilder
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
 import net.cjsah.bot.console.command.tree.CommandNode
 import net.cjsah.bot.console.command.tree.LiteralCommandNode

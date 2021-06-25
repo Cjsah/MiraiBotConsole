@@ -1,12 +1,14 @@
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package net.cjsah.bot.console
+package net.cjsah.bot.console.plugin
 
 import cc.moecraft.yaml.HyConfig
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import net.cjsah.bot.console.Files
+import net.cjsah.bot.console.util.Util
 import net.mamoe.mirai.Bot
 import org.hydev.logger.HyLogger
 import org.hydev.logger.foreground

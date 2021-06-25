@@ -1,9 +1,10 @@
-package net.cjsah.bot.console
+package net.cjsah.bot.console.util
 
-import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
+import net.cjsah.bot.console.Console
+import net.cjsah.bot.console.Files
+import net.cjsah.bot.console.Permission
 import net.mamoe.mirai.contact.User
 import java.io.BufferedOutputStream
 import java.io.File

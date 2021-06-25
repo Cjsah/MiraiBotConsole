@@ -4,7 +4,7 @@ import net.cjsah.bot.console.Console
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.arguments.base.Argument
 import net.cjsah.bot.console.command.context.CommandContext
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 import net.mamoe.mirai.contact.Group
 
 class GroupArgument private constructor(): Argument<Group> {
@@ -18,7 +18,7 @@ class GroupArgument private constructor(): Argument<Group> {
     override fun parse(reader: StringReader): Group {
         val start = reader.getCursor()
         val number = reader.readLong()
-        val group = Console.bot.getGroup(number)
+        val group = Console.getBot().getGroup(number)
         if (group == null) {
             reader.setCursor(start)
             throw CommandException.BUILT_EXCEPTIONS.groupNotFound().createWithContext(reader, number)

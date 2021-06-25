@@ -6,7 +6,7 @@ import net.cjsah.bot.console.command.Command
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
-import net.cjsah.bot.console.command.exceptions.CommandException
+import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
 import java.util.function.Predicate
 
