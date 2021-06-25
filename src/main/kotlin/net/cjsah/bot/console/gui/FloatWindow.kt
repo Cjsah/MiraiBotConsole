@@ -1,11 +1,10 @@
 package net.cjsah.bot.console.gui
 
-
 import javax.swing.*
 import java.awt.*
 import java.awt.event.*
 
-@Deprecated("wait to update")
+//@Deprecated("wait to update")
 @Suppress("FloatWindows")
 object FloatWindow {
     var mouseAtX = 0
@@ -46,13 +45,17 @@ object FloatWindow {
         button.isBorderPainted = false //去掉按钮边框
         button.setBounds(0, 256, 256, 128) //设置按钮大小及位置
 
+        button.addActionListener {
+            MainUI()
+        }
+
         val p = JPanel()
         p.layout = null
         p.add(l)
         p.add(button)
         p.isOpaque = false
         jf.contentPane.add(p)
-        jf.show()
+        jf.isVisible = true
     }
 }
 

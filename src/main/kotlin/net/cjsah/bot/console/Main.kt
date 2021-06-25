@@ -13,6 +13,7 @@ import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol.ANDROID_PAD
 import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.appenders.ColorCompatibility
 import java.io.File
+import net.cjsah.bot.console.gui.FloatWindow.floatWindow
 
 // ***本程序部分代码借鉴于小神***
 
@@ -66,6 +67,13 @@ suspend fun main() {
     logger.log("正在加载插件...")
     Console.loadAllPlugins()
     logger.log("插件加载完成")
+
+    try{
+        floatWindow()
+        logger.log("悬浮窗加载成功")
+    }catch (e: Exception) {
+        logger.log("悬浮窗加载失败")
+    }
 
     startListener()
 

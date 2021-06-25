@@ -8,7 +8,7 @@ import java.awt.SystemColor
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-@Deprecated("wait to update")
+//@Deprecated("wait to update")
 class MainUI : JFrame("MariaBotConsole") {
 
     private var command = JTextField()
@@ -148,6 +148,5 @@ class MainUI : JFrame("MariaBotConsole") {
         this.isVisible = true
 
     }
-
 
 }
