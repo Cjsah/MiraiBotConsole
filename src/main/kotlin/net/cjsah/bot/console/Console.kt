@@ -5,7 +5,6 @@ package net.cjsah.bot.console
 import com.google.common.collect.Lists
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.cjsah.bot.console.command.CommandManager
@@ -16,10 +15,8 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration
-import okhttp3.internal.wait
 import org.hydev.logger.HyLogger
 import java.io.File
-import java.lang.RuntimeException
 import java.net.URL
 import java.net.URLClassLoader
 import java.util.jar.JarFile
@@ -31,9 +28,10 @@ object Console {
     lateinit var permissions: JsonObject
     private lateinit var listener: Thread
     private val loadedPlugins = mutableListOf<Plugin>()
+    private var exit = false
 
     internal fun start(id: Long, password: String, login: Boolean = true) {
-        logger.log("登录账号: $id")
+        if (login) logger.log("登录账号: $id")
 
         bot = BotFactory.newBot(id, password) {
             fileBasedDeviceInfo("$id.json")
@@ -44,26 +42,29 @@ object Console {
         }
 
         runBlocking {
-            async { if (login) bot.alsoLogin() }.wait()
+            if (login) bot.alsoLogin()
         }
 
-        if (bot.isOnline) logger.log("登录成功")
-        else throw RuntimeException("登陆失败")
+        if (login) {
+            if (bot.isOnline) logger.log("登录成功")
+            else throw RuntimeException("登陆失败")
+        }
         ConsoleEvents.register(bot)
         logger.log("正在加载插件...")
         loadAllPlugins()
         logger.log("插件加载完成")
 
         listener = thread(name = "控制台监控") {
-            // 控制台命令
-            while (!Thread.currentThread().isInterrupted) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource(Console)) }
+            while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource(Console)) }
         }
 
         logger.log("控制台已启动")
+
     }
 
     fun stop() {
-        listener.interrupt()
+        this.exit = true
+
         unloadAllPlugins()
 
         bot.close()
