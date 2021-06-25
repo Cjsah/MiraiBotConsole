@@ -9,16 +9,10 @@ import org.hydev.logger.HyLoggerConfig
 fun main() {
 //    System.setProperty("mirai.no-desktop", "")
     HyLoggerConfig.appenders[0] = LogAppender()
-    val logger = Console.logger
-    val config = Account.get()
 
-    if (Files.init()) {
-        logger.log("初始化完成")
-        logger.log("请在${config.configFile.name}中填入你的QQ号和密码后重启Bot")
-        return
-    }
+    Files.init()
 
     Console.permissions = Gson().fromJson(Files.PERMISSIONS.file.readText())
 
-    Console.start(config.getLong("account"), config.getString("password"))
+    Console.start(123456, "123456", false)
 }

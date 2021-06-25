@@ -5,6 +5,7 @@ package net.cjsah.bot.console
 import com.google.common.collect.Lists
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.cjsah.bot.console.command.CommandManager
@@ -15,6 +16,7 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration
+import okhttp3.internal.wait
 import org.hydev.logger.HyLogger
 import java.io.File
 import java.lang.RuntimeException
@@ -42,7 +44,7 @@ object Console {
         }
 
         runBlocking {
-            if (login) bot.alsoLogin()
+            async { if (login) bot.alsoLogin() }.wait()
         }
 
         if (bot.isOnline) logger.log("登录成功")
