@@ -2,6 +2,7 @@ package net.cjsah.bot.console
 
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
+import net.cjsah.bot.console.gui.MainUI
 import net.cjsah.bot.console.util.LogAppender
 import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.appenders.ColorCompatibility
@@ -9,10 +10,22 @@ import org.hydev.logger.appenders.ColorCompatibility
 fun main() {
 //    System.setProperty("mirai.no-desktop", "")
     HyLoggerConfig.appenders[0] = LogAppender()
-    if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
 
     val logger = Console.logger
     val config = Account.get()
+
+    if (System.getProperty("nocolor") != null) HyLoggerConfig.colorCompatibility = ColorCompatibility.DISABLED
+
+    if (System.getProperty("nogui") == null) {
+        try{
+            MainUI()
+            logger.log("GUI加载成功")
+        }catch (e: Exception) {
+            logger.log("GUI加载失败")
+        }
+    }else{
+        logger.log("GUI已禁用")
+    }
 
     if (Files.init()) {
         logger.log("初始化完成")

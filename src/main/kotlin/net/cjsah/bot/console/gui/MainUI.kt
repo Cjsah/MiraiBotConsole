@@ -1,12 +1,12 @@
 package net.cjsah.bot.console.gui
 
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.GridLayout
-import java.awt.Panel
-import java.awt.SystemColor
+import java.awt.*
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.border.TitledBorder
+import kotlin.system.exitProcess
 
 //@Deprecated("wait to update")
 class MainUI : JFrame("MariaBotConsole") {
@@ -15,10 +15,43 @@ class MainUI : JFrame("MariaBotConsole") {
     private var accountTextField = JTextField()
     private var passwordField = JPasswordField()
 
+    private fun systemTray() {
+        if (SystemTray.isSupported()) { // 判断系统是否支持托盘功能.
+            // 创建托盘右击弹出菜单
+            val popupMenu = PopupMenu()
+
+            val itemOpen = MenuItem("打开主界面")
+            itemOpen.addActionListener { this.isVisible = true }
+            popupMenu.add(itemOpen)
+
+            val itemExit = MenuItem("退出")
+            itemExit.addActionListener { exitProcess(0) }
+            popupMenu.add(itemExit)
+
+            //创建托盘图标
+            val icon = ImageIcon("assets/Icon.png") // 创建图片对象
+            val trayIcon = TrayIcon(
+                icon.image, "MiraiBotConsole",
+                popupMenu
+            )
+            trayIcon.addActionListener { this.isVisible = true }
+
+            //把托盘图标添加到系统托盘
+            //这个可以点击关闭之后再放到托盘里面，在此是打开程序直接显示托盘图标了
+            try {
+                SystemTray.getSystemTray().add(trayIcon)
+            } catch (e1: AWTException) {
+                e1.printStackTrace()
+            }
+        }
+    }
+
+
     init {
         this.setBounds(100, 100, 900, 600)
         this.isResizable = false
-        this.defaultCloseOperation = EXIT_ON_CLOSE
+        //this.defaultCloseOperation = EXIT_ON_CLOSE
+        this.defaultCloseOperation = DISPOSE_ON_CLOSE
         val tabbedPane = JTabbedPane()
         this.contentPane.add(tabbedPane, BorderLayout.CENTER)
         val console = Panel()
@@ -143,9 +176,19 @@ class MainUI : JFrame("MariaBotConsole") {
         passwordInputPanel.add(passwordVis, BorderLayout.SOUTH)
         tabbedPane.setBackgroundAt(3, SystemColor.control)
 
-        command.addActionListener { }
+        command.addActionListener {
+            val commandText = command.text
+            //executeCommand(commandText)
+            command.text = ""
+        }
+
+        exit.addActionListener {
+            exitProcess(0)
+        }
 
         this.isVisible = true
+
+        systemTray()
 
     }
 
