@@ -9,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.cjsah.bot.console.command.CommandManager
 import net.cjsah.bot.console.command.source.ConsoleCommandSource
-import net.cjsah.bot.console.gui.MainUI
 import net.cjsah.bot.console.plugin.ConsolePlugin
 import net.cjsah.bot.console.plugin.Plugin
 import net.mamoe.mirai.Bot

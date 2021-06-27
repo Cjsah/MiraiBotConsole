@@ -1,9 +1,6 @@
 package net.cjsah.bot.console.gui
 
 import java.awt.*
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
-import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.border.TitledBorder
 import kotlin.system.exitProcess
@@ -51,7 +48,7 @@ class MainUI : JFrame("MariaBotConsole") {
         this.setBounds(100, 100, 900, 600)
         this.isResizable = false
         //this.defaultCloseOperation = EXIT_ON_CLOSE
-        this.defaultCloseOperation = DISPOSE_ON_CLOSE
+        this.defaultCloseOperation = EXIT_ON_CLOSE
         val tabbedPane = JTabbedPane()
         this.contentPane.add(tabbedPane, BorderLayout.CENTER)
         val console = Panel()

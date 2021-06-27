@@ -32,9 +32,25 @@ tasks {
     }
 }
 
+//(tasks.getByName("processResources") as ProcessResources).apply {
+//    exclude("**/*.*")
+//}
+
 tasks.withType<Jar> {
     from("LICENSE")
+//    var classPath = ""
+//    configurations.runtimeClasspath.get().forEach { classPath += "libs/${it.name} " }
+//
     manifest {
         attributes(Pair("Main-Class", "net.cjsah.bot.console.MainKt"))
+//        attributes(Pair("Class-Path", classPath.subSequence(0, classPath.length-1)))
+//    }
+//    into("libs") {
+//        from(configurations.runtimeClasspath.get()/*.map { if (it.isDirectory) it else zipTree(it) }*/)
     }
+}
+
+task("rundir") {
+    val f = file("run")
+    if (!f.exists()) f.mkdirs()
 }
