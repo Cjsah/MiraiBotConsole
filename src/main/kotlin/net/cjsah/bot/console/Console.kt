@@ -78,7 +78,7 @@ object Console {
 
     fun loadPlugin(plugin: Plugin, log: Boolean = true) = runBlocking {
         withContext(Dispatchers.IO) {
-            plugin.bot = bot
+            plugin.setBot(bot)
             if (plugin.hasConfig && !plugin.pluginDir.exists()) plugin.pluginDir.mkdir()
             plugin.onPluginStart()
             loadedPlugins.add(plugin)

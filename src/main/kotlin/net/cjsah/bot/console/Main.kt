@@ -2,7 +2,6 @@ package net.cjsah.bot.console
 
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
-import net.cjsah.bot.console.gui.MainUI
 import net.cjsah.bot.console.util.LogAppender
 import org.hydev.logger.HyLoggerConfig
 import org.hydev.logger.appenders.ColorCompatibility

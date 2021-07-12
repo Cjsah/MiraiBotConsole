@@ -10,6 +10,9 @@ import net.cjsah.bot.console.Console
 import net.cjsah.bot.console.Files
 import net.cjsah.bot.console.Permission
 import net.mamoe.mirai.contact.User
+import org.hydev.logger.background
+import org.hydev.logger.foreground
+import java.awt.Color
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -26,6 +29,12 @@ object Util {
      * @see Gson
      */
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
+
+    fun getColor(r: Int, g: Int, b: Int, foreground: Boolean): String {
+        val color = Color(r, g, b)
+        return if (foreground) color.foreground() else color.background()
+    }
+
 
     /**
      * 文件下载

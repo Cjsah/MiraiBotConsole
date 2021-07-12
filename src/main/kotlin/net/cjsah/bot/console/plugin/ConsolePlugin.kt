@@ -20,7 +20,7 @@ class ConsolePlugin private constructor(): Plugin(
         fun get() = plugin
     }
 
-    override suspend fun onPluginStart() {
+    override fun onPluginStart() {
         // stop
         CommandRegistration.EVENT.register(CommandManager.literal("stop").requires{source ->
             source is ConsoleCommandSource
