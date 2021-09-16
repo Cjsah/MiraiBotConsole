@@ -2,11 +2,13 @@ package net.cjsah.bot.console.plugin
 
 import net.cjsah.bot.console.Console
 import net.cjsah.bot.console.Permission
-import net.cjsah.bot.console.util.Util
 import net.cjsah.bot.console.command.CommandManager
+import net.cjsah.bot.console.command.CommandManager.dispatcher
 import net.cjsah.bot.console.command.arguments.base.LongArgument
 import net.cjsah.bot.console.command.source.ConsoleCommandSource
+import net.cjsah.bot.console.command.tree.CommandNode
 import net.cjsah.bot.console.events.CommandRegistration
+import net.cjsah.bot.console.util.Util
 
 class ConsolePlugin private constructor(): Plugin(
     "ConsolePlugin",
@@ -26,6 +28,14 @@ class ConsolePlugin private constructor(): Plugin(
             source is ConsoleCommandSource
         }.executes {
             Console.stop()
+        })
+
+        // help
+        CommandRegistration.EVENT.register(CommandManager.literal("help").executes{ context ->
+            val map: Map<CommandNode, String> = dispatcher.getSmartUsage(context.source)
+            for (value in map.values) {
+                (context.source).sendFeedBack("/$value")
+            }
         })
 
         // permission

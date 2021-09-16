@@ -7,8 +7,8 @@ import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.builder.RequiredArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
 import net.cjsah.bot.console.command.context.ParsedNodeResult
-import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
+import net.cjsah.bot.console.exceptions.CommandException
 import java.util.function.Predicate
 
 class ArgumentCommandNode<T>(
@@ -31,6 +31,8 @@ class ArgumentCommandNode<T>(
         contextBuilder.withArgument(name, parsed)
         contextBuilder.withRange(parsed.getRange())
     }
+
+    override fun getUsageText() = "<$name>"
 
     override fun isValidInput(input: String): Boolean {
         return try {

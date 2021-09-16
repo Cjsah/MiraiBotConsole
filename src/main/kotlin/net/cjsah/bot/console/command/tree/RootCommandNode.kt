@@ -7,6 +7,7 @@ import net.cjsah.bot.console.command.context.CommandContextBuilder
 class RootCommandNode : CommandNode(null, { true }) {
 
     override fun getName() = ""
+    override fun getUsageText() = ""
 
     override fun isValidInput(input: String) = false
 

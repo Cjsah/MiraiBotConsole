@@ -4,17 +4,22 @@ import net.cjsah.bot.console.command.Dispatcher.ResultConsumer
 import net.cjsah.bot.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContext
 import net.cjsah.bot.console.command.context.CommandContextBuilder
-import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
 import net.cjsah.bot.console.command.tree.CommandNode
 import net.cjsah.bot.console.command.tree.LiteralCommandNode
 import net.cjsah.bot.console.command.tree.RootCommandNode
+import net.cjsah.bot.console.exceptions.CommandException
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.stream.Collectors
 
 class Dispatcher {
     companion object {
         var ARGUMENT_SEPARATOR = ' '
+        private const val USAGE_OPTIONAL_OPEN = "["
+        private const val USAGE_OPTIONAL_CLOSE = "]"
+        private const val USAGE_REQUIRED_OPEN = "("
+        private const val USAGE_REQUIRED_CLOSE = ")"
+        private const val USAGE_OR = "|"
     }
 
     private val roots = RootCommandNode()
@@ -146,6 +151,61 @@ class Dispatcher {
             return potentials[0]
         }
         return ParseResults(contextSoFar, originalReader, errors ?: emptyMap())
+    }
+
+    fun getSmartUsage(source: CommandSource<*>): Map<CommandNode, String> {
+        val result: MutableMap<CommandNode, String> = LinkedHashMap<CommandNode, String>()
+        val optional = roots.getCommand() != null
+        for (child in roots.getChildren()) {
+            val usage: String? = getSmartUsage(child, source, optional, false)
+            if (usage != null) {
+                result[child] = usage
+            }
+        }
+        return result
+    }
+
+    private fun getSmartUsage(node: CommandNode, source: CommandSource<*>, optional: Boolean, deep: Boolean): String? {
+        if (!node.canUse(source)) {
+            return null
+        }
+        val self: String =
+            if (optional) USAGE_OPTIONAL_OPEN + node.getUsageText() + USAGE_OPTIONAL_CLOSE else node.getUsageText()
+        val childOptional = node.getCommand() != null
+        val open: String =
+            if (childOptional) USAGE_OPTIONAL_OPEN else USAGE_REQUIRED_OPEN
+        val close: String =
+            if (childOptional) USAGE_OPTIONAL_CLOSE else USAGE_REQUIRED_CLOSE
+        if (!deep) {
+            val children: Collection<CommandNode> = node.getChildren().stream().filter { c -> c.canUse(source) }.collect(Collectors.toList())
+            if (children.size == 1) {
+                val usage = getSmartUsage(children.iterator().next(), source, childOptional, childOptional)
+                if (usage != null) return self + ARGUMENT_SEPARATOR + usage
+            } else if (children.size > 1) {
+                val childUsage: MutableSet<String> = LinkedHashSet()
+                for (child in children) {
+                    val usage = getSmartUsage(child, source, childOptional, true)
+                    if (usage != null) childUsage.add(usage)
+                }
+                if (childUsage.size == 1) {
+                    val usage = childUsage.iterator().next()
+                    return self + ARGUMENT_SEPARATOR + if (childOptional) USAGE_OPTIONAL_OPEN + usage + USAGE_OPTIONAL_CLOSE else usage
+                } else if (childUsage.size > 1) {
+                    val builder = StringBuilder(open)
+                    var count = 0
+                    for (child in children) {
+                        if (count > 0) builder.append(USAGE_OR)
+                        builder.append(child.getUsageText())
+                        count++
+                    }
+                    if (count > 0) {
+                        builder.append(close)
+                        return self + ARGUMENT_SEPARATOR + builder.toString()
+                    }
+                }
+            }
+        }
+        return self
     }
 
     fun interface ResultConsumer {

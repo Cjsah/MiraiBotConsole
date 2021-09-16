@@ -1,14 +1,17 @@
-import net.cjsah.bot.console.gui.MainUI
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.Gson
+import net.cjsah.bot.console.Console
+import net.cjsah.bot.console.Files
+import net.cjsah.bot.console.util.LogAppender
+import org.hydev.logger.HyLoggerConfig
 
 fun main() {
-//    System.setProperty("mirai.no-desktop", "")
-//    HyLoggerConfig.appenders[0] = LogAppender()
-//
-//    Files.init()
-    TestUI()
+    System.setProperty("mirai.no-desktop", "")
+    HyLoggerConfig.appenders[0] = LogAppender()
 
+    Files.init()
 
-//    Console.permissions = Gson().fromJson(Files.PERMISSIONS.file.readText())
-//
-//    Console.start(123456, "123456", false)
+    Console.permissions = Gson().fromJson(Files.PERMISSIONS.file.readText())
+
+    Console.start(123456, "123456", false)
 }

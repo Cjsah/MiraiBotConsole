@@ -47,6 +47,8 @@ class LiteralCommandNode(
         return -1
     }
 
+    override fun getUsageText() = this.literal
+
     override fun isValidInput(input: String) = parse(StringReader(input)) > -1
 
 

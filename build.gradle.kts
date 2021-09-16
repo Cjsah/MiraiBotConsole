@@ -1,12 +1,13 @@
 plugins {
-    kotlin("jvm") version "1.4.31"
+    kotlin("jvm") version "1.5.10"
     id("com.github.johnrengelman.shadow") version "6.1.0"
-    maven
+    id("maven-publish")
 }
 
 group = "net.cjsah.bot.console"
 version = "1.9"
-val miraiCoreVersion = "2.6.4"
+val build_number = project.properties["build_number"]
+if (build_number != "undefined") version = "$version+build.$build_number"
 
 repositories {
     mavenCentral()
@@ -15,8 +16,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    api("net.mamoe", "mirai-core-api", miraiCoreVersion)
-    runtimeOnly("net.mamoe", "mirai-core", miraiCoreVersion)
+    api("net.mamoe", "mirai-core", "2.7.0")
     api("org.hydev:HyLogger:2.1.0.378")
     api("com.google.code.gson:gson:2.8.5")
     api("com.github.salomonbrys.kotson:kotson:2.5.0")
@@ -32,10 +32,6 @@ tasks {
     }
 }
 
-//(tasks.getByName("processResources") as ProcessResources).apply {
-//    exclude("**/*.*")
-//}
-
 tasks.withType<Jar> {
     from("LICENSE")
 //    var classPath = ""
@@ -50,7 +46,29 @@ tasks.withType<Jar> {
     }
 }
 
-task("rundir") {
+task("makedir") {
     val f = file("run")
     if (!f.exists()) f.mkdirs()
+}
+
+publishing {
+
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group as String
+            artifactId = rootProject.name
+            version = version
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri(project.properties["maven_url"] as String)
+            credentials {
+                username = project.properties["maven_account"] as String
+                password = project.properties["maven_password"] as String
+            }
+        }
+    }
 }

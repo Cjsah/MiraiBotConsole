@@ -6,8 +6,8 @@ import net.cjsah.bot.console.command.Command
 import net.cjsah.bot.console.command.StringReader
 import net.cjsah.bot.console.command.builder.ArgumentBuilder
 import net.cjsah.bot.console.command.context.CommandContextBuilder
-import net.cjsah.bot.console.exceptions.CommandException
 import net.cjsah.bot.console.command.source.CommandSource
+import net.cjsah.bot.console.exceptions.CommandException
 import java.util.function.Predicate
 
 abstract class CommandNode(
@@ -52,6 +52,8 @@ abstract class CommandNode(
             }
         }
     }
+
+    abstract fun getUsageText(): String
 
     protected abstract fun isValidInput(input: String): Boolean
 
