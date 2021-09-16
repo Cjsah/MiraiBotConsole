@@ -6,8 +6,9 @@ plugins {
 
 group = "net.cjsah.bot.console"
 version = "1.11"
+val ENV: MutableMap<String, String> = System.getenv()
 val build_number = project.properties["build_number"]
-if (build_number != "undefined") version = "$version+build.$build_number"
+if (ENV.containsKey("BUILD_NUMBER")) version = "$version+build.${ENV["BUILD_NUMBER"]}"
 
 repositories {
     mavenCentral()
@@ -52,7 +53,6 @@ task("makedir") {
 }
 
 publishing {
-
     publications {
         create<MavenPublication>("maven") {
             groupId = project.group as String
@@ -62,13 +62,14 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            url = uri(project.properties["maven_url"] as String)
+    if (ENV.containsKey("MAVEN_URL")) {
+        repositories.maven {
+            url = uri(ENV["MAVEN_URL"] as String)
             credentials {
-                username = project.properties["maven_account"] as String
-                password = project.properties["maven_password"] as String
+                username = ENV["MAVEN_USERNAME"]
+                password = ENV["MAVEN_PASSWORD"]
             }
         }
     }
+
 }
