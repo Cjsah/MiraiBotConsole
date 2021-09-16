@@ -30,12 +30,12 @@ jobs:
       with:
         java-version: '14'
         distribution: 'adopt'
+    - name: Set github number
+      run: sed -i "s/undefined/$GITHUB_RUN_NUMBER/g" gradle.properties
     - name: Give permission
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew shadowJar
-      env:
-        BUILD_NUMBER: $GITHUB_RUN_NUMBER
     - name: Save artifacts
       uses: actions/upload-artifact@v2
       with:
