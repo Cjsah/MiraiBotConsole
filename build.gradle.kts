@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.cjsah.bot.console"
-version = "1.9"
+version = "1.11"
 val build_number = project.properties["build_number"]
 if (build_number != "undefined") version = "$version+build.$build_number"
 
