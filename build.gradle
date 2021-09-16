@@ -1,0 +1,63 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'maven-publish'
+}
+
+//sourceCompatibility = JavaVersion.VERSION_16
+//targetCompatibility = JavaVersion.VERSION_16
+
+group = 'net.cjsah.bot.console'
+version = '1.11'
+if (project.build_number != "undefined") version += "+build.${project.build_number}"
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    api "net.mamoe:mirai-core:2.7.0"
+    api "org.hydev:HyLogger:2.1.0.378"
+    api "com.google.code.gson:gson:2.8.5"
+    api "com.github.salomonbrys.kotson:kotson:2.5.0"
+    api "com.github.HyDevelop:HyConfigLib:3.1.52"
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar) {
+    from("LICENSE")
+//    var classPath = ""
+//    configurations.runtimeClasspath.get().forEach { classPath += "libs/${it.name} " }
+//
+    manifest {
+        attributes "Main-Class": "net.cjsah.bot.console.MainKt"
+//        attributes(Pair("Class-Path", classPath.subSequence(0, classPath.length-1)))
+//    }
+//    into("libs") {
+//        from(configurations.runtimeClasspath.get()/*.map { if (it.isDirectory) it else zipTree(it) }*/)
+    }
+
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+//			groupId project.group
+//            artifactId project.archivesBaseName
+//            version SemVer_version
+			from components.java
+        }
+    }
+
+    def ENV = System.getenv()
+    if (ENV.MAVEN_URL) {
+        repositories.maven {
+            url ENV.MAVEN_URL
+            credentials {
+                username ENV.MAVEN_USERNAME
+                password ENV.MAVEN_PASSWORD
+            }
+        }
+    }
+}

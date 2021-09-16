@@ -8,14 +8,14 @@ on:
     branches:
     - main
     paths:
-      - "build.gradle.kts"
+      - "build.gradle"
       - "gradle.properties"
       - "src/**"  
   pull_request:
     branches:
     - main
     paths:
-      - "build.gradle.kts"
+      - "build.gradle"
       - "gradle.properties"
       - "src/**"
 
