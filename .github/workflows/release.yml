@@ -32,12 +32,12 @@ jobs:
         with:
           name: build-artifacts
           path: build/libs/
-      - name: Get release jar
+      - name: Get direct jar
         id: getjar
         run: |
           output="$(find build/libs/ -name "*-all.jar" -type f -printf "%f\n")"
           echo "::set-output name=jarname::$output"
-      - name: Upload to Github release
+      - name: Upload to Github
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
