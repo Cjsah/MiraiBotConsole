@@ -20,7 +20,6 @@ jobs:
           distribution: 'adopt'
       - name: Set status in codes
         run: |
-          sed -i "s/{maven_url}/${{ secrets.MAVEN_URL }}/g" gradle.properties
           sed -i "s/{username}/${{ secrets.MAVEN_USERNAME }}/g" gradle.properties
           sed -i "s/{password}/${{ secrets.MAVEN_PASSWORD }}/g" gradle.properties
       - name: Give permission
