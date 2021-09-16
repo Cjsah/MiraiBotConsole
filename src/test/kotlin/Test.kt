@@ -1,8 +1,8 @@
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
-import net.cjsah.bot.console.Console
-import net.cjsah.bot.console.Files
-import net.cjsah.bot.console.util.LogAppender
+import net.cjsah.console.Console
+import net.cjsah.console.Files
+import net.cjsah.console.util.LogAppender
 import org.hydev.logger.HyLoggerConfig
 
 fun main() {

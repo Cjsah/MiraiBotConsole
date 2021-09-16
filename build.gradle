@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'net.cjsah.bot.console'
+group = 'net.cjsah.console'
 version = '1.11'
 if (project.build_number != "undefined") version += "+build.${project.build_number}"
 
@@ -52,7 +52,6 @@ publishing {
 
     def ENV = System.getenv()
     if (ENV.MAVEN_URL) {
-        println "abc"
         repositories.maven {
             url ENV.MAVEN_URL
             credentials {
