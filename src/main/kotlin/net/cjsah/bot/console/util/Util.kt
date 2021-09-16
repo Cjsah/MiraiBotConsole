@@ -19,6 +19,7 @@ import java.io.FileOutputStream
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 import java.util.function.Consumer
 import kotlin.concurrent.thread
 
@@ -56,7 +57,7 @@ object Util {
     fun getPermission(user: User): Permission {
         Permission.values().forEach {
             if (it != Permission.USER) {
-                Console.permissions.get(it.name.toLowerCase()).asJsonArray.forEach { id ->
+                Console.permissions.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { id ->
                     if (id.asLong == user.id) return it
                 }
             }
@@ -68,7 +69,7 @@ object Util {
         val json = Console.permissions
 
         if (permission != Permission.USER) {
-            json.get(permission.name.toLowerCase()).asJsonArray.forEach { jsonID ->
+            json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.forEach { jsonID ->
                 if (jsonID.asLong == id) {
                     Console.logger.warning("$id 已经是此权限, 无需修改")
                     return
@@ -78,7 +79,7 @@ object Util {
             var notInJson = true
             Permission.values().forEach each@{
                 if (it != Permission.USER) {
-                    json.get(it.name.toLowerCase()).asJsonArray.forEach { jsonID ->
+                    json.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { jsonID ->
                         if (jsonID.asLong == id) {
                             notInJson = false
                             return@each
@@ -94,15 +95,15 @@ object Util {
 
         Permission.values().forEach {
             if (it != permission && it != Permission.USER) {
-                json.get(it.name.toLowerCase()).asJsonArray.removeAll { jsonID -> jsonID.asLong == id }
+                json.get(it.name.lowercase(Locale.getDefault())).asJsonArray.removeAll { jsonID -> jsonID.asLong == id }
             }
         }
 
         if (permission != Permission.USER) {
-            json.get(permission.name.toLowerCase()).asJsonArray.add(id)
+            json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.add(id)
         }
         Files.PERMISSIONS.file.writeText(GSON.toJson(json))
-        Console.logger.log("已将 $id 设为 ${permission.name.toLowerCase()}")
+        Console.logger.log("已将 $id 设为 ${permission.name.lowercase(Locale.getDefault())}")
     }
 
     fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {
