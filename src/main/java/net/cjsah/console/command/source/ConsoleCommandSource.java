@@ -23,10 +23,18 @@ public class ConsoleCommandSource extends CommandSource<Console> {
     @Override
     public void sendFeedBack(String message, LogLevel level) {
         switch (level) {
-            case LOG -> Console.INSTANCE.getLogger().log(message);
-            case WARNING -> Console.INSTANCE.getLogger().warning(message);
-            case ERROR -> Console.INSTANCE.getLogger().error(message);
-            case DEBUG -> Console.INSTANCE.getLogger().debug(message);
+            case LOG:
+                Console.INSTANCE.getLogger().log(message);
+                break;
+            case WARNING:
+                Console.INSTANCE.getLogger().warning(message);
+                break;
+            case ERROR:
+                Console.INSTANCE.getLogger().error(message);
+                break;
+            case DEBUG:
+                Console.INSTANCE.getLogger().debug(message);
+                break;
         }
     }
 }
