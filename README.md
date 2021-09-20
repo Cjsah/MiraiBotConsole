@@ -8,3 +8,13 @@
 
 [**点我跳转插件仓库**](https://github.com/Cjsah/MiraiConsolePlugins)
 
+
+
+### API
+
+**maven地址 [https://maven.cjsah.net](https://maven.cjsah.net)**
+
+
+
+
+

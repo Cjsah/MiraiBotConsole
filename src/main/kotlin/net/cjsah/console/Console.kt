@@ -9,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
-import net.cjsah.console.plugin.ConsolePlugin
 import net.cjsah.console.plugin.Plugin
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
@@ -94,18 +93,12 @@ object Console {
     }
 
     private fun loadAllPlugins() {
-        loadPlugin(ConsolePlugin.get(), false)
         getPluginJars().forEach { pluginFile -> getPlugin(pluginFile)?.let { plugin -> loadPlugin(plugin) } }
     }
 
     private fun unloadAllPlugins() {
-        loadedPlugins.removeIf { plugin ->
-            if (plugin is ConsolePlugin) {
-                false
-            }else {
-                unloadPlugin(plugin)
-                true
-            }
+        loadedPlugins.forEach {
+            unloadPlugin(it)
         }
     }
 

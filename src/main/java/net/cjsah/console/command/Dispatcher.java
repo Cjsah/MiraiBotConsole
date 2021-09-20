@@ -1,5 +1,6 @@
 package net.cjsah.console.command;
 
+import com.google.common.collect.Lists;
 import net.cjsah.console.command.builder.LiteralArgumentBuilder;
 import net.cjsah.console.command.context.CommandContext;
 import net.cjsah.console.command.context.CommandContextBuilder;
@@ -36,7 +37,7 @@ public class Dispatcher {
         int result = 0;
         boolean foundCommand = false;
         CommandContext original = parse.getContext().build();
-        List<CommandContext> contexts = List.of(original);
+        List<CommandContext> contexts = Lists.newArrayList(original);
         while (contexts != null) {
             for (CommandContext context : contexts) {
                 if (context.getCommand() != null) {
@@ -112,58 +113,19 @@ public class Dispatcher {
         return new ParseResults(builder, originalReader, exceptions);
     }
 
-//    fun getSmartUsage(source: CommandSource<*>): Map<CommandNode, String> {
-//        val result: MutableMap<CommandNode, String> = LinkedHashMap<CommandNode, String>()
-//        val optional = roots.getCommand() != null
-//        for (child in roots.getChildren()) {
-//            val usage: String? = getSmartUsage(child, source, optional, false)
-//            if (usage != null) {
-//                result[child] = usage
-//            }
-//        }
-//        return result
-//    }
-//
-//    private fun getSmartUsage(node: CommandNode, source: CommandSource<*>, optional: Boolean, deep: Boolean): String? {
-//        if (!node.canUse(source)) {
-//            return null
-//        }
-//        val self: String =
-//        if (optional) USAGE_OPTIONAL_OPEN + node.getUsageText() + USAGE_OPTIONAL_CLOSE else node.getUsageText()
-//        val childOptional = node.getCommand() != null
-//        val open: String =
-//        if (childOptional) USAGE_OPTIONAL_OPEN else USAGE_REQUIRED_OPEN
-//        val close: String =
-//        if (childOptional) USAGE_OPTIONAL_CLOSE else USAGE_REQUIRED_CLOSE
-//        if (!deep) {
-//            val children: Collection<CommandNode> = node.getChildren().stream().filter { c -> c.canUse(source) }.collect(Collectors.toList())
-//            if (children.size == 1) {
-//                val usage = getSmartUsage(children.iterator().next(), source, childOptional, childOptional)
-//                if (usage != null) return self + ARGUMENT_SEPARATOR + usage
-//            } else if (children.size > 1) {
-//                val childUsage: MutableSet<String> = LinkedHashSet()
-//                for (child in children) {
-//                    val usage = getSmartUsage(child, source, childOptional, true)
-//                    if (usage != null) childUsage.add(usage)
-//                }
-//                if (childUsage.size == 1) {
-//                    val usage = childUsage.iterator().next()
-//                    return self + ARGUMENT_SEPARATOR + if (childOptional) USAGE_OPTIONAL_OPEN + usage + USAGE_OPTIONAL_CLOSE else usage
-//                } else if (childUsage.size > 1) {
-//                    val builder = StringBuilder(open)
-//                    var count = 0
-//                    for (child in children) {
-//                        if (count > 0) builder.append(USAGE_OR)
-//                        builder.append(child.getUsageText())
-//                        count++
-//                    }
-//                    if (count > 0) {
-//                        builder.append(close)
-//                        return self + ARGUMENT_SEPARATOR + builder.toString()
-//                    }
-//                }
-//            }
-//        }
-//        return self
-//    }
+    public Map<String, String> getHelp(CommandSource<?> source) {
+        final Map<String, String> result = new LinkedHashMap<>();
+        ROOTS.getChildren().forEach((child) -> this.getHelp(result, "/", child, source, true));
+        return result;
+    }
+
+    private void getHelp(final Map<String, String> result, String mem, CommandNode node, CommandSource<?> source, boolean first) {
+        if (!node.canUse(source)) return;
+        mem += String.format("%s%s", first ? "" : " ", node.getUsageText());
+        if (node.getCommand() != null) {
+            result.put(mem, node.getHelp());
+        }
+        String finalMem = mem;
+        node.getChildren().forEach((child) -> this.getHelp(result, finalMem, child, source, false));
+    }
 }

@@ -11,6 +11,10 @@ public class CommandManager {
 
     private static final Dispatcher DISPATCHER = new Dispatcher();
 
+    public CommandManager() {
+        ConsoleCommand.register(DISPATCHER);
+    }
+
     public static LiteralArgumentBuilder literal(String literal) {
         return LiteralArgumentBuilder.literal(literal);
     }
