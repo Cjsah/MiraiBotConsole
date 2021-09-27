@@ -29,19 +29,21 @@ jobs:
         with:
           name: build-artifacts
           path: build/libs/
-      - name: Get direct jar
-        id: getjar
+      - name: zip files
+        id: zip
         run: |
-          output="$(find build/libs/ -name "*-all.jar" -type f -printf "%f\n")"
-          echo "::set-output name=jarname::$output"
+          jar="$(find -name "MiraiBotConsole*.jar" -type f -printf "%f\n")"
+          zp=${jar/.jar/.zip}
+          cd build/libs/ && zip -r $zp * && cd -
+          echo "::set-output name=zipfile::$zp"
       - name: Upload to Github
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/libs/${{ steps.getjar.outputs.jarname }}
-          asset_name: ${{ steps.getjar.outputs.jarname }}
+          asset_path: build/libs/${{ steps.zip.outputs.zipfile }}
+          asset_name: ${{ steps.zip.outputs.zipfile }}
           asset_content_type: application/java-archive
       - name: Publish to maven
         run: ./gradlew publish
