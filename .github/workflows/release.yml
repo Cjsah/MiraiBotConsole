@@ -36,6 +36,11 @@ jobs:
           mv build/libs/$gz build/
           echo "::set-output name=zipfile::$zp"
           echo "::set-output name=gzipfile::$gz"
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/libs/
       - name: Upload zip to Github
         uses: actions/upload-release-asset@v1
         env:
@@ -45,11 +50,6 @@ jobs:
           asset_path: build/${{ steps.zip.outputs.zipfile }}
           asset_name: ${{ steps.zip.outputs.zipfile }}
           asset_content_type: application/zip
-      - name: Save artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-artifacts
-          path: build/libs/
       - name: Upload gzip to Github
         uses: actions/upload-release-asset@v1
         env:
