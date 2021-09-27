@@ -34,15 +34,20 @@ jobs:
         run: |
           output="$(find build/libs/ -name "*-all.jar" -type f -printf "%f\n")"
           echo "::set-output name=jarname::$output"
-      - name: Upload to Github
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/libs/${{ steps.getjar.outputs.jarname }}
-          asset_name: ${{ steps.getjar.outputs.jarname }}
-          asset_content_type: application/java-archive
+      - name: get files
+        run: |
+          ls -al
+          ls -al build
+          ls -al build/libs
+#      - name: Upload to Github
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ github.event.release.upload_url }}
+#          asset_path: build/libs/${{ steps.getjar.outputs.jarname }}
+#          asset_name: ${{ steps.getjar.outputs.jarname }}
+#          asset_content_type: application/java-archive
       - name: Publish to maven
         run: ./gradlew publish
         env:
