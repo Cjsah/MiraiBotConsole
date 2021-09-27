@@ -24,15 +24,15 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - name: zip files
+      - name: Package files
         id: zip
         run: |
           jar="$(find -name "MiraiBotConsole*.jar" -type f -printf "%f\n")"
           zp=${jar/.jar/.zip}
           gz=${jar/.jar/.tar.gz}
           cd build/libs/ && zip -r $zp * && cd -
-          cd build/libs/ && tar -zcvf $gz * && cd -
           mv build/libs/$zp build/
+          cd build/libs/ && tar -zcvf $gz * && cd -
           mv build/libs/$gz build/
           echo "::set-output name=zipfile::$zp"
           echo "::set-output name=gzipfile::$gz"
