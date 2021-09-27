@@ -2,11 +2,10 @@ package net.cjsah.console
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import net.cjsah.console.util.Util
 import java.io.File
 import java.util.function.Consumer
 
-internal enum class Files(file: String, private val isDirectory: Boolean, private val initialize: Consumer<Files>?) {
+internal enum class ConsoleFiles(file: String, private val isDirectory: Boolean, private val initialize: Consumer<ConsoleFiles>?) {
     PERMISSIONS("permissions.json", false, {
         val json = JsonObject()
         json.add("owner", JsonArray())

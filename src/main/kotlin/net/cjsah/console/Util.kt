@@ -1,18 +1,11 @@
-package net.cjsah.console.util
+package net.cjsah.console
 
 import cc.moecraft.yaml.HyConfig
-import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import net.cjsah.console.Console
-import net.cjsah.console.Files
-import net.cjsah.console.Permission
 import net.mamoe.mirai.contact.User
-import org.hydev.logger.background
-import org.hydev.logger.foreground
-import java.awt.Color
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -30,12 +23,6 @@ object Util {
      * @see Gson
      */
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
-
-    fun getColor(r: Int, g: Int, b: Int, foreground: Boolean): String {
-        val color = Color(r, g, b)
-        return if (foreground) color.foreground() else color.background()
-    }
-
 
     /**
      * 文件下载
@@ -71,7 +58,7 @@ object Util {
         if (permission != Permission.USER) {
             json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.forEach { jsonID ->
                 if (jsonID.asLong == id) {
-                    Console.logger.warning("$id 已经是此权限, 无需修改")
+                    Console.logger.warn("$id 已经是此权限, 无需修改")
                     return
                 }
             }
@@ -88,7 +75,7 @@ object Util {
                 }
             }
             if (notInJson) {
-                Console.logger.warning("$id 已经是此权限, 无需修改")
+                Console.logger.warn("$id 已经是此权限, 无需修改")
                 return
             }
         }
@@ -102,8 +89,8 @@ object Util {
         if (permission != Permission.USER) {
             json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.add(id)
         }
-        Files.PERMISSIONS.file.writeText(GSON.toJson(json))
-        Console.logger.log("已将 $id 设为 ${permission.name.lowercase(Locale.getDefault())}")
+        ConsoleFiles.PERMISSIONS.file.writeText(GSON.toJson(json))
+        Console.logger.info("已将 $id 设为 ${permission.name.lowercase(Locale.getDefault())}")
     }
 
     fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {
@@ -119,7 +106,7 @@ object Util {
     }
 
     fun getJson(file: File, default: Consumer<JsonObject>): JsonElement {
-        if (file.exists()) return GSON.fromJson(file.readText())
+        if (file.exists()) return GSON.fromJson(file.readText(), JsonObject::class.java)
         val json = JsonObject()
         default.accept(json)
         file.writeText(GSON.toJson(json))

@@ -2,7 +2,7 @@ package net.cjsah.console
 
 import cc.moecraft.yaml.HyConfig
 
-internal class Account private constructor() : HyConfig(Files.ACCOUNT.file, false, true) {
+internal class Account private constructor() : HyConfig(ConsoleFiles.ACCOUNT.file, false, true) {
 
     companion object {
         private val account = Account()

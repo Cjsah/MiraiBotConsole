@@ -7,8 +7,8 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'net.cjsah.console'
-version = '1.11'
+group = project.mvn_group
+version = project.console_version
 if (project.build_number != "undefined") version += "+build.${project.build_number}"
 
 repositories {
@@ -19,25 +19,28 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "net.mamoe:mirai-core:2.7.0"
-    implementation "org.hydev:HyLogger:2.1.0.378"
-    implementation "com.google.code.gson:gson:2.8.5"
-    implementation "com.github.salomonbrys.kotson:kotson:2.5.0"
+    implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation "com.github.HyDevelop:HyConfigLib:3.1.52"
+    implementation 'org.slf4j:slf4j-nop:1.7.32'
 }
 
-tasks.withType(org.gradle.jvm.tasks.Jar) {
-    from("LICENSE")
-//    var classPath = ""
-//    configurations.runtimeClasspath.get().forEach { classPath += "libs/${it.name} " }
-//
-    manifest {
-        attributes "Main-Class": "net.cjsah.bot.console.MainKt"
-//        attributes(Pair("Class-Path", classPath.subSequence(0, classPath.length-1)))
-//    }
-//    into("libs") {
-//        from(configurations.runtimeClasspath.get()/*.map { if (it.isDirectory) it else zipTree(it) }*/)
-    }
+task copyJar(type: Copy) {
+    from configurations.runtimeClasspath
+    into 'build/libs/lib'
+}
 
+jar.dependsOn([copyJar])
+
+jar {
+    from("LICENSE")
+    manifest {
+        attributes ([
+                "Main-Class" : "net.cjsah.console.MainKt",
+                "Class-Path" : new File('build/libs/lib').list().findAll { it.endsWith(".jar") }.collect { "lib/$it" }.join(' ')
+        ])
+    }
 }
 
 publishing {

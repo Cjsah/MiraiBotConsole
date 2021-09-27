@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="5">
+    <Appenders>
+        <Console name="SysOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="%style{[}{White}%style{%d{yyyy-MM-dd HH:mm:ss}}{Magenta}%style{]}{White} %style{[}{White}%style{%logger{36}}{Cyan}%style{]}{White} %style{[}{White}%highlight{%level}{ERROR=Bright RED, WARN=Bright yellow, INFO=Bright Green}%style{]}{White} %highlight{%msg}{ERROR=RED, WARN=Yellow, INFO=green}%n" />
+        </Console>
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] [%logger{36}] [%level] %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy />
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <filters>
+                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+            </filters>
+            <AppenderRef ref="SysOut"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

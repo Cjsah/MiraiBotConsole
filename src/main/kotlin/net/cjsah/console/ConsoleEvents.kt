@@ -3,7 +3,6 @@ package net.cjsah.console
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.GroupCommandSource
 import net.cjsah.console.command.source.UserCommandSource
-import net.cjsah.console.util.Util
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
@@ -14,8 +13,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageChain
-import org.hydev.logger.HyLogger
-import org.hydev.logger.format.AnsiColor
+import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.time.LocalDateTime
 
@@ -31,14 +29,14 @@ object ConsoleEvents {
         }
         GlobalEventChannel.subscribeAlways<FriendMessageEvent> {
             sendLogger(
-                "${AnsiColor.GREEN}好友消息",
+                "好友消息",/*GREEN*/
                 "<${sender.id}> [${sender.nick}] ${message.contentToString()}",
                 message
             )
         }
         GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
             sendLogger(
-                "${AnsiColor.YELLOW}群组消息",
+                "群组消息",/*YELLOW*/
                 "<${group.id}> [${sender.nameCardOrNick}] ${message.contentToString()}",
                 message
             )
@@ -46,7 +44,7 @@ object ConsoleEvents {
 
         GlobalEventChannel.subscribeAlways<GroupTempMessageEvent> {
             sendLogger(
-                "${AnsiColor.CYAN}临时消息",
+                "临时消息",/*CYAN*/
                 "<${sender.id}> [${sender.nameCardOrNick}] ${message.contentToString()}",
                 message
             )
@@ -54,35 +52,35 @@ object ConsoleEvents {
 
         GlobalEventChannel.subscribeAlways<MemberJoinEvent> {
             sendLogger(
-                "${AnsiColor.YELLOW}群组消息",
+                "群组消息",/*YELLOW*/
                 "用户${this.member.id} 加入了群组"
             )
         }
 
         GlobalEventChannel.subscribeAlways<MemberLeaveEvent> {
             sendLogger(
-                "${AnsiColor.YELLOW}群组消息",
+                "群组消息",/*YELLOW*/
                 "用户${this.member.id} 离开了群组"
             )
         }
 
         GlobalEventChannel.subscribeAlways<GroupTempMessagePostSendEvent> {
             sendLogger(
-                "${AnsiColor.CYAN}发送临时消息",
+                "发送临时消息",/*CYAN*/
                 "<${this.target.id}> [${this.target.nameCard}] ${message.contentToString()}"
             )
         }
 
         GlobalEventChannel.subscribeAlways<FriendMessagePostSendEvent> {
             sendLogger(
-                "${AnsiColor.CYAN}发送好友消息",
+                "发送好友消息",/*CYAN*/
                 "<${this.target.id}> [${this.target.nick}] ${message.contentToString()}"
             )
         }
 
         GlobalEventChannel.subscribeAlways<GroupMessagePostSendEvent> {
             sendLogger(
-                "${AnsiColor.CYAN}发送群组消息",
+                "发送群组消息",/*CYAN*/
                 "<${this.target.id}> [${bot.nick}] ${message.contentToString()}"
             )
         }
@@ -110,12 +108,12 @@ object ConsoleEvents {
             if (it is Image) image = downloadImageFile(it)
         }
         image?.let { changeContent = "$content [$image]" }
-        HyLogger(prefix).log(changeContent)
+        LogManager.getLogger(prefix).info(changeContent)
     }
 
     private suspend fun downloadImageFile(image: Image): String {
         val date = LocalDateTime.now().toLocalDate()
-        val imageDirection = File(Files.IMAGES.file, "${date.year}-${if (date.monthValue < 10) "0" else ""}${date.monthValue}")
+        val imageDirection = File(ConsoleFiles.IMAGES.file, "${date.year}-${if (date.monthValue < 10) "0" else ""}${date.monthValue}")
         val imageFile = image.imageId.replace("""[{}]""".toRegex(), "")
         if (!imageDirection.exists()) imageDirection.mkdirs()
         Util.download(image.queryUrl(), File(imageDirection, imageFile))

@@ -4,7 +4,7 @@ import net.cjsah.console.Console;
 import net.cjsah.console.Permission;
 import net.cjsah.console.command.argument.LongArgument;
 import net.cjsah.console.command.source.ConsoleCommandSource;
-import net.cjsah.console.util.Util;
+import net.cjsah.console.Util;
 
 import java.util.Map;
 

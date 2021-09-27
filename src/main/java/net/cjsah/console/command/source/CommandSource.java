@@ -2,7 +2,7 @@ package net.cjsah.console.command.source;
 
 import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.CommandException;
-import org.hydev.logger.LogLevel;
+import org.apache.logging.log4j.Level;
 
 public abstract class CommandSource<T> {
     protected final T source;
@@ -15,7 +15,7 @@ public abstract class CommandSource<T> {
 
     public abstract void sendFeedBack(String message) throws CommandException;
 
-    public abstract void sendFeedBack(String message, LogLevel level) throws CommandException;
+    public abstract void sendFeedBack(String message, Level level) throws CommandException;
 
     public T getSource() {
         return this.source;

@@ -3,9 +3,9 @@ package net.cjsah.console.command.source;
 import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.BuiltExceptions;
 import net.cjsah.console.exceptions.CommandException;
-import net.cjsah.console.util.Util;
+import net.cjsah.console.Util;
 import net.mamoe.mirai.contact.User;
-import org.hydev.logger.LogLevel;
+import org.apache.logging.log4j.Level;
 
 public class UserCommandSource extends CommandSource<User>{
 
@@ -24,7 +24,7 @@ public class UserCommandSource extends CommandSource<User>{
     }
 
     @Override
-    public void sendFeedBack(String message, LogLevel level) throws CommandException {
+    public void sendFeedBack(String message, Level level) throws CommandException {
         throw BuiltExceptions.commandSendByMember().create();
     }
 }

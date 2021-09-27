@@ -2,7 +2,7 @@ package net.cjsah.console.command.source;
 
 import net.cjsah.console.Console;
 import net.cjsah.console.Permission;
-import org.hydev.logger.LogLevel;
+import org.apache.logging.log4j.Level;
 
 public class ConsoleCommandSource extends CommandSource<Console> {
 
@@ -17,24 +17,19 @@ public class ConsoleCommandSource extends CommandSource<Console> {
 
     @Override
     public void sendFeedBack(String message) {
-        this.sendFeedBack(message, LogLevel.LOG);
+        this.sendFeedBack(message, Level.INFO);
     }
 
     @Override
-    public void sendFeedBack(String message, LogLevel level) {
-        switch (level) {
-            case LOG:
-                Console.INSTANCE.getLogger().log(message);
-                break;
-            case WARNING:
-                Console.INSTANCE.getLogger().warning(message);
-                break;
-            case ERROR:
-                Console.INSTANCE.getLogger().error(message);
-                break;
-            case DEBUG:
-                Console.INSTANCE.getLogger().debug(message);
-                break;
+    public void sendFeedBack(String message, Level level) {
+        if (Level.INFO.equals(level)) {
+            Console.INSTANCE.getLogger().info(message);
+        } else if (Level.WARN.equals(level)) {
+            Console.INSTANCE.getLogger().warn(message);
+        } else if (Level.ERROR.equals(level)) {
+            Console.INSTANCE.getLogger().error(message);
+        } else if (Level.DEBUG.equals(level)) {
+            Console.INSTANCE.getLogger().debug(message);
         }
     }
 }

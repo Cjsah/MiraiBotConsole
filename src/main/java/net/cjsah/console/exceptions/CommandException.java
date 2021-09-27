@@ -2,7 +2,6 @@ package net.cjsah.console.exceptions;
 
 public class CommandException extends Exception {
     public static boolean ENABLE_COMMAND_STACK_TRACES = true;
-    public static int CONTEXT_AMOUNT = 100;
     private final CommandExceptionType type;
     private final String message;
     private final String input;
@@ -22,21 +21,6 @@ public class CommandException extends Exception {
         this.type = type;
         this.input = input;
         this.cursor = cursor;
-    }
-
-    @Override
-    public String getMessage() {
-        if (this.input == null || this.cursor < 0) {
-            return this.message;
-        }
-        final StringBuilder builder = new StringBuilder();
-        final int cursor = Math.min(this.input.length(), this.cursor);
-        if (cursor > CONTEXT_AMOUNT) {
-            builder.append("...");
-        }
-        builder.append(this.input, Math.max(0, cursor - CONTEXT_AMOUNT), cursor);
-        builder.append("<--[HERE]");
-        return this.message + " at position " + cursor + ": " + builder;
     }
 
     public CommandExceptionType getType() {

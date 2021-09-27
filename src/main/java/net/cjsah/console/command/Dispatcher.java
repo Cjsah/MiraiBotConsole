@@ -72,7 +72,7 @@ public class Dispatcher {
             try {
                 try {
                     child.parse(reader, context);
-                }catch (RuntimeException e) {
+                }catch (CommandException e) {
                     throw BuiltExceptions.dispatcherParseException().createWithContext(reader, e.getLocalizedMessage());
                 }
                 if (reader.canRead() && reader.peek() != ARGUMENT_SEPARATOR) throw BuiltExceptions.dispatcherExpectedArgumentSeparator().createWithContext(reader);
