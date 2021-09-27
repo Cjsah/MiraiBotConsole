@@ -34,9 +34,12 @@ jobs:
         run: |
           jar="$(find -name "MiraiBotConsole*.jar" -type f -printf "%f\n")"
           zp=${jar/.jar/.zip}
+          gz=${jar/.jar/.tar.gz}
           cd build/libs/ && zip -r $zp * && cd -
+          cd build/libs/ && tar -zcvf $gz * && cd -
           echo "::set-output name=zipfile::$zp"
-      - name: Upload to Github
+          echo "::set-output name=gzipfile::$gz"
+      - name: Upload zip to Github
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,7 +47,16 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: build/libs/${{ steps.zip.outputs.zipfile }}
           asset_name: ${{ steps.zip.outputs.zipfile }}
-          asset_content_type: application/java-archive
+          asset_content_type: application/zip
+      - name: Upload gzip to Github
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/libs/${{ steps.zip.outputs.gzipfile }}
+          asset_name: ${{ steps.zip.outputs.gzipfile }}
+          asset_content_type: application/x-compressed-tar
       - name: Publish to maven
         run: ./gradlew publish
         env:
