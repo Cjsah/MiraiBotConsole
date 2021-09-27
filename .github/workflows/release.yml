@@ -24,11 +24,6 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - name: Save artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-artifacts
-          path: build/libs/
       - name: zip files
         id: zip
         run: |
@@ -37,6 +32,8 @@ jobs:
           gz=${jar/.jar/.tar.gz}
           cd build/libs/ && zip -r $zp * && cd -
           cd build/libs/ && tar -zcvf $gz * && cd -
+          mv build/libs/$zp build/
+          mv build/libs/$gz build/
           echo "::set-output name=zipfile::$zp"
           echo "::set-output name=gzipfile::$gz"
       - name: Upload zip to Github
@@ -45,16 +42,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/libs/${{ steps.zip.outputs.zipfile }}
+          asset_path: build/${{ steps.zip.outputs.zipfile }}
           asset_name: ${{ steps.zip.outputs.zipfile }}
           asset_content_type: application/zip
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/libs/
       - name: Upload gzip to Github
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/libs/${{ steps.zip.outputs.gzipfile }}
+          asset_path: build/${{ steps.zip.outputs.gzipfile }}
           asset_name: ${{ steps.zip.outputs.gzipfile }}
           asset_content_type: application/x-compressed-tar
       - name: Publish to maven
