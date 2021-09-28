@@ -14,6 +14,7 @@ public class PluginInformation {
     private final String description;
     private final boolean hasConfig;
     private final String version;
+    private final String license;
     private final String name;
     private final String main;
     private final String id;
@@ -23,6 +24,7 @@ public class PluginInformation {
         this.description = this.information.get("description").getAsString();
         this.hasConfig = this.information.get("hasConfig").getAsBoolean();
         this.version = this.information.get("version").getAsString();
+        this.license = this.information.get("license").getAsString();
         this.name = this.information.get("name").getAsString();
         this.main = this.information.get("main").getAsString();
         this.id = this.information.get("id").getAsString();
@@ -53,6 +55,10 @@ public class PluginInformation {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public String getLicense() {
+        return this.license;
     }
 
     public String getName() {
