@@ -1,10 +1,9 @@
-package net.cjsah.console.command;
+package net.cjsah.console;
 
-import net.cjsah.console.Console;
-import net.cjsah.console.Permission;
+import net.cjsah.console.command.Command;
+import net.cjsah.console.command.CommandManager;
 import net.cjsah.console.command.argument.LongArgument;
 import net.cjsah.console.command.source.ConsoleCommandSource;
-import net.cjsah.console.Util;
 
 import java.util.Map;
 
