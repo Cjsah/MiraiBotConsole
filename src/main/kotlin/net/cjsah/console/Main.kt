@@ -19,6 +19,8 @@ fun main() {
 
     Console.permissions = Gson().fromJson(ConsoleFiles.PERMISSIONS.file.readText(), JsonObject::class.java)
 
+    ConsoleCommand.register()
+
     Console.start(config.getLong("account"), config.getString("password"), false)
 
 }
