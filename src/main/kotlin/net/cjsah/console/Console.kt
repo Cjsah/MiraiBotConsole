@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import kotlin.concurrent.thread
 
-internal object Console {
+object Console {
     private lateinit var bot: Bot
     val logger: Logger = LogManager.getLogger("控制台")
     lateinit var permissions: JsonObject
@@ -59,7 +59,7 @@ internal object Console {
 
     }
 
-    fun stop() {
+    internal fun stop() {
         this.exit = true
 
         logger.info("正在关闭所有插件...")

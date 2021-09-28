@@ -12,7 +12,7 @@ public class ConsoleCommand {
     protected static void register(Dispatcher dispatcher) {
         // stop
         dispatcher.register(CommandManager.literal("stop").requires(source -> source instanceof ConsoleCommandSource).executes("停止服务器", context -> {
-            Console.INSTANCE.stop();
+            Console.INSTANCE.stop$MiraiBotConsole();
             return Command.SUCCESSFUL;
         }));
 
