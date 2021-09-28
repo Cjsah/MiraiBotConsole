@@ -25,7 +25,7 @@ public class Dispatcher {
         ROOTS.addChild(command.build());
     }
 
-    protected int execute(String input, CommandSource<?> source) throws CommandException {
+    public int execute(String input, CommandSource<?> source) throws CommandException {
         StringReader reader = new StringReader(input);
         CommandContextBuilder builder = new CommandContextBuilder(this, source, ROOTS, reader.getCursor());
         ParseResults parse = parseNodes(ROOTS, reader, builder);

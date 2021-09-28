@@ -7,12 +7,14 @@ import net.cjsah.console.command.builder.RequiredArgumentBuilder;
 import net.cjsah.console.command.source.CommandSource;
 import net.cjsah.console.exceptions.CommandException;
 
+import java.util.function.Consumer;
+
 public class CommandManager {
 
     private static final Dispatcher DISPATCHER = new Dispatcher();
 
     public CommandManager() {
-        ConsoleCommand.register(DISPATCHER);
+        ConsoleCommand.register();
     }
 
     public static LiteralArgumentBuilder literal(String literal) {
@@ -34,8 +36,8 @@ public class CommandManager {
         return 0;
     }
 
-    public static void register(LiteralArgumentBuilder command) {
-        DISPATCHER.register(command);
+    public static void register(Consumer<Dispatcher> command) {
+        command.accept(DISPATCHER);
     }
 
 }
