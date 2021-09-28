@@ -28,6 +28,9 @@ jobs:
         id: zip
         run: |
           jar="$(find -name "MiraiBotConsole*.jar" -type f -printf "%f\n")"
+          echo '#!/bin/bash' >> start.sh
+          echo "java -jar $jar" >> start.sh
+          echo "java -jar $jar" >> start.bat
           zp=${jar/.jar/.zip}
           gz=${jar/.jar/.tar.gz}
           cd build/libs/ && zip -r $zp * && cd -
