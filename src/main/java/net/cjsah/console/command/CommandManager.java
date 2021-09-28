@@ -1,6 +1,7 @@
 package net.cjsah.console.command;
 
 import net.cjsah.console.Console;
+import net.cjsah.console.ConsoleCommand;
 import net.cjsah.console.command.argument.Argument;
 import net.cjsah.console.command.builder.LiteralArgumentBuilder;
 import net.cjsah.console.command.builder.RequiredArgumentBuilder;
