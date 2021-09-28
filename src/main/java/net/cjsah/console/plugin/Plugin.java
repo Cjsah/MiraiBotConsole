@@ -57,7 +57,8 @@ public abstract class Plugin {
     public abstract void onPluginUnload();
 
     /**
-     * 插件配置目录
+     * 获取插件配置目录
+     * @return 配置文件夹
      */
     public File getPluginDir() {
         if (!this.init) throw new PluginException("插件还未初始化, 请先初始化");
@@ -67,6 +68,9 @@ public abstract class Plugin {
 
     /**
      * 获取yml格式配置文件
+     * @param name 配置文件名
+     * @param defaultValue 默认值
+     * @return 配置文件
      */
     protected HyConfig getYamlConfig(String name, Consumer<HyConfig> defaultValue) {
         return Util.INSTANCE.getYaml(new File(getPluginDir(), name), defaultValue);
@@ -74,6 +78,9 @@ public abstract class Plugin {
 
     /**
      * 获取json格式配置文件
+     * @param name 配置文件名
+     * @param defaultValue 默认值
+     * @return 配置文件
      */
     protected JsonElement getJsonConfig(String name, Consumer<JsonObject> defaultValue) {
         return Util.INSTANCE.getJson(new File(getPluginDir(), name), defaultValue);
