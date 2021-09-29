@@ -51,7 +51,6 @@ public class PluginLoader {
         Console.INSTANCE.getLogger().info((COUNT == 0) ? "没有插件被加载" : "正在加载 " + COUNT + " 个插件");
         for (File jar : jars) {
             Plugin plugin = getPlugin(jar);
-            plugin.onPluginLoad();
             Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
             MODS.put(plugin.getInfo().getId(), plugin);
         }

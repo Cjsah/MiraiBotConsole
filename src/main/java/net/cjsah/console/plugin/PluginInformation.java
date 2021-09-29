@@ -1,8 +1,8 @@
 package net.cjsah.console.plugin;
 
 import com.google.gson.JsonObject;
+import net.cjsah.console.Util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class PluginInformation {
     private final JsonObject information;
     private final Map<String, String> contacts = new HashMap<>();
-    private final Collection<String> authors = new ArrayList<>();
+    private final Collection<String> authors;
     private final String description;
     private final boolean hasConfig;
     private final String version;
@@ -28,7 +28,7 @@ public class PluginInformation {
         this.name = this.information.get("name").getAsString();
         this.main = this.information.get("main").getAsString();
         this.id = this.information.get("id").getAsString();
-        this.information.get("authors").getAsJsonArray().forEach((author) -> this.authors.add(author.getAsString()));
+        this.authors = Util.INSTANCE.jsonArray2StringList(this.information.get("authors").getAsJsonArray());
         this.information.get("contact").getAsJsonObject().entrySet().forEach((entry) -> this.contacts.put(entry.getKey(), entry.getValue().getAsString()));
     }
 
