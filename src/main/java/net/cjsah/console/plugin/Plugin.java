@@ -26,6 +26,7 @@ public abstract class Plugin {
             if (info.hasConfig() && (!this.getPluginDir().exists() || this.getPluginDir().isDirectory())) {
                 this.getPluginDir().mkdirs();
             }
+            this.onPluginLoad();
             this.init = true;
         }else {
             throw new PluginException("插件已经初始化, 请勿再次初始化");
@@ -39,7 +40,7 @@ public abstract class Plugin {
     /**
      * 插件加载时执行 ({@link Console#bot} = null)
      */
-    public abstract void onPluginLoad();
+    protected abstract void onPluginLoad();
 
     /**
      * 机器人登陆后执行
@@ -66,25 +67,25 @@ public abstract class Plugin {
         return new File(ConsoleFiles.PLUGINS.getFile(), this.info.getId());
     }
 
-    /**
-     * 获取yml格式配置文件
-     * @param name 配置文件名
-     * @param defaultValue 默认值
-     * @return 配置文件
-     */
-    protected HyConfig getYamlConfig(String name, Consumer<HyConfig> defaultValue) {
-        return Util.INSTANCE.getYaml(new File(getPluginDir(), name), defaultValue);
-    }
-
-    /**
-     * 获取json格式配置文件
-     * @param name 配置文件名
-     * @param defaultValue 默认值
-     * @return 配置文件
-     */
-    protected JsonElement getJsonConfig(String name, Consumer<JsonObject> defaultValue) {
-        return Util.INSTANCE.getJson(new File(getPluginDir(), name), defaultValue);
-    }
+//    /**
+//     * 获取yml格式配置文件
+//     * @param name 配置文件名
+//     * @param defaultValue 默认值
+//     * @return 配置文件
+//     */
+//    public HyConfig getYamlConfig(String name, Consumer<HyConfig> defaultValue) {
+//        return Util.INSTANCE.getYaml(new File(getPluginDir(), name), defaultValue);
+//    }
+//
+//    /**
+//     * 获取json格式配置文件
+//     * @param name 配置文件名
+//     * @param defaultValue 默认值
+//     * @return 配置文件
+//     */
+//    public JsonElement getJsonConfig(String name, Consumer<JsonObject> defaultValue) {
+//        return Util.INSTANCE.getJson(new File(getPluginDir(), name), defaultValue);
+//    }
 
     @Override
     public String toString() {

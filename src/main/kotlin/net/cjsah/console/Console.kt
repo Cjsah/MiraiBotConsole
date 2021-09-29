@@ -59,7 +59,7 @@ object Console {
 
     }
 
-    internal fun stop() {
+    fun stop() {
         this.exit = true
 
         logger.info("正在关闭所有插件...")

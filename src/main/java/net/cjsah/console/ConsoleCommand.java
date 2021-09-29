@@ -13,7 +13,7 @@ public class ConsoleCommand {
         CommandManager.register((dispatcher) -> dispatcher.register(CommandManager.literal("stop").requires(source ->
                 source instanceof ConsoleCommandSource
         ).executes("停止服务器", context -> {
-            Console.INSTANCE.stop$MiraiBotConsole();
+            Console.INSTANCE.stop();
             return Command.SUCCESSFUL;
         })));
 
