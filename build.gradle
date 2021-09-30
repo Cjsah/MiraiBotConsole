@@ -41,7 +41,7 @@ jar {
     manifest {
         attributes ([
                 "Main-Class" : "net.cjsah.console.MainKt",
-                "Class-Path" : new File('build/libs/lib').list().findAll { it.endsWith(".jar") }.collect { "lib/$it" }.join(' ')
+                "Class-Path" : configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(' ')
         ])
     }
 }

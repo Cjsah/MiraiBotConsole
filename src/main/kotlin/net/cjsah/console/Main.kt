@@ -6,7 +6,6 @@ import com.google.gson.JsonObject
 
 fun main() {
     System.setProperty("mirai.no-desktop", "")
-    if (System.getProperty("log4j.skipJansi") == null) System.setProperty("log4j.skipJansi", "false")
 
     val logger = Console.logger
     val config = Account.get()
