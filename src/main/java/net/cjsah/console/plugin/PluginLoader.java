@@ -8,6 +8,7 @@ import net.cjsah.console.Util;
 import net.cjsah.console.exceptions.PluginException;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
@@ -25,7 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PluginLoader {
-    private static final Map<String, Plugin> MODS = new HashMap<>();
+    public static final Map<String, Plugin> MODS = new HashMap<>();
     private static int COUNT = 0;
 
     public static void onBotStarted() {
@@ -51,8 +52,8 @@ public class PluginLoader {
         Console.INSTANCE.getLogger().info((COUNT == 0) ? "没有插件被加载" : "正在加载 " + COUNT + " 个插件");
         for (File jar : jars) {
             Plugin plugin = getPlugin(jar);
-            Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
             MODS.put(plugin.getInfo().getId(), plugin);
+            Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
         }
     }
 
@@ -71,7 +72,11 @@ public class PluginLoader {
         URI jarURI = new URI("jar:" + uri.getScheme(), uri.getHost(), uri.getPath(), uri.getFragment());
         FileSystem fileSystem = FileSystems.newFileSystem(jarURI, Maps.newHashMap());
         Path path = fileSystem.getPath("plugin.json");
-        JsonObject json = Util.INSTANCE.getGSON().fromJson(new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8), JsonObject.class);
+        InputStream inputStream = Files.newInputStream(path);
+        InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        JsonObject json = Util.INSTANCE.getGSON().fromJson(reader, JsonObject.class);
+        inputStream.close();
+        reader.close();
         PluginInformation info = new PluginInformation(json);
         if (MODS.containsKey(info.getId())) throw new PluginException("插件 " + file + " [" + String.format("%s (%s) v%s", info.getName(), info.getId(), info.getVersion()) + "] 无法加载, 已有同名插件 " + MODS.get(info.getId()));
         String main = info.getMain();
@@ -82,4 +87,25 @@ public class PluginLoader {
         return plugin;
     }
 
+//    private static void loadClassPathPlugin() throws Exception {
+//        if (isDevelopment()) {
+//            ClassLoader loader = PluginLoader.class.getClassLoader();
+//            InputStream resource = loader.getResourceAsStream("plugin.json");
+//            InputStreamReader reader = new InputStreamReader(resource, StandardCharsets.UTF_8);
+//            JsonObject json = Util.INSTANCE.getGSON().fromJson(reader, JsonObject.class);
+//            resource.close();
+//            reader.close();
+//            PluginInformation info = new PluginInformation(json);
+//            if (MODS.containsKey(info.getId())) throw new PluginException("插件 " + info.getName() + " [" + String.format("%s (%s) v%s", info.getName(), info.getId(), info.getVersion()) + "] 无法加载, 已有同名插件 " + MODS.get(info.getId()));
+//            String main = info.getMain();
+//            Class<?> clazz = Class.forName(main, true, loader);
+//            Plugin plugin = (Plugin) clazz.getDeclaredConstructor().newInstance();
+//            plugin.init(info);
+//            MODS.put(plugin.getInfo().getId(), plugin);
+//            Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
+//
+//        }
+//    }
+//
+//
 }

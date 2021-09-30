@@ -6,6 +6,7 @@ import net.cjsah.console.command.argument.LongArgument;
 import net.cjsah.console.command.source.ConsoleCommandSource;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ConsoleCommand {
     protected static void register() {
@@ -20,8 +21,13 @@ public class ConsoleCommand {
         // help
         CommandManager.register((dispatcher) -> dispatcher.register(CommandManager.literal("help").executes("打开帮助", context -> {
             Map<String, String> helps = dispatcher.getHelp(context.getSource());
-            for (Map.Entry<String, String> help : helps.entrySet()) {
-                context.getSource().sendFeedBack(String.format("%s\t%s\n", help.getKey(), help.getValue()));
+            if (context.getSource() instanceof ConsoleCommandSource) {
+                for (Map.Entry<String, String> help : helps.entrySet()) {
+                    context.getSource().sendFeedBack(String.format("%s\t%s", help.getKey(), help.getValue()));
+                }
+            } else {
+                String collect = helps.entrySet().stream().map((entry) -> String.format("%s\t%s", entry.getKey(), entry.getValue())).collect(Collectors.joining("\n"));
+                context.getSource().sendFeedBack(collect);
             }
             return Command.SUCCESSFUL;
         })));

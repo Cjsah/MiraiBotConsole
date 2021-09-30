@@ -3,21 +3,17 @@ package net.cjsah.console.plugin;
 import net.cjsah.console.Console;
 import net.cjsah.console.ConsoleFiles;
 import net.cjsah.console.exceptions.PluginException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public abstract class Plugin {
     private PluginInformation info;
     private boolean init = false;
-    protected Logger logger;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void init(final PluginInformation info) {
         if (!this.init) {
             this.info = info;
-            this.logger = LogManager.getLogger(info.getName());
             if (info.hasConfig() && (!this.getPluginDir().exists() || this.getPluginDir().isDirectory())) {
                 this.getPluginDir().mkdirs();
             }
@@ -57,7 +53,6 @@ public abstract class Plugin {
      * @return 配置文件夹
      */
     public File getPluginDir() {
-        if (!this.init) throw new PluginException("插件还未初始化, 请先初始化");
         if (!this.info.hasConfig()) throw new PluginException("此插件没有配置文件");
         return new File(ConsoleFiles.PLUGINS.getFile(), this.info.getId());
     }

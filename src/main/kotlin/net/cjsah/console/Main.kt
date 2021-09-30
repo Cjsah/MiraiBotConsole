@@ -21,7 +21,11 @@ fun main() {
 
     ConsoleCommand.register()
 
-    Console.start(config.getLong("account"), config.getString("password"), false)
+    Console.start(config.getLong("account"), config.getString("password"))
 
 }
 
+//fun isDevelopment(): Boolean {
+//    return System.getProperty("development") != null
+//}
+//

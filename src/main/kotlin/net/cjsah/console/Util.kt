@@ -2,6 +2,8 @@ package net.cjsah.console
 
 import cc.moecraft.yaml.HyConfig
 import com.google.gson.*
+import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import java.io.BufferedOutputStream
 import java.io.File
@@ -40,11 +42,11 @@ object Util {
         }
     }
 
-    fun getPermission(user: User): Permission {
+    fun getPermission(contact: Contact): Permission {
         Permission.values().forEach {
             if (it != Permission.USER) {
                 Console.permissions.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { id ->
-                    if (id.asLong == user.id) return it
+                    if (id.asLong == contact.id) return it
                 }
             }
         }

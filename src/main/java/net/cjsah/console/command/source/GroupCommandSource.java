@@ -18,6 +18,10 @@ public class GroupCommandSource extends CommandSource<Group>{
 
     @Override
     public boolean hasPermission(Permission permission) {
+        return permission.getLevel() <= Util.INSTANCE.getPermission(this.source).getLevel();
+    }
+
+    public boolean memberHasPermission(Permission permission) {
         return permission.getLevel() <= Util.INSTANCE.getPermission(this.sender).getLevel();
     }
 

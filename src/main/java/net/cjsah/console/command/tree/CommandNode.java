@@ -9,9 +9,9 @@ import net.cjsah.console.exceptions.CommandException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class CommandNode implements Comparable<CommandNode> {
@@ -80,7 +80,7 @@ public abstract class CommandNode implements Comparable<CommandNode> {
             if (node instanceof LiteralCommandNode) {
                 this.literals.put(node.getName(), (LiteralCommandNode) node);
             } else if (node instanceof ArgumentCommandNode) {
-                this.arguments.put(node.getName(), (ArgumentCommandNode) node);
+                this.arguments.put(node.getName(), (ArgumentCommandNode<?>) node);
             }
         }
     }
@@ -94,7 +94,7 @@ public abstract class CommandNode implements Comparable<CommandNode> {
             String text = input.getString().substring(cursor, input.getCursor());
             input.setCursor(cursor);
             LiteralCommandNode literal = this.literals.get(text);
-            if (literal != null) return Set.of(literal);
+            if (literal != null) return Collections.singletonList(literal);
             else return this.arguments.values();
         }
         return this.arguments.values();

@@ -29,7 +29,7 @@ public class Dispatcher {
         StringReader reader = new StringReader(input);
         CommandContextBuilder builder = new CommandContextBuilder(this, source, ROOTS, reader.getCursor());
         ParseResults parse = parseNodes(ROOTS, reader, builder);
-        if (reader.canRead()) {
+        if (parse.getReader().canRead()) {
             if (parse.getExceptions().size() == 1) throw parse.getExceptions().values().iterator().next();
             else if (parse.getContext().getRange().isEmpty()) throw BuiltExceptions.dispatcherUnknownCommand().createWithContext(reader);
             else throw BuiltExceptions.dispatcherUnknownArgument().createWithContext(reader);
