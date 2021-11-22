@@ -1,6 +1,7 @@
 package net.cjsah.console.plugin;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.cjsah.console.Console;
 import net.cjsah.console.ConsoleFiles;
@@ -53,12 +54,30 @@ public class PluginLoader {
         for (File jar : jars) {
             Plugin plugin = getPlugin(jar);
             MODS.put(plugin.getInfo().getId(), plugin);
+            if (!Console.permissions.has(plugin.getInfo().getId())) {
+                JsonObject json = new JsonObject();
+                json.addProperty("whitelist", false);
+                JsonObject list = new JsonObject();
+                list.add("user", new JsonArray());
+                list.add("group", new JsonArray());
+                json.add("white", list);
+                list = new JsonObject();
+                list.add("user", new JsonArray());
+                list.add("group", new JsonArray());
+                json.add("black", list);
+                Console.permissions.add(plugin.getInfo().getId(), json);
+                Util.INSTANCE.save(ConsoleFiles.PERMISSIONS.getFile(), Util.INSTANCE.getGSON().toJson(Console.permissions));
+            }
             Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
         }
     }
 
     public static int getCount() {
         return COUNT;
+    }
+
+    public static Plugin getPlugin(String id) {
+        return MODS.getOrDefault(id, null);
     }
 
     private static Collection<File> getPluginJars() {
@@ -84,6 +103,7 @@ public class PluginLoader {
         Class<?> clazz = Class.forName(main, true, ucl);
         Plugin plugin = (Plugin) clazz.getDeclaredConstructor().newInstance();
         plugin.init(info);
+
         return plugin;
     }
 

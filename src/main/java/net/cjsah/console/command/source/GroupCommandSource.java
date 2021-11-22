@@ -1,9 +1,9 @@
 package net.cjsah.console.command.source;
 
-import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.BuiltExceptions;
 import net.cjsah.console.exceptions.CommandException;
 import net.cjsah.console.Util;
+import net.cjsah.console.plugin.Plugin;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import org.apache.logging.log4j.Level;
@@ -17,12 +17,12 @@ public class GroupCommandSource extends CommandSource<Group>{
     }
 
     @Override
-    public boolean hasPermission(Permission permission) {
-        return permission.getLevel() <= Util.INSTANCE.getPermission(this.source).getLevel();
+    public boolean CanUse(Plugin plugin) {
+        return Util.INSTANCE.canUse(plugin, this.source.getId(), false);
     }
 
-    public boolean memberHasPermission(Permission permission) {
-        return permission.getLevel() <= Util.INSTANCE.getPermission(this.sender).getLevel();
+    public boolean memberHasPermission(Plugin plugin) {
+        return Util.INSTANCE.canUse(plugin, this.sender.getId(), true);
     }
 
     @Override

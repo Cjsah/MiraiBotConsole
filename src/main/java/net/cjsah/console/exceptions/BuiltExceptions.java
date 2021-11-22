@@ -40,6 +40,7 @@ public class BuiltExceptions {
 
     private static final Para1CommandException GROUP_NOT_FOUND = new Para1CommandException((group) -> String.format("机器人并没有加入此群组 '%s'", group));
     private static final Para1CommandException FRIEND_NOT_FOUND = new Para1CommandException((friend) -> String.format("机器人并没有此好友 '%s'", friend));
+    private static final Para1CommandException PLUGIN_NOT_FOUND = new Para1CommandException((plugin) -> String.format("没有找到此插件: '%s'", plugin));
 
     public static Para2CommandException doubleTooLow() {
         return DOUBLE_TOO_LOW;
@@ -155,6 +156,10 @@ public class BuiltExceptions {
 
     public static Para1CommandException groupNotFound() {
         return GROUP_NOT_FOUND;
+    }
+
+    public static Para1CommandException pluginNotFound() {
+        return PLUGIN_NOT_FOUND;
     }
 
     public static Para1CommandException friendNotFound() {

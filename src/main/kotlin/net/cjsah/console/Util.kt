@@ -2,9 +2,7 @@ package net.cjsah.console
 
 import cc.moecraft.yaml.HyConfig
 import com.google.gson.*
-import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.User
+import net.cjsah.console.plugin.Plugin
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -13,7 +11,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 import java.util.function.Consumer
 import kotlin.concurrent.thread
 
@@ -42,56 +39,53 @@ object Util {
         }
     }
 
-    fun getPermission(contact: Contact): Permission {
-        Permission.values().forEach {
-            if (it != Permission.USER) {
-                Console.permissions.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { id ->
-                    if (id.asLong == contact.id) return it
-                }
-            }
-        }
-        return Permission.USER
+    /**
+     * 给java用户使用
+     */
+    fun save(file: File, text: String) {
+        file.writeText(text)
     }
 
-    fun setPermission(id: Long, permission: Permission) {
-        val json = Console.permissions
 
-        if (permission != Permission.USER) {
-            json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.forEach { jsonID ->
-                if (jsonID.asLong == id) {
-                    Console.logger.warn("$id 已经是此权限, 无需修改")
-                    return
-                }
-            }
-        }else {
-            var notInJson = true
-            Permission.values().forEach each@{
-                if (it != Permission.USER) {
-                    json.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { jsonID ->
-                        if (jsonID.asLong == id) {
-                            notInJson = false
-                            return@each
-                        }
-                    }
-                }
-            }
-            if (notInJson) {
-                Console.logger.warn("$id 已经是此权限, 无需修改")
-                return
+    fun canUse(plugin: Plugin, id: Long, isUser: Boolean): Boolean {
+        val permission = Console.permissions.get(plugin.info.id).asJsonObject
+        val whitelist = permission.get("whitelist").asBoolean
+        val list = permission.get(if (whitelist) "white" else "black").asJsonObject
+            .get(if (isUser) "user" else "group").asJsonArray
+        list.forEach { if (it.asLong == id) return whitelist }
+        return !whitelist
+    }
+
+    fun setPermission(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
+        val list = Console.permissions.get(plugin.info.id).asJsonObject
+            .get(if (white) "white" else "black").asJsonObject
+            .get(if (isUser) "user" else "group").asJsonArray
+        list.forEach {
+            if (it.asLong == id) {
+                return "$id 已在其中, 无需修改"
             }
         }
+        list.add(id)
+        ConsoleFiles.PERMISSIONS.file.writeText(GSON.toJson(Console.permissions))
+        return "已将${if (isUser) "用户" else "群"} $id 添加到${if (white) "白名单" else "黑名单"}"
+    }
 
-        Permission.values().forEach {
-            if (it != permission && it != Permission.USER) {
-                json.get(it.name.lowercase(Locale.getDefault())).asJsonArray.removeAll { jsonID -> jsonID.asLong == id }
+    fun removePermission(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
+        val list = Console.permissions.get(plugin.info.id).asJsonObject
+            .get(if (white) "white" else "black").asJsonObject
+            .get(if (isUser) "user" else "group").asJsonArray
+        var value: JsonElement? = null
+        list.forEach {
+            if (it.asLong == id) {
+                value = it
+                return@forEach
             }
         }
+        if (value == null) return "$id 不在其中, 无需修改"
+        list.remove(value)
+        ConsoleFiles.PERMISSIONS.file.writeText(GSON.toJson(Console.permissions))
+        return "已将${if (isUser) "用户" else "群"} $id 移出${if (white) "白名单" else "黑名单"}"
 
-        if (permission != Permission.USER) {
-            json.get(permission.name.lowercase(Locale.getDefault())).asJsonArray.add(id)
-        }
-        ConsoleFiles.PERMISSIONS.file.writeText(GSON.toJson(json))
-        Console.logger.info("已将 $id 设为 ${permission.name.lowercase(Locale.getDefault())}")
     }
 
     fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {

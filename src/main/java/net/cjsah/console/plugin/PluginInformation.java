@@ -2,10 +2,12 @@ package net.cjsah.console.plugin;
 
 import com.google.gson.JsonObject;
 import net.cjsah.console.Util;
+import net.cjsah.console.exceptions.PluginException;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class PluginInformation {
     private final JsonObject information;
@@ -28,6 +30,7 @@ public class PluginInformation {
         this.name = this.information.get("name").getAsString();
         this.main = this.information.get("main").getAsString();
         this.id = this.information.get("id").getAsString();
+        if (Pattern.matches("[a-z_]+[a-z1-9_]*", this.id)) throw new PluginException("插件id只能使用变量命名规则!");
         this.authors = Util.INSTANCE.jsonArray2StringList(this.information.get("authors").getAsJsonArray());
         this.information.get("contact").getAsJsonObject().entrySet().forEach((entry) -> this.contacts.put(entry.getKey(), entry.getValue().getAsString()));
     }

@@ -1,9 +1,9 @@
 package net.cjsah.console.command.source;
 
-import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.BuiltExceptions;
 import net.cjsah.console.exceptions.CommandException;
 import net.cjsah.console.Util;
+import net.cjsah.console.plugin.Plugin;
 import net.mamoe.mirai.contact.User;
 import org.apache.logging.log4j.Level;
 
@@ -14,8 +14,8 @@ public class UserCommandSource extends CommandSource<User>{
     }
 
     @Override
-    public boolean hasPermission(Permission permission) {
-        return permission.getLevel() <= Util.INSTANCE.getPermission(this.source).getLevel();
+    public boolean CanUse(Plugin plugin) {
+        return Util.INSTANCE.canUse(plugin, this.source.getId(), true);
     }
 
     @Override
