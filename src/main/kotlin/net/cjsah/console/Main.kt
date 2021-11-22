@@ -16,7 +16,7 @@ fun main() {
         return
     }
 
-    Console.permissions = Gson().fromJson(ConsoleFiles.PERMISSIONS.file.readText(), JsonObject::class.java)
+    Console.permissions = Util.fromJson(ConsoleFiles.PERMISSIONS.file)
 
     ConsoleCommand.register()
 

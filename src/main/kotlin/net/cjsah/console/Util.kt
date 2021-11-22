@@ -11,6 +11,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 import java.util.function.Consumer
 import kotlin.concurrent.thread
 
@@ -46,6 +47,24 @@ object Util {
         file.writeText(text)
     }
 
+    fun fromJson(file: File): JsonObject {
+        return GSON.fromJson(file.readText(), JsonObject::class.java)
+    }
+
+    fun hasPermission(id: Long, permission: Permission): Boolean {
+        return getPermission(id).level >= permission.level
+    }
+
+    fun getPermission(id: Long): Permission {
+        Permission.values().forEach {
+            if (it != Permission.USER) {
+                Console.permissions.get(it.name.lowercase(Locale.getDefault())).asJsonArray.forEach { je ->
+                    if (je.asLong == id) return it
+                }
+            }
+        }
+        return Permission.USER
+    }
 
     fun canUse(plugin: Plugin, id: Long, isUser: Boolean): Boolean {
         val permission = Console.permissions.get(plugin.info.id).asJsonObject
@@ -85,7 +104,6 @@ object Util {
         list.remove(value)
         ConsoleFiles.PERMISSIONS.file.writeText(GSON.toJson(Console.permissions))
         return "已将${if (isUser) "用户" else "群"} $id 移出${if (white) "白名单" else "黑名单"}"
-
     }
 
     fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {
