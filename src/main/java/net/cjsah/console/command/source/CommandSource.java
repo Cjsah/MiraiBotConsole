@@ -1,5 +1,6 @@
 package net.cjsah.console.command.source;
 
+import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.CommandException;
 import net.cjsah.console.plugin.Plugin;
 import org.apache.logging.log4j.Level;
@@ -10,6 +11,8 @@ public abstract class CommandSource<T> {
     protected CommandSource(final T source) {
         this.source = source;
     }
+
+    public abstract boolean hasPermission(Permission permission);
 
     public abstract boolean CanUse(Plugin plugin);
 

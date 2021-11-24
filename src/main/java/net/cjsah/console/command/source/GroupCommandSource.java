@@ -1,5 +1,6 @@
 package net.cjsah.console.command.source;
 
+import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.BuiltExceptions;
 import net.cjsah.console.exceptions.CommandException;
 import net.cjsah.console.Util;
@@ -17,11 +18,16 @@ public class GroupCommandSource extends CommandSource<Group>{
     }
 
     @Override
+    public boolean hasPermission(Permission permission) {
+        return Util.INSTANCE.hasPermission(this.sender, permission);
+    }
+
+    @Override
     public boolean CanUse(Plugin plugin) {
         return Util.INSTANCE.canUse(plugin, this.source.getId(), false);
     }
 
-    public boolean memberHasPermission(Plugin plugin) {
+    public boolean memberCanUse(Plugin plugin) {
         return Util.INSTANCE.canUse(plugin, this.sender.getId(), true);
     }
 

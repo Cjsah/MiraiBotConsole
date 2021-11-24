@@ -39,29 +39,31 @@ public class ConsoleCommand {
         })));
 
         // permission
-        CommandManager.register(dispatcher -> dispatcher.register(CommandManager.literal("permission").then(CommandManager.argument("plugin", PluginArgument.plugin()).then(CommandManager.literal("whitelist").then(CommandManager.literal("add").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加用户到插件白名单", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.setPermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, true));
+        CommandManager.register(dispatcher -> dispatcher.register(CommandManager.literal("permission").requires(source ->
+                source.hasPermission(Permission.ADMIN)
+        ).then(CommandManager.argument("plugin", PluginArgument.plugin()).then(CommandManager.literal("whitelist").then(CommandManager.literal("add").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加用户到插件白名单", context -> {
+            context.getSource().sendFeedBack(Util.INSTANCE.setList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, true));
             return Command.SUCCESSFUL;
         }))).then(CommandManager.literal("group").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加群组到插件白名单", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.setPermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, false));
+            context.getSource().sendFeedBack(Util.INSTANCE.setList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, false));
             return Command.SUCCESSFUL;
         })))).then(CommandManager.literal("remove").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("从插件白名单移除用户", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.removePermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, true));
+            context.getSource().sendFeedBack(Util.INSTANCE.removeList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, true));
             return Command.SUCCESSFUL;
         }))).then(CommandManager.literal("group").then(CommandManager.argument("id", LongArgument.longArg()).executes("从插件白名单移除群组", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.removePermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, false));
+            context.getSource().sendFeedBack(Util.INSTANCE.removeList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, false));
             return Command.SUCCESSFUL;
         }))))).then(CommandManager.literal("blacklist").then(CommandManager.literal("add").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加用户到插件黑名单", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.setPermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, true));
+            context.getSource().sendFeedBack(Util.INSTANCE.setList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, true));
             return Command.SUCCESSFUL;
         }))).then(CommandManager.literal("group").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加群组到插件黑名单", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.setPermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, false));
+            context.getSource().sendFeedBack(Util.INSTANCE.setList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, false));
             return Command.SUCCESSFUL;
         })))).then(CommandManager.literal("remove").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("从插件黑名单移除用户", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.removePermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, true));
+            context.getSource().sendFeedBack(Util.INSTANCE.removeList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, true));
             return Command.SUCCESSFUL;
         }))).then(CommandManager.literal("group").then(CommandManager.argument("id", LongArgument.longArg()).executes("从插件黑名单移除群组", context -> {
-            context.getSource().sendFeedBack(Util.INSTANCE.removePermission(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, false));
+            context.getSource().sendFeedBack(Util.INSTANCE.removeList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), false, false));
             return Command.SUCCESSFUL;
         }))))).then(CommandManager.literal("status").executes("权限状态", context -> {
             Plugin plugin = PluginArgument.getPlugin(context, "plugin");
@@ -83,7 +85,7 @@ public class ConsoleCommand {
             Util.INSTANCE.save(ConsoleFiles.PERMISSIONS.getFile(), Util.INSTANCE.getGSON().toJson(Console.permissions));
             context.getSource().sendFeedBack(String.format("已将插件 %s 设为白名单模式", plugin.getInfo().getName()));
             return Command.SUCCESSFUL;
-        })).then(CommandManager.literal("blacklist").executes("设置插件为黑名单模式", context -> {
+        })).then(CommandManager.literal("blacklist").executes("设置插件为黑名单模式(默认)", context -> {
             Plugin plugin = PluginArgument.getPlugin(context, "plugin");
             Console.permissions.get(plugin.getInfo().getId()).getAsJsonObject().addProperty("whitelist", false);
             Util.INSTANCE.save(ConsoleFiles.PERMISSIONS.getFile(), Util.INSTANCE.getGSON().toJson(Console.permissions));

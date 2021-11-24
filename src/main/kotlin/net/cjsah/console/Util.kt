@@ -3,6 +3,7 @@ package net.cjsah.console
 import cc.moecraft.yaml.HyConfig
 import com.google.gson.*
 import net.cjsah.console.plugin.Plugin
+import net.mamoe.mirai.contact.Contact
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -51,8 +52,8 @@ object Util {
         return GSON.fromJson(file.readText(), JsonObject::class.java)
     }
 
-    fun hasPermission(id: Long, permission: Permission): Boolean {
-        return getPermission(id).level >= permission.level
+    fun hasPermission(contact: Contact, permission: Permission): Boolean {
+        return getPermission(contact.id).level >= permission.level
     }
 
     fun getPermission(id: Long): Permission {
@@ -75,7 +76,7 @@ object Util {
         return !whitelist
     }
 
-    fun setPermission(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
+    fun setList(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
         val list = Console.permissions.get(plugin.info.id).asJsonObject
             .get(if (white) "white" else "black").asJsonObject
             .get(if (isUser) "user" else "group").asJsonArray
@@ -89,7 +90,7 @@ object Util {
         return "已将${if (isUser) "用户" else "群"} $id 添加到${if (white) "白名单" else "黑名单"}"
     }
 
-    fun removePermission(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
+    fun removeList(plugin: Plugin, id: Long, white: Boolean, isUser: Boolean): String {
         val list = Console.permissions.get(plugin.info.id).asJsonObject
             .get(if (white) "white" else "black").asJsonObject
             .get(if (isUser) "user" else "group").asJsonArray

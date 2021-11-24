@@ -1,5 +1,6 @@
 package net.cjsah.console.command.source;
 
+import net.cjsah.console.Permission;
 import net.cjsah.console.exceptions.BuiltExceptions;
 import net.cjsah.console.exceptions.CommandException;
 import net.cjsah.console.Util;
@@ -11,6 +12,11 @@ public class UserCommandSource extends CommandSource<User>{
 
     public UserCommandSource(User source) {
         super(source);
+    }
+
+    @Override
+    public boolean hasPermission(Permission permission) {
+        return Util.INSTANCE.hasPermission(this.source, permission);
     }
 
     @Override
