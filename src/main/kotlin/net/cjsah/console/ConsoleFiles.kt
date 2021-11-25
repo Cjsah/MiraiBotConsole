@@ -8,9 +8,11 @@ import java.util.function.Consumer
 internal enum class ConsoleFiles(file: String, private val isDirectory: Boolean, private val initialize: Consumer<ConsoleFiles>?) {
     PERMISSIONS("permissions.json", false, {
         val json = JsonObject()
-        json.add("owner", JsonArray())
-        json.add("admin", JsonArray())
-        json.add("helper", JsonArray())
+        val person = JsonObject()
+        person.add("owner", JsonArray())
+        person.add("admin", JsonArray())
+        person.add("helper", JsonArray())
+        json.add("person", person)
         it.file.writeText(Util.GSON.toJson(json))
     }),
 
