@@ -12,15 +12,9 @@ fun main() {
         return
     }
 
-    Console.permissions = Util.fromJson(ConsoleFiles.PERMISSIONS.file)
-
     ConsoleCommand.register()
 
     Console.start(config.getLong("account"), config.getString("password"))
 
 }
 
-//fun isDevelopment(): Boolean {
-//    return System.getProperty("development") != null
-//}
-//

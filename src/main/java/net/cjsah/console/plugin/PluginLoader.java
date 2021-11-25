@@ -1,7 +1,6 @@
 package net.cjsah.console.plugin;
 
 import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.cjsah.console.Console;
 import net.cjsah.console.ConsoleFiles;
@@ -54,20 +53,7 @@ public class PluginLoader {
         for (File jar : jars) {
             Plugin plugin = getPlugin(jar);
             MODS.put(plugin.getInfo().getId(), plugin);
-            if (!Console.permissions.has(plugin.getInfo().getId())) {
-                JsonObject json = new JsonObject();
-                json.addProperty("whitelist", false);
-                JsonObject list = new JsonObject();
-                list.add("user", new JsonArray());
-                list.add("group", new JsonArray());
-                json.add("white", list);
-                list = new JsonObject();
-                list.add("user", new JsonArray());
-                list.add("group", new JsonArray());
-                json.add("black", list);
-                Console.permissions.add(plugin.getInfo().getId(), json);
-                Util.INSTANCE.save(ConsoleFiles.PERMISSIONS.getFile(), Util.INSTANCE.getGSON().toJson(Console.permissions));
-            }
+            Console.INSTANCE.getPermissions().addPlugin(plugin);
             Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
         }
     }
@@ -106,26 +92,4 @@ public class PluginLoader {
 
         return plugin;
     }
-
-//    private static void loadClassPathPlugin() throws Exception {
-//        if (isDevelopment()) {
-//            ClassLoader loader = PluginLoader.class.getClassLoader();
-//            InputStream resource = loader.getResourceAsStream("plugin.json");
-//            InputStreamReader reader = new InputStreamReader(resource, StandardCharsets.UTF_8);
-//            JsonObject json = Util.INSTANCE.getGSON().fromJson(reader, JsonObject.class);
-//            resource.close();
-//            reader.close();
-//            PluginInformation info = new PluginInformation(json);
-//            if (MODS.containsKey(info.getId())) throw new PluginException("插件 " + info.getName() + " [" + String.format("%s (%s) v%s", info.getName(), info.getId(), info.getVersion()) + "] 无法加载, 已有同名插件 " + MODS.get(info.getId()));
-//            String main = info.getMain();
-//            Class<?> clazz = Class.forName(main, true, loader);
-//            Plugin plugin = (Plugin) clazz.getDeclaredConstructor().newInstance();
-//            plugin.init(info);
-//            MODS.put(plugin.getInfo().getId(), plugin);
-//            Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
-//
-//        }
-//    }
-//
-//
 }

@@ -1,8 +1,7 @@
 package net.cjsah.console.command.source;
 
 import net.cjsah.console.Console;
-import net.cjsah.console.Permission;
-import net.cjsah.console.Util;
+import net.cjsah.console.Permissions;
 import net.cjsah.console.plugin.Plugin;
 import org.apache.logging.log4j.Level;
 
@@ -13,7 +12,7 @@ public class ConsoleCommandSource extends CommandSource<Console> {
     }
 
     @Override
-    public boolean hasPermission(Permission permission) {
+    public boolean hasPermission(Permissions.PermissionType permission) {
         return true;
     }
 

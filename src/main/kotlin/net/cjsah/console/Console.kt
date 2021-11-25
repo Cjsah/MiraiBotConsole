@@ -2,7 +2,6 @@
 
 package net.cjsah.console
 
-import com.google.gson.JsonObject
 import kotlinx.coroutines.runBlocking
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
@@ -18,7 +17,7 @@ import kotlin.concurrent.thread
 object Console {
     private lateinit var bot: Bot
     val logger: Logger = LogManager.getLogger("控制台")
-    lateinit var permissions: JsonObject
+    val permissions: Permissions = Permissions()
     private var exit = false
 
     internal fun start(id: Long, password: String, login: Boolean = true) {
