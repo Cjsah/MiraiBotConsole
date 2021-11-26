@@ -87,7 +87,6 @@ public class PluginLoader {
         Class<?> clazz = Class.forName(main, true, ucl);
         Plugin plugin = (Plugin) clazz.getDeclaredConstructor().newInstance();
         plugin.init(info);
-
         return plugin;
     }
 }

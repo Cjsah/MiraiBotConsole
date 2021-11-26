@@ -8,10 +8,12 @@ class Permissions {
     private val list = HashMap<String, WBList>()
     private val permissions = HashMap<PermissionType, List<Long>>()
 
-    init { load() }
-
     companion object {
         fun getEmpty() = WBList(false, listOf(), listOf(), listOf(), listOf())
+    }
+
+    fun init() {
+        load()
     }
 
     fun reload() {

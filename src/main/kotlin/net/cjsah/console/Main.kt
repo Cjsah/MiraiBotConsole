@@ -12,6 +12,8 @@ fun main() {
         return
     }
 
+    Console.permissions.init()
+
     ConsoleCommand.register()
 
     Console.start(config.getLong("account"), config.getString("password"))
