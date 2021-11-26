@@ -42,8 +42,6 @@ public class PluginLoader {
             entry.getValue().onPluginUnload();
             return true;
         });
-
-        MODS.values().forEach(Plugin::onPluginUnload);
     }
 
     public static void loadPlugins() throws Exception {
