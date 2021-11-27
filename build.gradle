@@ -64,7 +64,7 @@ tasks.withType(Javadoc) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-//          version SemVer_version
+          version project.console_version
 // 			groupId project.group
             artifactId project.archivesBaseName
             from components.java
