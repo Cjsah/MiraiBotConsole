@@ -3,14 +3,13 @@ package net.cjsah.console
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import net.cjsah.console.plugin.Plugin
+import net.mamoe.mirai.contact.ContactList
+import net.mamoe.mirai.contact.Friend
+import net.mamoe.mirai.contact.Group
 
 class Permissions {
     private val list = HashMap<String, WBList>()
     private val permissions = HashMap<PermissionType, List<Long>>()
-
-    companion object {
-        fun getEmpty() = WBList(false, listOf(), listOf(), listOf(), listOf())
-    }
 
     fun init() {
         load()
@@ -57,7 +56,7 @@ class Permissions {
     }
 
     fun addPlugin(plugin: Plugin) {
-        if (!list.containsKey(plugin.info.id)) list[plugin.info.id] = getEmpty()
+        if (!list.containsKey(plugin.info.id)) list[plugin.info.id] = WBList(false, listOf(), listOf(), listOf(), listOf())
         save()
     }
 
@@ -105,6 +104,24 @@ class Permissions {
 
     fun getPermissionList(permission: PermissionType) = permissions[permission]!!
 
+    fun getAllowGroup(plugin: Plugin): List<Group> {
+        val wb = list[plugin.info.id]
+        return if (wb == null) Console.getBot().groups.toList()
+        else Console.getBot().groups.filter {
+            if (wb.isWhite) wb.WG.contains(it.id)
+            else !wb.BG.contains(it.id)
+        }
+    }
+
+    fun getAllowUser(plugin: Plugin): List<Friend> {
+        val wb = list[plugin.info.id]
+        return if (wb == null) Console.getBot().friends.toList()
+        else Console.getBot().friends.filter {
+            if (wb.isWhite) wb.WU.contains(it.id)
+            else !wb.BU.contains(it.id)
+        }
+    }
+
     fun isWhite(plugin: Plugin) = list[plugin.info.id]?.isWhite ?: false
 
     fun getWU(plugin: Plugin) = list[plugin.info.id]?.WU ?: listOf()
@@ -122,57 +139,57 @@ class Permissions {
         OWNER
     }
 
-    class WBList(
-        internal var isWhite: Boolean,
-        internal var WU: List<Long>,
-        internal var WG: List<Long>,
-        internal var BU: List<Long>,
-        internal var BG: List<Long>
+    private class WBList(
+        var isWhite: Boolean,
+        var WU: List<Long>,
+        var WG: List<Long>,
+        var BU: List<Long>,
+        var BG: List<Long>
     ) {
 
-        internal fun setListType(white: Boolean): Boolean {
+        fun setListType(white: Boolean): Boolean {
             if (isWhite == white) return false
             isWhite = white
             return true
         }
 
-        internal fun addWU(value: Long): Boolean {
+        fun addWU(value: Long): Boolean {
             if (WU.contains(value)) return false
             WU = WU.plus(value)
             return true
         }
-        internal fun addWG(value: Long): Boolean {
+        fun addWG(value: Long): Boolean {
             if (WG.contains(value)) return false
             WG = WG.plus(value)
             return true
         }
-        internal fun addBU(value: Long): Boolean {
+        fun addBU(value: Long): Boolean {
             if (BU.contains(value)) return false
             BU = BU.plus(value)
             return true
         }
-        internal fun addBG(value: Long): Boolean {
+        fun addBG(value: Long): Boolean {
             if (BG.contains(value)) return false
             BG = BG.plus(value)
             return true
         }
 
-        internal fun removeWU(value: Long): Boolean {
+        fun removeWU(value: Long): Boolean {
             if (!WU.contains(value)) return false
             WU = WU.filter{ it != value }
             return true
         }
-        internal fun removeWG(value: Long): Boolean {
+        fun removeWG(value: Long): Boolean {
             if (!WU.contains(value)) return false
             WG = WG.filter{ it != value }
             return true
         }
-        internal fun removeBU(value: Long): Boolean {
+        fun removeBU(value: Long): Boolean {
             if (!WU.contains(value)) return false
             BU = BU.filter{ it != value }
             return true
         }
-        internal fun removeBG(value: Long): Boolean {
+        fun removeBG(value: Long): Boolean {
             if (!WU.contains(value)) return false
             BG = BG.filter{ it != value }
             return true
