@@ -25,11 +25,13 @@ object Util {
      * json解析器
      * @see Gson
      */
+    @JvmField
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
      * 文件下载
      */
+    @JvmStatic
     fun download(url: String, file: File) = thread(name = "BotDownloadService") {
         try {
             val huc = URL(url).openConnection() as HttpURLConnection
@@ -47,18 +49,22 @@ object Util {
     /**
      * 给java用户使用
      */
+    @JvmStatic
     fun save(file: File, text: String) {
         file.writeText(text)
     }
 
+    @JvmStatic
     fun fromJson(file: File): JsonObject {
         return GSON.fromJson(file.readText(), JsonObject::class.java)
     }
 
+    @JvmStatic
     fun hasPermission(contact: Contact, permission: Permissions.PermissionType): Boolean {
         return getPermission(contact.id).ordinal >= permission.ordinal
     }
 
+    @JvmStatic
     fun getPermission(id: Long): Permissions.PermissionType {
         Permissions.PermissionType.values().forEach {
             if (it != Permissions.PermissionType.USER) {
@@ -70,6 +76,7 @@ object Util {
         return Permissions.PermissionType.USER
     }
 
+    @JvmStatic
     fun canUse(plugin: Plugin, id: Long, isUser: Boolean): Boolean {
         val whitelist = Console.permissions.isWhite(plugin)
         val list: List<Long> = if (whitelist) {
@@ -81,6 +88,7 @@ object Util {
         return !whitelist
     }
 
+    @JvmStatic
     fun getYaml(file: File, default: Consumer<HyConfig>): HyConfig {
         val config = HyConfig(file, false, true)
         if (!file.exists()) {
@@ -93,6 +101,7 @@ object Util {
         return config
     }
 
+    @JvmStatic
     fun getJson(file: File, default: Consumer<JsonObject>): JsonElement {
         if (file.exists()) return GSON.fromJson(file.readText(), JsonObject::class.java)
         val json = JsonObject()
@@ -101,46 +110,57 @@ object Util {
         return json
     }
 
+    @JvmStatic
     fun jsonArray2ByteList(jsonArray: JsonArray): List<Byte> {
         return jsonArray.map { it.asByte }
     }
 
+    @JvmStatic
     fun jsonArray2IntList(jsonArray: JsonArray): List<Int> {
         return jsonArray.map { it.asInt }
     }
 
+    @JvmStatic
     fun jsonArray2ShortList(jsonArray: JsonArray): List<Short> {
         return jsonArray.map { it.asShort }
     }
 
+    @JvmStatic
     fun jsonArray2LongList(jsonArray: JsonArray): List<Long> {
         return jsonArray.map { it.asLong }
     }
 
+    @JvmStatic
     fun jsonArray2BigDecimalList(jsonArray: JsonArray): List<BigDecimal> {
         return jsonArray.map { it.asBigDecimal }
     }
 
+    @JvmStatic
     fun jsonArray2BigIntegerList(jsonArray: JsonArray): List<BigInteger> {
         return jsonArray.map { it.asBigInteger }
     }
 
+    @JvmStatic
     fun jsonArray2FloatList(jsonArray: JsonArray): List<Float> {
         return jsonArray.map { it.asFloat }
     }
 
+    @JvmStatic
     fun jsonArray2DoubleList(jsonArray: JsonArray): List<Double> {
         return jsonArray.map { it.asDouble }
     }
 
+    @JvmStatic
     fun jsonArray2BooleanList(jsonArray: JsonArray): List<Boolean> {
         return jsonArray.map { it.asBoolean }
     }
 
+    @JvmStatic
     fun jsonArray2StringList(jsonArray: JsonArray): List<String> {
         return jsonArray.map { it.asString }
     }
 
+    @JvmStatic
     @JvmName("StringList2JsonArray")
     fun list2JsonArray(List: Collection<String>): JsonArray {
         val array = JsonArray()
@@ -148,6 +168,7 @@ object Util {
         return array
     }
 
+    @JvmStatic
     @JvmName("NumberList2JsonArray")
     fun list2JsonArray(List: Collection<Number>): JsonArray {
         val array = JsonArray()
@@ -155,6 +176,7 @@ object Util {
         return array
     }
 
+    @JvmStatic
     @JvmName("CharList2JsonArray")
     fun list2JsonArray(List: Collection<Char>): JsonArray {
         val array = JsonArray()
@@ -162,6 +184,7 @@ object Util {
         return array
     }
 
+    @JvmStatic
     @JvmName("BooleanList2JsonArray")
     fun list2JsonArray(List: Collection<Boolean>): JsonArray {
         val array = JsonArray()
@@ -169,6 +192,7 @@ object Util {
         return array
     }
 
+    @JvmStatic
     @JvmName("JsonElementList2JsonArray")
     fun list2JsonArray(List: Collection<JsonElement>): JsonArray {
         val array = JsonArray()

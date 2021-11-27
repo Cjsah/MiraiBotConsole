@@ -19,16 +19,16 @@ public class GroupCommandSource extends CommandSource<Group>{
 
     @Override
     public boolean hasPermission(Permissions.PermissionType permission) {
-        return Util.INSTANCE.hasPermission(this.sender, permission);
+        return Util.hasPermission(this.sender, permission);
     }
 
     @Override
     public boolean CanUse(Plugin plugin) {
-        return Util.INSTANCE.canUse(plugin, this.source.getId(), false);
+        return Util.canUse(plugin, this.source.getId(), false);
     }
 
     public boolean memberCanUse(Plugin plugin) {
-        return Util.INSTANCE.canUse(plugin, this.sender.getId(), true);
+        return Util.canUse(plugin, this.sender.getId(), true);
     }
 
     @Override

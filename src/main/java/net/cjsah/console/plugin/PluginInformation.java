@@ -31,7 +31,7 @@ public class PluginInformation {
         this.main = this.information.get("main").getAsString();
         this.id = this.information.get("id").getAsString();
         if (Pattern.matches("[a-z_]+[a-z1-9_]*", this.id)) throw new PluginException("插件id只能使用变量命名规则!");
-        this.authors = Util.INSTANCE.jsonArray2StringList(this.information.get("authors").getAsJsonArray());
+        this.authors = Util.jsonArray2StringList(this.information.get("authors").getAsJsonArray());
         this.information.get("contact").getAsJsonObject().entrySet().forEach((entry) -> this.contacts.put(entry.getKey(), entry.getValue().getAsString()));
     }
 

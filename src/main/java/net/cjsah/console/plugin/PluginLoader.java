@@ -77,7 +77,7 @@ public class PluginLoader {
         Path path = fileSystem.getPath("plugin.json");
         InputStream inputStream = Files.newInputStream(path);
         InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        JsonObject json = Util.INSTANCE.getGSON().fromJson(reader, JsonObject.class);
+        JsonObject json = Util.GSON.fromJson(reader, JsonObject.class);
         inputStream.close();
         reader.close();
         PluginInformation info = new PluginInformation(json);

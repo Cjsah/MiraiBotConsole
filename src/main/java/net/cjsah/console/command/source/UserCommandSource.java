@@ -16,12 +16,12 @@ public class UserCommandSource extends CommandSource<User>{
 
     @Override
     public boolean hasPermission(Permissions.PermissionType permission) {
-        return Util.INSTANCE.hasPermission(this.source, permission);
+        return Util.hasPermission(this.source, permission);
     }
 
     @Override
     public boolean CanUse(Plugin plugin) {
-        return Util.INSTANCE.canUse(plugin, this.source.getId(), true);
+        return Util.canUse(plugin, this.source.getId(), true);
     }
 
     @Override
