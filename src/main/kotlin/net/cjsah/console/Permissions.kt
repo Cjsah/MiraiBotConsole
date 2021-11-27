@@ -3,7 +3,6 @@ package net.cjsah.console
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import net.cjsah.console.plugin.Plugin
-import net.mamoe.mirai.contact.ContactList
 import net.mamoe.mirai.contact.Friend
 import net.mamoe.mirai.contact.Group
 
