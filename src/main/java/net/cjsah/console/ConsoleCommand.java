@@ -70,9 +70,15 @@ public class ConsoleCommand {
             List<String> bul = Console.INSTANCE.getPermissions().getBU(plugin).stream().map(String::valueOf).collect(Collectors.toList());
             List<String> bgl = Console.INSTANCE.getPermissions().getBG(plugin).stream().map(String::valueOf).collect(Collectors.toList());
             if (wul.isEmpty() && wgl.isEmpty()) content += "白名单: 空\n";
-            else content += String.format("白名单: \n%s\n%s\n", String.join("\n", wul), String.join("\n", wgl));
+            else {
+                if (!wul.isEmpty()) content += String.format("用户白名单: \n%s\n", String.join("\n", wul));
+                if (!wgl.isEmpty()) content += String.format("群白名单: \n%s\n", String.join("\n", wgl));
+            }
             if (bul.isEmpty() && bgl.isEmpty()) content += "黑名单: 空\n";
-            else content += String.format("黑名单: \n%s\n%s", String.join("\n", bul), String.join("\n", bgl));
+            else {
+                if (!wul.isEmpty()) content += String.format("用户黑名单: \n%s\n", String.join("\n", bul));
+                if (!wgl.isEmpty()) content += String.format("群黑名单: \n%s\n", String.join("\n", bgl));
+            }
             context.getSource().sendFeedBack(content);
             return Command.SUCCESSFUL;
         })).then(CommandManager.literal("set").then(CommandManager.literal("whitelist").executes("设置插件为白名单模式", context -> {
