@@ -28,10 +28,10 @@ class Permissions {
             } else {
                 list[kv.key] = WBList(
                     kv.value.asJsonObject.get("white").asBoolean,
-                    kv.value.asJsonObject.get("whitelist").asJsonObject.get("user").asJsonArray.map { it.asLong },
-                    kv.value.asJsonObject.get("whitelist").asJsonObject.get("group").asJsonArray.map { it.asLong },
-                    kv.value.asJsonObject.get("blacklist").asJsonObject.get("user").asJsonArray.map { it.asLong },
-                    kv.value.asJsonObject.get("blacklist").asJsonObject.get("group").asJsonArray.map { it.asLong }
+                    kv.value.asJsonObject.get("white-user").asJsonArray.map { it.asLong },
+                    kv.value.asJsonObject.get("white-group").asJsonArray.map { it.asLong },
+                    kv.value.asJsonObject.get("black-user").asJsonArray.map { it.asLong },
+                    kv.value.asJsonObject.get("black-group").asJsonArray.map { it.asLong }
                 )
             }
         }
@@ -39,18 +39,17 @@ class Permissions {
 
     private fun save() {
         val json = JsonObject().apply {
-            this.add("person", JsonObject().apply {
-                permissions.entries.forEach { this.add(it.key.name.lowercase(), JsonArray().apply { it.value.forEach { value -> this.add(value) } }) }
-                list.entries.forEach { this.add(it.key, JsonObject().apply {
-                        this.addProperty("white", it.value.isWhite)
-                        this.add("white-user", JsonArray().apply { it.value.WU.forEach { value -> this.add(value) } })
-                        this.add("white-group", JsonArray().apply { it.value.WG.forEach { value -> this.add(value) } })
-                        this.add("black-user", JsonArray().apply { it.value.BU.forEach { value -> this.add(value) } })
-                        this.add("black-group", JsonArray().apply { it.value.BG.forEach { value -> this.add(value) } })
-                    }) }
-            })
+            this.add("person", JsonObject().apply { permissions.entries.forEach {
+                this.add(it.key.name.lowercase(), JsonArray().apply { it.value.forEach { value -> this.add(value) } })
+            } })
+            list.entries.forEach { this.add(it.key, JsonObject().apply {
+                this.addProperty("white", it.value.isWhite)
+                this.add("white-user", JsonArray().apply { it.value.WU.forEach { value -> this.add(value) } })
+                this.add("white-group", JsonArray().apply { it.value.WG.forEach { value -> this.add(value) } })
+                this.add("black-user", JsonArray().apply { it.value.BU.forEach { value -> this.add(value) } })
+                this.add("black-group", JsonArray().apply { it.value.BG.forEach { value -> this.add(value) } })
+            }) }
         }
-
         ConsoleFiles.PERMISSIONS.file.writeText(Util.GSON.toJson(json))
     }
 

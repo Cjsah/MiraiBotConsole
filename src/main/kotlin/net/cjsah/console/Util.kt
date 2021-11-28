@@ -17,6 +17,7 @@ import java.math.BigInteger
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.function.Consumer
+import java.util.function.Supplier
 import kotlin.concurrent.thread
 
 @Suppress("unused")
@@ -25,7 +26,7 @@ object Util {
      * json解析器
      * @see Gson
      */
-    @JvmStatic
+    @JvmField
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
@@ -102,12 +103,11 @@ object Util {
     }
 
     @JvmStatic
-    fun getJson(file: File, default: Consumer<JsonObject>): JsonElement {
-        if (file.exists()) return GSON.fromJson(file.readText(), JsonObject::class.java)
-        val json = JsonObject()
-        default.accept(json)
-        file.writeText(GSON.toJson(json))
-        return json
+    fun getJson(file: File, default: Supplier<JsonElement>): JsonElement {
+        if (file.exists()) return GSON.fromJson(file.readText(), JsonElement::class.java)
+        val jsonElement = default.get()
+        file.writeText(GSON.toJson(jsonElement))
+        return jsonElement
     }
 
     @JvmStatic
