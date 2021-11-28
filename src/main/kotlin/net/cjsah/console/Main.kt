@@ -1,5 +1,7 @@
 package net.cjsah.console
 
+import com.google.gson.JsonObject
+
 fun main() {
     System.setProperty("mirai.no-desktop", "")
 

@@ -25,7 +25,7 @@ object Util {
      * json解析器
      * @see Gson
      */
-    @JvmStatic
+    @JvmField
     val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
