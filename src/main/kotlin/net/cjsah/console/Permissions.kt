@@ -21,7 +21,6 @@ class Permissions {
 
     private fun load() {
         Util.fromJson(ConsoleFiles.PERMISSIONS.file).entrySet().forEach { kv ->
-            Console.logger.info(kv.key)
             if (kv.key == "person") {
                 permissions[PermissionType.OWNER] = kv.value.asJsonObject.get("owner").asJsonArray.map { it.asLong }
                 permissions[PermissionType.ADMIN] = kv.value.asJsonObject.get("admin").asJsonArray.map { it.asLong }
@@ -39,7 +38,6 @@ class Permissions {
     }
 
     private fun save() {
-        Console.logger.info("save")
         val json = JsonObject().apply {
             this.add("person", JsonObject().apply { permissions.entries.forEach {
                 this.add(it.key.name.lowercase(), JsonArray().apply { it.value.forEach { value -> this.add(value) } })
@@ -52,7 +50,6 @@ class Permissions {
                 this.add("black-group", JsonArray().apply { it.value.BG.forEach { value -> this.add(value) } })
             }) }
         }
-        Console.logger.info(Util.GSON.toJson(json))
         ConsoleFiles.PERMISSIONS.file.writeText(Util.GSON.toJson(json))
     }
 

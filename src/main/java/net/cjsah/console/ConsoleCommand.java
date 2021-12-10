@@ -5,7 +5,10 @@ import net.cjsah.console.command.CommandManager;
 import net.cjsah.console.command.argument.LongArgument;
 import net.cjsah.console.command.argument.PluginArgument;
 import net.cjsah.console.command.source.ConsoleCommandSource;
+import net.cjsah.console.command.source.UserCommandSource;
 import net.cjsah.console.plugin.Plugin;
+import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.contact.User;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +40,7 @@ public class ConsoleCommand {
 
         // permission
         CommandManager.register(dispatcher -> dispatcher.register(CommandManager.literal("permission").requires(source ->
-                source.hasPermission(Permissions.PermissionType.ADMIN)
+                (!(source.getSource() instanceof Contact) || source.getSource() instanceof User) && source.hasPermission(Permissions.PermissionType.ADMIN)
         ).then(CommandManager.argument("plugin", PluginArgument.plugin()).then(CommandManager.literal("whitelist").then(CommandManager.literal("add").then(CommandManager.literal("user").then(CommandManager.argument("id", LongArgument.longArg()).executes("添加用户到插件白名单", context -> {
             context.getSource().sendFeedBack(Console.INSTANCE.getPermissions().addToList(PluginArgument.getPlugin(context, "plugin"), LongArgument.getLong(context, "id"), true, true));
             return Command.SUCCESSFUL;
@@ -76,8 +79,8 @@ public class ConsoleCommand {
             }
             if (bul.isEmpty() && bgl.isEmpty()) content += "黑名单: 空\n";
             else {
-                if (!wul.isEmpty()) content += String.format("用户黑名单: \n%s\n", String.join("\n", bul));
-                if (!wgl.isEmpty()) content += String.format("群黑名单: \n%s\n", String.join("\n", bgl));
+                if (!bul.isEmpty()) content += String.format("用户黑名单: \n%s\n", String.join("\n", bul));
+                if (!bgl.isEmpty()) content += String.format("群黑名单: \n%s\n", String.join("\n", bgl));
             }
             context.getSource().sendFeedBack(content);
             return Command.SUCCESSFUL;
