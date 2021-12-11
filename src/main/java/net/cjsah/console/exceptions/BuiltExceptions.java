@@ -36,8 +36,6 @@ public class BuiltExceptions {
     private static final Para0CommandException DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR = new Para0CommandException("需要空格来结束一个参数，但发现尾随数据 ");
     private static final Para1CommandException DISPATCHER_PARSE_EXCEPTION = new Para1CommandException((message) -> String.format("无法解析命令: '%s'", message));
 
-    private static final Para0CommandException COMMAND_SEND_BY_MEMBER = new Para0CommandException("这条指令是成员发送的!");
-
     private static final Para1CommandException GROUP_NOT_FOUND = new Para1CommandException((group) -> String.format("机器人并没有加入此群组 '%s'", group));
     private static final Para1CommandException FRIEND_NOT_FOUND = new Para1CommandException((friend) -> String.format("机器人并没有此好友 '%s'", friend));
     private static final Para1CommandException PLUGIN_NOT_FOUND = new Para1CommandException((plugin) -> String.format("没有找到此插件: '%s'", plugin));
@@ -148,10 +146,6 @@ public class BuiltExceptions {
 
     public static Para1CommandException dispatcherParseException() {
         return DISPATCHER_PARSE_EXCEPTION;
-    }
-
-    public static Para0CommandException commandSendByMember() {
-        return COMMAND_SEND_BY_MEMBER;
     }
 
     public static Para1CommandException groupNotFound() {

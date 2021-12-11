@@ -50,7 +50,7 @@ object Console {
         PluginLoader.onBotStarted()
 
         thread(name = "指令进程") {
-            while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource(Console)) }
+            while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource()) }
             logger.info("指令进程已结束")
         }
 
