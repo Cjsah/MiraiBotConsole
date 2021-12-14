@@ -2,10 +2,10 @@ package net.cjsah.console.command.tree
 
 import net.cjsah.console.command.StringReader
 import net.cjsah.console.command.builder.ArgumentBuilder
-import net.cjsah.console.command.context.CommandContextBuilder
+import net.cjsah.console.command.context.ContextBuilder
 import net.cjsah.console.exceptions.CommandException
 
-class RootCommandNode : CommandNode(null, null, {true})  {
+class RootCommandNode : CommandNode("", null, {true})  {
     override fun getName() = ""
 
     override fun getUsageText() = ""
@@ -13,7 +13,7 @@ class RootCommandNode : CommandNode(null, null, {true})  {
     override fun isValidInput(input: String) = false
 
     @Throws(CommandException::class)
-    override fun parse(reader: StringReader, builder: CommandContextBuilder) {
+    override fun parse(reader: StringReader, builder: ContextBuilder) {
     }
 
     override fun createBuilder(): ArgumentBuilder<*> {

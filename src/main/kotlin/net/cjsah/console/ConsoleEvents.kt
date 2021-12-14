@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.time.LocalDateTime
 
-object ConsoleEvents {
+internal object ConsoleEvents {
     fun register(bot: Bot) {
         // command
         GlobalEventChannel.subscribeAlways<MessageEvent> {

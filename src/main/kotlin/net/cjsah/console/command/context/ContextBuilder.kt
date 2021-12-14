@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package net.cjsah.console.command.context
 
 import net.cjsah.console.command.Command
@@ -11,7 +13,7 @@ class ContextBuilder(
     private val rootNode: CommandNode,
     start: Int
 ) {
-    private val arguments: MutableMap<String, ParsedNodeResult<*>> = LinkedHashMap()
+    private val arguments: MutableMap<String, ParsedNode<*>> = LinkedHashMap()
     private var command: Command? = null
     private var range: Range
 
@@ -19,7 +21,7 @@ class ContextBuilder(
         range = Range(start)
     }
 
-    fun withArgument(name: String, argument: ParsedNodeResult<*>): ContextBuilder {
+    fun withArgument(name: String, argument: ParsedNode<*>): ContextBuilder {
         arguments[name] = argument
         return this
     }

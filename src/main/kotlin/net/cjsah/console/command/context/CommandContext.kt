@@ -6,13 +6,13 @@ import net.cjsah.console.command.Command
 import net.cjsah.console.command.source.CommandSource
 
 class CommandContext(
-    private val arguments: Map<String, ParsedNodeResult<*>>,
+    private val arguments: Map<String, ParsedNode<*>>,
     private val source: CommandSource<*>,
     private val command: Command?
 ) {
     fun <V> getArgument(name: String, clazz: Class<V>): V {
-        val argument: ParsedNodeResult<*> = arguments[name] ?: throw IllegalArgumentException("此命令中不存在参数 '$name'")
-        val result = argument.result
+        val argument: ParsedNode<*> = arguments[name] ?: throw IllegalArgumentException("此命令中不存在参数 '$name'")
+        val result = argument.getResult()!!
         return if (ClassConversion[clazz].isAssignableFrom(result.javaClass)) {
             result as V
         } else {

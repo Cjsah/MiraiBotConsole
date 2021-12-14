@@ -3,13 +3,13 @@ package net.cjsah.console.command.tree
 import net.cjsah.console.command.Command
 import net.cjsah.console.command.StringReader
 import net.cjsah.console.command.builder.ArgumentBuilder
-import net.cjsah.console.command.context.CommandContextBuilder
+import net.cjsah.console.command.context.ContextBuilder
 import net.cjsah.console.command.source.CommandSource
 import net.cjsah.console.exceptions.CommandException
 import java.util.function.Predicate
 
 abstract class CommandNode(
-    private var help: String?,
+    private var help: String,
     private var command: Command?,
     private val requirement: Predicate<CommandSource<*>>
 ) : Comparable<CommandNode> {
@@ -24,7 +24,7 @@ abstract class CommandNode(
     protected abstract fun isValidInput(input: String): Boolean
 
     @Throws(CommandException::class)
-    abstract fun parse(reader: StringReader, builder: CommandContextBuilder)
+    abstract fun parse(reader: StringReader, builder: ContextBuilder)
 
     abstract fun createBuilder(): ArgumentBuilder<*>
 
@@ -38,7 +38,7 @@ abstract class CommandNode(
         return command
     }
 
-    open fun getHelp(): String? {
+    open fun getHelp(): String {
         return help
     }
 
@@ -69,10 +69,10 @@ abstract class CommandNode(
 
     open fun getRelevantNodes(input: StringReader): Collection<CommandNode> {
         if (literals.isNotEmpty()) {
-            val cursor = input.cursor
+            val cursor = input.getCursor()
             while (input.canRead() && input.peek() != ' ') input.skip()
-            val text = input.string.substring(cursor, input.cursor)
-            input.cursor = cursor
+            val text = input.getString().substring(cursor, input.getCursor())
+            input.setCursor(cursor)
             val literal = literals[text]
             return literal?.let { listOf(it) } ?: arguments.values
         }

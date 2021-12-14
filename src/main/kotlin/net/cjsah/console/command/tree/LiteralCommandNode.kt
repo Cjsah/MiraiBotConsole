@@ -2,10 +2,9 @@ package net.cjsah.console.command.tree
 
 import net.cjsah.console.command.Command
 import net.cjsah.console.command.StringReader
-import net.cjsah.console.command.builder.ArgumentBuilder
 import net.cjsah.console.command.builder.LiteralArgumentBuilder
-import net.cjsah.console.command.context.CommandContextBuilder
-import net.cjsah.console.command.context.IntRange
+import net.cjsah.console.command.context.ContextBuilder
+import net.cjsah.console.command.context.Range
 import net.cjsah.console.command.source.CommandSource
 import net.cjsah.console.exceptions.BuiltExceptions
 import net.cjsah.console.exceptions.CommandException
@@ -24,32 +23,30 @@ class LiteralCommandNode(
     override fun isValidInput(input: String) = parse(StringReader(input)) > -1
 
     @Throws(CommandException::class)
-    override fun parse(reader: StringReader, builder: CommandContextBuilder) {
-        val start = reader.cursor
+    override fun parse(reader: StringReader, builder: ContextBuilder) {
+        val start = reader.getCursor()
         val end = parse(reader)
         if (end < 0) throw BuiltExceptions.literalIncorrect().createWithContext(reader, literal)
-        builder.withRange(IntRange(start, end))
+        builder.withRange(Range(start, end))
     }
 
-    override fun createBuilder(): ArgumentBuilder<*> {
-        return LiteralArgumentBuilder.literal(literal).apply {
-            this.requires(super.getRequirement())
-            if (super.getCommand() != null) this.executes(super.getHelp(), super.getCommand())
-        }
+    override fun createBuilder() =  LiteralArgumentBuilder.literal(literal).apply {
+        this.requires(super.getRequirement())
+        if (super.getCommand() != null) this.executes(super.getHelp(), super.getCommand())
     }
 
     override fun getSortedKey() = literal
 
     private fun parse(reader: StringReader): Int {
         if (reader.canRead(literal.length)) {
-            val start = reader.cursor
+            val start = reader.getCursor()
             val end = start + literal.length
-            if (reader.string.substring(start, end) == literal) {
-                reader.cursor = end
+            if (reader.getString().substring(start, end) == literal) {
+                reader.setCursor(end)
                 if (!reader.canRead() || reader.peek() == ' ') {
                     return end
                 } else {
-                    reader.cursor = start
+                    reader.setCursor(start)
                 }
             }
         }

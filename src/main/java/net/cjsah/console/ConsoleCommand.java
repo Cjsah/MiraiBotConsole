@@ -5,7 +5,6 @@ import net.cjsah.console.command.CommandManager;
 import net.cjsah.console.command.argument.LongArgument;
 import net.cjsah.console.command.argument.PluginArgument;
 import net.cjsah.console.command.source.ConsoleCommandSource;
-import net.cjsah.console.command.source.UserCommandSource;
 import net.cjsah.console.plugin.Plugin;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.User;

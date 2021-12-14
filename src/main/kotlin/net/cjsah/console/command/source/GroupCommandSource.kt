@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package net.cjsah.console.command.source
 
 import kotlinx.coroutines.runBlocking
