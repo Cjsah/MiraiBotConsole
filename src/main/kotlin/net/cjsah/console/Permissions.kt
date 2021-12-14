@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package net.cjsah.console
 
 import com.google.gson.JsonArray

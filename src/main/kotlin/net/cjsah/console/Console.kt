@@ -61,13 +61,18 @@ object Console {
     fun stop() {
         this.exit = true
 
-        logger.info("正在关闭所有插件...")
-        PluginLoader.onBotStopped()
+        if (!PluginLoader.isEmpty()) {
+            logger.info("正在关闭所有插件...")
+            PluginLoader.onBotStopped()
+        }
 
+        logger.info("QQ账号退出登陆...")
         bot.close()
 
-        logger.info("正在卸载所有插件...")
-        PluginLoader.onPluginUnload()
+        if (!PluginLoader.isEmpty()) {
+            logger.info("正在卸载所有插件...")
+            PluginLoader.onPluginUnload()
+        }
 
         logger.info("控制台退出...")
     }

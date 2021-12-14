@@ -25,20 +25,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class PluginLoader {
-    private static final Map<String, Plugin> MODS = new HashMap<>();
+    private static final Map<String, Plugin> PLUGINS = new HashMap<>();
     private static int COUNT = 0;
 
     public static void onBotStarted() {
-        MODS.values().forEach(Plugin::onBotStarted);
+        PLUGINS.values().forEach(Plugin::onBotStarted);
     }
 
     public static void onBotStopped() {
-        MODS.values().forEach(Plugin::onBotStopped);
+        PLUGINS.values().forEach(Plugin::onBotStopped);
     }
 
     public static void onPluginUnload() {
-        MODS.entrySet().removeIf((entry) -> {
+        PLUGINS.entrySet().removeIf((entry) -> {
             entry.getValue().onPluginUnload();
             return true;
         });
@@ -50,7 +51,7 @@ public class PluginLoader {
         Console.INSTANCE.getLogger().info((COUNT == 0) ? "没有插件被加载" : "正在加载 " + COUNT + " 个插件");
         for (File jar : jars) {
             Plugin plugin = getPlugin(jar);
-            MODS.put(plugin.getInfo().getId(), plugin);
+            PLUGINS.put(plugin.getInfo().getId(), plugin);
             Console.INSTANCE.getPermissions().addPlugin(plugin);
             Console.INSTANCE.getLogger().info(String.format("插件 %s %s 已加载", plugin.getInfo().getName(), plugin.getInfo().getVersion()));
         }
@@ -60,8 +61,12 @@ public class PluginLoader {
         return COUNT;
     }
 
+    public static boolean isEmpty() {
+        return PLUGINS.isEmpty();
+    }
+
     public static Plugin getPlugin(String id) {
-        return MODS.getOrDefault(id, null);
+        return PLUGINS.getOrDefault(id, null);
     }
 
     private static Collection<File> getPluginJars() {
@@ -81,7 +86,7 @@ public class PluginLoader {
         inputStream.close();
         reader.close();
         PluginInformation info = new PluginInformation(json);
-        if (MODS.containsKey(info.getId())) throw new PluginException("插件 " + file + " [" + String.format("%s (%s) v%s", info.getName(), info.getId(), info.getVersion()) + "] 无法加载, 已有同名插件 " + MODS.get(info.getId()));
+        if (PLUGINS.containsKey(info.getId())) throw new PluginException("插件 " + file + " [" + String.format("%s (%s) v%s", info.getName(), info.getId(), info.getVersion()) + "] 无法加载, 已有同名插件 " + PLUGINS.get(info.getId()));
         String main = info.getMain();
         URLClassLoader ucl = new URLClassLoader(new URL[]{new URL("jar:" + uri.toURL() + "!/")});
         Class<?> clazz = Class.forName(main, true, ucl);

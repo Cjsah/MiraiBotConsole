@@ -3,7 +3,7 @@ package net.cjsah.console.command
 import net.cjsah.console.command.context.CommandContext
 import net.cjsah.console.exceptions.CommandException
 
-interface Command {
+fun interface Command {
     companion object {
         const val SUCCESSFUL = 1
     }
