@@ -34,11 +34,11 @@ class FloatArgument private constructor(
         val result = reader.readFloat()
         if (result < min) {
             reader.setCursor(start)
-            throw BuiltExceptions.floatTooLow().createWithContext(reader, result, max)
+            throw BuiltExceptions.FLOAT_TOO_LOW.createWithContext(reader, result, max)
         }
         if (result > max) {
             reader.setCursor(start)
-            throw BuiltExceptions.floatTooHigh().createWithContext(reader, result, max)
+            throw BuiltExceptions.FLOAT_TOO_HIGH.createWithContext(reader, result, max)
         }
         return result
     }

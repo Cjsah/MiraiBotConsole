@@ -34,11 +34,11 @@ class IntArgument private constructor(
         val result = reader.readInt()
         if (result < min) {
             reader.setCursor(start)
-            throw BuiltExceptions.integerTooLow().createWithContext(reader, result, max)
+            throw BuiltExceptions.INTEGER_TOO_LOW.createWithContext(reader, result, max)
         }
         if (result > max) {
             reader.setCursor(start)
-            throw BuiltExceptions.integerTooHigh().createWithContext(reader, result, max)
+            throw BuiltExceptions.INTEGER_TOO_HIGH.createWithContext(reader, result, max)
         }
         return result
     }

@@ -92,13 +92,13 @@ class StringReader(private val string: String) {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw BuiltExceptions.readerExpectedInt().createWithContext(this)
+            throw BuiltExceptions.READER_EXPECTED_INT.createWithContext(this)
         }
         return try {
             number.toInt()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw BuiltExceptions.readerInvalidInt().createWithContext(this, number)
+            throw BuiltExceptions.READER_INVALID_INT.createWithContext(this, number)
         }
     }
 
@@ -110,13 +110,13 @@ class StringReader(private val string: String) {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw BuiltExceptions.readerExpectedLong().createWithContext(this)
+            throw BuiltExceptions.READER_EXPECTED_LONG.createWithContext(this)
         }
         return try {
             number.toLong()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw BuiltExceptions.readerInvalidLong().createWithContext(this, number)
+            throw BuiltExceptions.READER_INVALID_LONG.createWithContext(this, number)
         }
     }
 
@@ -128,13 +128,13 @@ class StringReader(private val string: String) {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw BuiltExceptions.readerExpectedDouble().createWithContext(this)
+            throw BuiltExceptions.READER_EXPECTED_DOUBLE.createWithContext(this)
         }
         return try {
             number.toDouble()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw BuiltExceptions.readerInvalidDouble().createWithContext(this, number)
+            throw BuiltExceptions.READER_INVALID_DOUBLE.createWithContext(this, number)
         }
     }
 
@@ -146,13 +146,13 @@ class StringReader(private val string: String) {
         }
         val number = string.substring(start, cursor)
         if (number.isEmpty()) {
-            throw BuiltExceptions.readerExpectedFloat().createWithContext(this)
+            throw BuiltExceptions.READER_EXPECTED_FLOAT.createWithContext(this)
         }
         return try {
             number.toFloat()
         } catch (ex: NumberFormatException) {
             cursor = start
-            throw BuiltExceptions.readerInvalidFloat().createWithContext(this, number)
+            throw BuiltExceptions.READER_INVALID_FLOAT.createWithContext(this, number)
         }
     }
 
@@ -175,7 +175,7 @@ class StringReader(private val string: String) {
         }
         val next = peek()
         if (!isQuotedStringStart(next)) {
-            throw BuiltExceptions.readerExpectedStartOfQuote().createWithContext(this)
+            throw BuiltExceptions.READER_EXPECTED_START_OF_QUOTE.createWithContext(this)
         }
         skip()
         return readStringUntil(next)
@@ -193,7 +193,7 @@ class StringReader(private val string: String) {
                     false
                 } else {
                     setCursor(getCursor() - 1)
-                    throw BuiltExceptions.readerInvalidEscape().createWithContext(this, c.toString())
+                    throw BuiltExceptions.READER_INVALID_ESCAPE.createWithContext(this, c.toString())
                 }
             } else if (c == SYNTAX_ESCAPE) {
                 escaped = true
@@ -203,7 +203,7 @@ class StringReader(private val string: String) {
                 result.append(c)
             }
         }
-        throw BuiltExceptions.readerExpectedEndOfQuote().createWithContext(this)
+        throw BuiltExceptions.READER_EXPECTED_END_OF_QUOTE.createWithContext(this)
     }
 
     @Throws(CommandException::class)
@@ -223,20 +223,20 @@ class StringReader(private val string: String) {
     fun readBoolean(): Boolean {
         val start = cursor
         val value = readString()
-        if (value.isEmpty()) throw BuiltExceptions.readerExpectedBool().createWithContext(this)
+        if (value.isEmpty()) throw BuiltExceptions.READER_EXPECTED_BOOL.createWithContext(this)
         return when (value) {
             "true" -> true
             "false" -> false
             else -> {
                 cursor = start
-                throw BuiltExceptions.readerInvalidBool().createWithContext(this, value)
+                throw BuiltExceptions.READER_INVALID_BOOL.createWithContext(this, value)
             }
         }
     }
 
     @Throws(CommandException::class)
     fun expect(c: Char) {
-        if (!canRead() || peek() != c) throw BuiltExceptions.readerExpectedSymbol().createWithContext(this, c.toString())
+        if (!canRead() || peek() != c) throw BuiltExceptions.READER_EXPECTED_SYMBOL.createWithContext(this, c.toString())
         skip()
     }
 

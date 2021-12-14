@@ -34,11 +34,11 @@ class DoubleArgument private constructor(
         val result = reader.readDouble()
         if (result < min) {
             reader.setCursor(start)
-            throw BuiltExceptions.doubleTooLow().createWithContext(reader, result, max)
+            throw BuiltExceptions.DOUBLE_TOO_LOW.createWithContext(reader, result, max)
         }
         if (result > max) {
             reader.setCursor(start)
-            throw BuiltExceptions.doubleTooHigh().createWithContext(reader, result, max)
+            throw BuiltExceptions.DOUBLE_TOO_HIGH.createWithContext(reader, result, max)
         }
         return result
     }

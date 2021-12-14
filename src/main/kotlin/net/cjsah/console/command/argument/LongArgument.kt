@@ -34,11 +34,11 @@ class LongArgument private constructor(
         val result = reader.readLong()
         if (result < min) {
             reader.setCursor(start)
-            throw BuiltExceptions.longTooLow().createWithContext(reader, result, max)
+            throw BuiltExceptions.LONG_TOO_LOW.createWithContext(reader, result, max)
         }
         if (result > max) {
             reader.setCursor(start)
-            throw BuiltExceptions.longTooHigh().createWithContext(reader, result, max)
+            throw BuiltExceptions.LONG_TOO_HIGH.createWithContext(reader, result, max)
         }
         return result
     }

@@ -24,7 +24,7 @@ class PluginArgument private constructor() : Argument<Plugin> {
         val plugin = PluginLoader.getPlugin(id)
         if (plugin == null) {
             reader.setCursor(start)
-            throw BuiltExceptions.pluginNotFound().createWithContext(reader, id)
+            throw BuiltExceptions.PLUGIN_NOT_FOUND.createWithContext(reader, id)
         }
         return plugin
     }

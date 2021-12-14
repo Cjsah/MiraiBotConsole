@@ -26,8 +26,8 @@ class Dispatcher {
         val parse = parseNodes(ROOTS, reader, builder)
         if (parse.reader.canRead()) {
             if (parse.exceptions.size == 1) throw parse.exceptions.values.iterator().next()
-            else if (parse.context.getRange().isEmpty()) throw BuiltExceptions.dispatcherUnknownCommand().createWithContext(reader)
-            else throw BuiltExceptions.dispatcherUnknownArgument().createWithContext(reader)
+            else if (parse.context.getRange().isEmpty()) throw BuiltExceptions.DISPATCHER_UNKNOWN_COMMAND.createWithContext(reader)
+            else throw BuiltExceptions.DISPATCHER_UNKNOWN_ARGUMENT.createWithContext(reader)
         }
         var result = 0
         var foundCommand = false
@@ -46,7 +46,7 @@ class Dispatcher {
             }
             contexts = null
         }
-        if (!foundCommand) throw BuiltExceptions.dispatcherUnknownCommand().createWithContext(reader)
+        if (!foundCommand) throw BuiltExceptions.DISPATCHER_UNKNOWN_COMMAND.createWithContext(reader)
         return result
     }
 
@@ -63,9 +63,9 @@ class Dispatcher {
                 try {
                     child.parse(reader, context)
                 } catch (e: CommandException) {
-                    throw BuiltExceptions.dispatcherParseException().createWithContext(reader, e.localizedMessage)
+                    throw BuiltExceptions.DISPATCHER_PARSE_EXCEPTION.createWithContext(reader, e.localizedMessage)
                 }
-                if (reader.canRead() && reader.peek() != ARGUMENT_SEPARATOR) throw BuiltExceptions.dispatcherExpectedArgumentSeparator().createWithContext(reader)
+                if (reader.canRead() && reader.peek() != ARGUMENT_SEPARATOR) throw BuiltExceptions.DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR.createWithContext(reader)
             } catch (e: CommandException) {
                 exceptions[child] = e
                 reader.setCursor(cursor)

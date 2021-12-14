@@ -24,7 +24,7 @@ class GroupArgument private constructor() : Argument<Group> {
         val group = getBot().getGroup(id)
         if (group == null) {
             reader.setCursor(start)
-            throw BuiltExceptions.groupNotFound().createWithContext(reader, id)
+            throw BuiltExceptions.GROUP_NOT_FOUND.createWithContext(reader, id)
         }
         return group
     }

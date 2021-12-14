@@ -24,7 +24,7 @@ class FriendArgument private constructor() : Argument<Friend> {
         val friend = getBot().getFriend(id)
         if (friend == null) {
             reader.setCursor(start)
-            throw BuiltExceptions.friendNotFound().createWithContext(reader, id)
+            throw BuiltExceptions.FRIEND_NOT_FOUND.createWithContext(reader, id)
         }
         return friend
     }

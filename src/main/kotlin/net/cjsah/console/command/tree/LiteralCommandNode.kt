@@ -26,7 +26,7 @@ class LiteralCommandNode(
     override fun parse(reader: StringReader, builder: ContextBuilder) {
         val start = reader.getCursor()
         val end = parse(reader)
-        if (end < 0) throw BuiltExceptions.literalIncorrect().createWithContext(reader, literal)
+        if (end < 0) throw BuiltExceptions.LITERAL_INCORRECT.createWithContext(reader, literal)
         builder.withRange(Range(start, end))
     }
 
