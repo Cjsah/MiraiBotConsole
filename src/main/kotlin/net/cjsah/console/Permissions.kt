@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package net.cjsah.console
 
 import com.google.gson.JsonArray
@@ -54,56 +56,56 @@ class Permissions {
     }
 
     fun addPlugin(plugin: Plugin) {
-        if (!list.containsKey(plugin.info.id)) list[plugin.info.id] = WBList(false, listOf(), listOf(), listOf(), listOf())
+        if (!list.containsKey(plugin.getInfo().id)) list[plugin.getInfo().id] = WBList(false, listOf(), listOf(), listOf(), listOf())
         save()
     }
 
     fun setListType(plugin: Plugin, white: Boolean): String {
-        val type = list[plugin.info.id]?.setListType(white)
+        val type = list[plugin.getInfo().id]?.setListType(white)
         save()
         return when(type) {
-            true -> "已将插件 ${plugin.info.name} 切换为${if (white) "白" else "黑"}名单模式"
-            false -> "插件 ${plugin.info.name} 已经是${if (white) "白" else "黑"}名单模式, 无需修改"
-            else -> "插件 ${plugin.info.name} 不存在"
+            true -> "已将插件 ${plugin.getInfo().name} 切换为${if (white) "白" else "黑"}名单模式"
+            false -> "插件 ${plugin.getInfo().name} 已经是${if (white) "白" else "黑"}名单模式, 无需修改"
+            else -> "插件 ${plugin.getInfo().name} 不存在"
         }
     }
 
     fun addToList(plugin: Plugin, value: Long, isWhite: Boolean, isUser: Boolean): String {
         val type = if (isWhite) {
-            if (isUser) list[plugin.info.id]?.addWU(value)
-            else list[plugin.info.id]?.addWG(value)
+            if (isUser) list[plugin.getInfo().id]?.addWU(value)
+            else list[plugin.getInfo().id]?.addWG(value)
         } else {
-            if (isUser) list[plugin.info.id]?.addBU(value)
-            else list[plugin.info.id]?.addBG(value)
+            if (isUser) list[plugin.getInfo().id]?.addBU(value)
+            else list[plugin.getInfo().id]?.addBG(value)
         }
         save()
         return when(type) {
-            true -> "已将${if (isUser) "用户" else "群"} $value 添加到插件 ${plugin.info.name} 的${if (isWhite) "白" else "黑"}名单"
+            true -> "已将${if (isUser) "用户" else "群"} $value 添加到插件 ${plugin.getInfo().name} 的${if (isWhite) "白" else "黑"}名单"
             false -> "$value 已在其中, 无需修改"
-            else -> "插件 ${plugin.info.name} 不存在"
+            else -> "插件 ${plugin.getInfo().name} 不存在"
         }
     }
 
     fun removeFromList(plugin: Plugin, value: Long, isWhite: Boolean, isUser: Boolean): String {
         val type = if (isWhite) {
-            if (isUser) list[plugin.info.id]?.removeWU(value)
-            else list[plugin.info.id]?.removeWG(value)
+            if (isUser) list[plugin.getInfo().id]?.removeWU(value)
+            else list[plugin.getInfo().id]?.removeWG(value)
         } else {
-            if (isUser) list[plugin.info.id]?.removeBU(value)
-            else list[plugin.info.id]?.removeBG(value)
+            if (isUser) list[plugin.getInfo().id]?.removeBU(value)
+            else list[plugin.getInfo().id]?.removeBG(value)
         }
         save()
         return when(type) {
-            true -> "已将${if (isUser) "用户" else "群"} $value 从插件 ${plugin.info.name} ${if (isWhite) "白" else "黑"}名单中移除"
+            true -> "已将${if (isUser) "用户" else "群"} $value 从插件 ${plugin.getInfo().name} ${if (isWhite) "白" else "黑"}名单中移除"
             false -> "$value 不在其中, 无需修改"
-            else -> "插件 ${plugin.info.name} 不存在"
+            else -> "插件 ${plugin.getInfo().name} 不存在"
         }
     }
 
     fun getPermissionList(permission: PermissionType) = permissions[permission]!!
 
     fun getAllowGroup(plugin: Plugin): List<Group> {
-        val wb = list[plugin.info.id]
+        val wb = list[plugin.getInfo().id]
         return if (wb == null) Console.getBot().groups.toList()
         else Console.getBot().groups.filter {
             if (wb.isWhite) wb.WG.contains(it.id)
@@ -112,7 +114,7 @@ class Permissions {
     }
 
     fun getAllowUser(plugin: Plugin): List<Friend> {
-        val wb = list[plugin.info.id]
+        val wb = list[plugin.getInfo().id]
         return if (wb == null) Console.getBot().friends.toList()
         else Console.getBot().friends.filter {
             if (wb.isWhite) wb.WU.contains(it.id)
@@ -120,15 +122,15 @@ class Permissions {
         }
     }
 
-    fun isWhite(plugin: Plugin) = list[plugin.info.id]?.isWhite ?: false
+    fun isWhite(plugin: Plugin) = list[plugin.getInfo().id]?.isWhite ?: false
 
-    fun getWU(plugin: Plugin) = list[plugin.info.id]?.WU ?: listOf()
+    fun getWU(plugin: Plugin) = list[plugin.getInfo().id]?.WU ?: listOf()
 
-    fun getWG(plugin: Plugin) = list[plugin.info.id]?.WG ?: listOf()
+    fun getWG(plugin: Plugin) = list[plugin.getInfo().id]?.WG ?: listOf()
 
-    fun getBU(plugin: Plugin) = list[plugin.info.id]?.BU ?: listOf()
+    fun getBU(plugin: Plugin) = list[plugin.getInfo().id]?.BU ?: listOf()
 
-    fun getBG(plugin: Plugin) = list[plugin.info.id]?.BG ?: listOf()
+    fun getBG(plugin: Plugin) = list[plugin.getInfo().id]?.BG ?: listOf()
 
     enum class PermissionType {
         USER,

@@ -1,3 +1,5 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
+
 package net.cjsah.console
 
 import io.ktor.util.cio.writeChannel
