@@ -3,7 +3,6 @@ package net.cjsah.console.plugin
 import com.google.gson.JsonObject
 import net.cjsah.console.Console
 import net.cjsah.console.Console.logger
-import net.cjsah.console.Console.permissions
 import net.cjsah.console.ConsoleFiles
 import net.cjsah.console.Util
 import net.cjsah.console.exceptions.PluginException
@@ -32,7 +31,7 @@ object PluginLoader {
         for (jar in jars) {
             val plugin = getPlugin(jar)
             Console.plugins[plugin.getInfo().id] = plugin
-            permissions.addPlugin(plugin)
+            Console.permissions.addPlugin(plugin)
             logger.info("插件 ${plugin.getInfo().name} ${plugin.getInfo().version} 已加载")
         }
     }
@@ -43,13 +42,12 @@ object PluginLoader {
 
     private fun getPluginJars(): Collection<File> {
         val files = ConsoleFiles.PLUGINS.file.listFiles() ?: return emptyList()
-        return files.filter { it.isFile && it.name.endsWith(".jar") && !it.name.startsWith(".") }
+        return files.filter { it.isFile && it.extension == "jar" }
     }
 
     @Throws(Exception::class)
     private fun getPlugin(file: File): Plugin {
-        val jarResource = javaClass.classLoader.getResource(file.name)
-        val classLoader = URLClassLoader(arrayOf(jarResource))
+        val classLoader = URLClassLoader(arrayOf(file.toURI().toURL()))
         val jarFile = JarFile(file)
         val infoEntry = jarFile.getJarEntry("plugin.json")
         val inputStream = jarFile.getInputStream(infoEntry)
