@@ -71,7 +71,7 @@ object ConsoleCommand {
                     ).then(literal("status")
                         .executes("权限状态") { context ->
                             val plugin = PluginArgument.getPlugin(context, "plugin")
-                            var content = "插件 ${plugin.info.name} 的权限状态:\n"
+                            var content = "插件 ${plugin.getInfo().name} 的权限状态:\n"
                             content += "模式: ${if (permissions.isWhite(plugin)) "白" else "黑"}名单\n"
                             val wul = permissions.getWU(plugin).map { obj -> obj.toString() }
                             val wgl = permissions.getWG(plugin).map { obj -> obj.toString() }

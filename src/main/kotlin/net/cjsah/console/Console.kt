@@ -5,6 +5,7 @@ package net.cjsah.console
 import kotlinx.coroutines.runBlocking
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
+import net.cjsah.console.plugin.Plugin
 import net.cjsah.console.plugin.PluginLoader
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
@@ -16,10 +17,12 @@ import kotlin.concurrent.thread
 
 object Console {
     private lateinit var bot: Bot
-    val logger: Logger = LogManager.getLogger("控制台")
-    val permissions: Permissions = Permissions()
     private var exit = false
+    @JvmField val logger: Logger = LogManager.getLogger("控制台")
+    @JvmField val permissions: Permissions = Permissions()
+    @JvmField val plugins: MutableMap<String, Plugin> = HashMap()
 
+    @JvmStatic
     internal fun start(id: Long, password: String, login: Boolean = true) {
         logger.info("正在加载插件...")
         PluginLoader.loadPlugins()
@@ -58,10 +61,11 @@ object Console {
 
     }
 
+    @JvmStatic
     fun stop() {
         this.exit = true
 
-        if (!PluginLoader.isEmpty()) {
+        if (plugins.isNotEmpty()) {
             logger.info("正在关闭所有插件...")
             PluginLoader.onBotStopped()
         }
@@ -69,7 +73,7 @@ object Console {
         logger.info("QQ账号退出登陆...")
         bot.close()
 
-        if (!PluginLoader.isEmpty()) {
+        if (plugins.isNotEmpty()) {
             logger.info("正在卸载所有插件...")
             PluginLoader.onPluginUnload()
         }
@@ -77,6 +81,7 @@ object Console {
         logger.info("控制台退出...")
     }
 
+    @JvmStatic
     fun getBot(): Bot {
         return bot
     }
