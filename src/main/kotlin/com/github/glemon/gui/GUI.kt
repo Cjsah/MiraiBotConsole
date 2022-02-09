@@ -1,6 +1,5 @@
 package com.github.glemon.gui
 
-import net.cjsah.console.gui.MiraiBotConsoleUI
 import java.awt.AWTException
 import java.awt.BorderLayout
 import java.awt.CardLayout
@@ -34,8 +33,7 @@ import kotlin.system.exitProcess
 class GUI : JFrame() {
     init {
         val cl = CardLayout(0, 0)
-        this.iconImage =
-            Toolkit.getDefaultToolkit().getImage(MiraiBotConsoleUI::class.java.getResource("/assets/Icon.png"))
+        this.iconImage = Toolkit.getDefaultToolkit().getImage(MiraiBotConsoleUI::class.java.getResource("/assets/Icon.png"))
         this.title = "MiraiBotConsole"
 
         //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,8 +96,7 @@ class GUI : JFrame() {
         console.add(command, BorderLayout.SOUTH)
         val state = JPanel()
         state.background = SystemColor.textHighlightText
-        state.border =
-            TitledBorder(null, "\u5728\u7EBF\u72B6\u6001", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        state.border = TitledBorder(null, "\u5728\u7EBF\u72B6\u6001", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         console.add(state, BorderLayout.NORTH)
         state.layout = BorderLayout(0, 0)
         val stateLabel = JLabel("在线") //记得改

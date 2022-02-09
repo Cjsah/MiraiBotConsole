@@ -1,4 +1,4 @@
-package net.cjsah.console.gui;
+package com.github.glemon.gui;
 
 import java.awt.EventQueue;
 import javax.swing.*;
