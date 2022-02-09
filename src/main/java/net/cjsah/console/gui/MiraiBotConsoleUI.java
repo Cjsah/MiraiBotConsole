@@ -6,15 +6,13 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class MiraiBotConsoleUI {
-
-    private JFrame frameBot;
+public class MiraiBotConsoleUI extends JFrame {
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
                 MiraiBotConsoleUI windows = new MiraiBotConsoleUI();
-                windows.frameBot.setVisible(true);
+                windows.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -22,26 +20,20 @@ public class MiraiBotConsoleUI {
     }
 
     public MiraiBotConsoleUI() {
-        initialize();
-    }
-
-    private void initialize() {
-
         CardLayout cl = new CardLayout(0,0);
-        frameBot = new JFrame();
-        frameBot.setIconImage(Toolkit.getDefaultToolkit().getImage(MiraiBotConsoleUI.class.getResource("/assets/Icon.png")));
-        frameBot.setTitle("MiraiBotConsole");
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(MiraiBotConsoleUI.class.getResource("/assets/Icon.png")));
+        this.setTitle("MiraiBotConsole");
 
-        //frameBot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        frameBot.setBounds(100, 100, 900, 600);
-        //frameBot.getContentPane().setLayout(new BorderLayout(0, 0));
+        this.setBounds(100, 100, 900, 600);
+        //this.getContentPane().setLayout(new BorderLayout(0, 0));
 
-        //frameBot.setUndecorated(true);		//窗口去边框
-        //frameBot.setAlwaysOnTop(true);		//设置窗口总在最前
-        //frameBot.setBackground(new Color(0,0,0,0));		//设置窗口背景为透明色
+        //this.setUndecorated(true);		//窗口去边框
+        //this.setAlwaysOnTop(true);		//设置窗口总在最前
+        //this.setBackground(new Color(0,0,0,0));		//设置窗口背景为透明色
 
-        frameBot.getContentPane().setLayout(null);
+        this.getContentPane().setLayout(null);
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -53,7 +45,7 @@ public class MiraiBotConsoleUI {
          *卡片总容器
          */
         JPanel cardPanel = new JPanel();
-        frameBot.getContentPane().add(cardPanel, BorderLayout.CENTER);
+        this.getContentPane().add(cardPanel, BorderLayout.CENTER);
         cardPanel.setLayout(cl);
         cardPanel.setBounds(48, 0, 836, 560);
 
@@ -112,8 +104,8 @@ public class MiraiBotConsoleUI {
         console.add(state, BorderLayout.NORTH);
         state.setLayout(new BorderLayout(0, 0));
 
-        JLabel state_Label = new JLabel("在线");      //记得改
-        state.add(state_Label, BorderLayout.EAST);
+        JLabel stateLabel = new JLabel("在线");      //记得改
+        state.add(stateLabel, BorderLayout.EAST);
 
         JPanel log = new JPanel();
         log.setBackground(new Color(255, 255, 255));
@@ -121,11 +113,11 @@ public class MiraiBotConsoleUI {
         console.add(log, BorderLayout.CENTER);
         log.setLayout(new BorderLayout(0, 0));
 
-        TextArea log_textArea = new TextArea("GUI部分组件功能尚未实现");
-        log_textArea.setBackground(new Color(245, 245, 245));
-        log_textArea.setEditable(false);
-        log_textArea.setForeground(Color.BLACK);
-        log.add(log_textArea, BorderLayout.CENTER);
+        TextArea logTextArea = new TextArea("GUI部分组件功能尚未实现");
+        logTextArea.setBackground(new Color(245, 245, 245));
+        logTextArea.setEditable(false);
+        logTextArea.setForeground(Color.BLACK);
+        log.add(logTextArea, BorderLayout.CENTER);
 
         /*
          *插件卡片
@@ -134,47 +126,47 @@ public class MiraiBotConsoleUI {
         cardPanel.add(plugin, "plugin");
         plugin.setLayout(null);
 
-        JPanel plugin_list_panel = new JPanel();
-        plugin_list_panel.setBounds(0, 32, 836, 528);
-        plugin_list_panel.setBorder(new TitledBorder(null, "插件列表", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        plugin.add(plugin_list_panel);
-        plugin_list_panel.setLayout(new BorderLayout(0, 0));
+        JPanel pluginListPanel = new JPanel();
+        pluginListPanel.setBounds(0, 32, 836, 528);
+        pluginListPanel.setBorder(new TitledBorder(null, "插件列表", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        plugin.add(pluginListPanel);
+        pluginListPanel.setLayout(new BorderLayout(0, 0));
 
-        JScrollPane plugin_scrollPane = new JScrollPane();
-        plugin_scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        plugin_list_panel.add(plugin_scrollPane, BorderLayout.CENTER);
+        JScrollPane pluginScrollPane = new JScrollPane();
+        pluginScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        pluginListPanel.add(pluginScrollPane, BorderLayout.CENTER);
 
         JPanel pluginPanel = new JPanel();
         pluginPanel.setLayout(null);
         pluginPanel.setBounds(0,0,836,1000);
         pluginPanel.setBackground(new Color(245,245,245));
-        plugin_scrollPane.setViewportView(pluginPanel);
+        pluginScrollPane.setViewportView(pluginPanel);
 
-        JPanel ctrl_panel = new JPanel();
-        ctrl_panel.setBounds(0, 0, 836, 32);
-        plugin.add(ctrl_panel);
-        ctrl_panel.setLayout(null);
+        JPanel ctrlPanel = new JPanel();
+        ctrlPanel.setBounds(0, 0, 836, 32);
+        plugin.add(ctrlPanel);
+        ctrlPanel.setLayout(null);
 
         JButton reloadButton = new JButton();//刷新按钮
         reloadButton.setIcon(new ImageIcon(Objects.requireNonNull(MiraiBotConsoleUI.class.getResource("/assets/button/refresh.png"))));
         reloadButton.setBounds(10, 0, 32, 32);
         reloadButton.setContentAreaFilled(false);		//设置按钮背景透明
         reloadButton.setBorderPainted(false);		//去掉按钮边框
-        ctrl_panel.add(reloadButton);
+        ctrlPanel.add(reloadButton);
 
         JButton addButton = new JButton();//添加按钮
         addButton.setIcon(new ImageIcon(Objects.requireNonNull(MiraiBotConsoleUI.class.getResource("/assets/button/add.png"))));
         addButton.setBounds(52, 0, 32, 32);
         addButton.setContentAreaFilled(false);		//设置按钮背景透明
         addButton.setBorderPainted(false);		//去掉按钮边框
-        ctrl_panel.add(addButton);
+        ctrlPanel.add(addButton);
 
         JButton delButton = new JButton();//删除按钮
         delButton.setIcon(new ImageIcon(Objects.requireNonNull(MiraiBotConsoleUI.class.getResource("/assets/button/delete.png"))));
         delButton.setBounds(94, 0, 32, 32);
         delButton.setContentAreaFilled(false);		//设置按钮背景透明
         delButton.setBorderPainted(false);		//去掉按钮边框
-        ctrl_panel.add(delButton);
+        ctrlPanel.add(delButton);
 
         /*
          *设置卡片
@@ -191,8 +183,8 @@ public class MiraiBotConsoleUI {
         JPanel accountInputPanel = new JPanel();
         accountInputPanel.setLayout(new BorderLayout(0, 0));
 
-        JLabel account_label = new JLabel("账户：");
-        accountInputPanel.add(account_label, BorderLayout.WEST);
+        JLabel accountLabel = new JLabel("账户：");
+        accountInputPanel.add(accountLabel, BorderLayout.WEST);
 
         JTextField accountTextField = new JTextField();
         accountTextField.setColumns(10);
@@ -203,16 +195,16 @@ public class MiraiBotConsoleUI {
         account.add(passwordInputPanel, BorderLayout.CENTER);
         passwordInputPanel.setLayout(new BorderLayout(0, 0));
 
-        JLabel password_label = new JLabel("密码：");
-        passwordInputPanel.add(password_label, BorderLayout.WEST);
+        JLabel passwordLabel = new JLabel("密码：");
+        passwordInputPanel.add(passwordLabel, BorderLayout.WEST);
 
         JPasswordField passwordField = new JPasswordField();
         passwordField.setToolTipText("");
         passwordInputPanel.add(passwordField, BorderLayout.CENTER);
 
-        JCheckBox password_vis = new JCheckBox("显示密码");
-        passwordInputPanel.add(password_vis, BorderLayout.SOUTH);
-        password_vis.addActionListener(e -> passwordField.setVisible(true));
+        JCheckBox passwordVis = new JCheckBox("显示密码");
+        passwordInputPanel.add(passwordVis, BorderLayout.SOUTH);
+        passwordVis.addActionListener(e -> passwordField.setVisible(true));
 
         JPanel ctrlButtonPanel = new JPanel();
         account.add(ctrlButtonPanel, BorderLayout.SOUTH);
@@ -232,7 +224,7 @@ public class MiraiBotConsoleUI {
         cardButtonPanel.setLocation(0, 0);
         cardButtonPanel.setBackground(new Color(49, 191, 225));
         cardButtonPanel.setSize(48, 560);
-        frameBot.getContentPane().add(cardButtonPanel, BorderLayout.WEST);
+        this.getContentPane().add(cardButtonPanel, BorderLayout.WEST);
         cardButtonPanel.setLayout(null);
 
         JButton dataPanelButton=new JButton();
@@ -272,36 +264,36 @@ public class MiraiBotConsoleUI {
         /*
          *创建系统托盘
          */
-		if (SystemTray.isSupported()) {
-			PopupMenu popupMenu = new PopupMenu();
+        if (SystemTray.isSupported()) {
+            PopupMenu popupMenu = new PopupMenu();
 
-			MenuItem itemDisplay = new MenuItem("显示主界面");
-            itemDisplay.addActionListener(e -> frameBot.setVisible(true));
+            MenuItem itemDisplay = new MenuItem("显示主界面");
+            itemDisplay.addActionListener(e -> this.setVisible(true));
             popupMenu.add(itemDisplay);
 
-			MenuItem itemExit = new MenuItem("退出");
+            MenuItem itemExit = new MenuItem("退出");
             itemExit.addActionListener(e -> System.exit(0));
-			popupMenu.add(itemExit);
-
-			/*
-			 *设置托盘图标
-			 */
-			final ImageIcon ico = new ImageIcon(
-					Objects.requireNonNull(MiraiBotConsoleUI.class.getResource("/assets/Icon16.png")));
-			TrayIcon trayIcon = new TrayIcon(ico.getImage(), "MiraiBotConsole", popupMenu);
-            trayIcon.addActionListener(e -> frameBot.setVisible(true));
+            popupMenu.add(itemExit);
 
             /*
-			 *创建系统托盘
-			 */
-			try {
-				SystemTray.getSystemTray().add(trayIcon);
-			} catch (AWTException e) {
-				//e.printStackTrace();
-			}
-		}
+             *设置托盘图标
+             */
+            final ImageIcon ico = new ImageIcon(
+                    Objects.requireNonNull(MiraiBotConsoleUI.class.getResource("/assets/Icon16.png")));
+            TrayIcon trayIcon = new TrayIcon(ico.getImage(), "MiraiBotConsole", popupMenu);
+            trayIcon.addActionListener(e -> this.setVisible(true));
 
+            /*
+             *创建系统托盘
+             */
+            try {
+                SystemTray.getSystemTray().add(trayIcon);
+            } catch (AWTException e) {
+                //e.printStackTrace();
+            }
+        }
 
     }
+
 }
 
