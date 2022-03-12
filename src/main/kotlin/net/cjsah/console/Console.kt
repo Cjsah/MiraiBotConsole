@@ -47,7 +47,7 @@ object Console {
             else throw RuntimeException("登陆失败")
         }
 
-        ConsoleEvents.register(bot)
+        ConsoleEvents.register()
 
         logger.info("正在启动所有插件...")
         PluginLoader.onBotStarted()
