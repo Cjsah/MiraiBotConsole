@@ -2,6 +2,7 @@
 
 package net.cjsah.console.command
 
+import net.cjsah.console.Console
 import net.cjsah.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.console.command.context.CommandContext
 import net.cjsah.console.command.context.ContextBuilder
@@ -10,6 +11,8 @@ import net.cjsah.console.command.tree.CommandNode
 import net.cjsah.console.command.tree.RootCommandNode
 import net.cjsah.console.exceptions.BuiltExceptions
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.exceptions.PluginException
+import net.cjsah.console.plugin.Plugin
 
 class Dispatcher {
     companion object {
@@ -17,12 +20,20 @@ class Dispatcher {
     }
     private val ROOTS = RootCommandNode()
 
-    fun register(command: LiteralArgumentBuilder) = ROOTS.addChild(command.build())
+    fun register(command: LiteralArgumentBuilder){
+        if (Console.isFreezed()) throw PluginException("此方法已被冻结, 请使用 register(Lnet/cjsah/console/plugin/Plugin;Lnet/cjsah/console/command/builder/LiteralArgumentBuilder;)V")
+        ROOTS.addChild(command.build())
+    }
+
+    @Suppress("unused")
+    fun register(plugin: Plugin, command: LiteralArgumentBuilder) = ROOTS.addChild(plugin, command.build())
+
+    fun deregister(plugin: Plugin) = ROOTS.removeChild(plugin)
 
     @Throws(CommandException::class)
     fun execute(input: String, source: CommandSource<*>): Int {
         val reader = StringReader(input)
-        val builder = ContextBuilder(this, source, ROOTS, reader.getCursor())
+        val builder = ContextBuilder(this, source, reader.getCursor())
         val parse = parseNodes(ROOTS, reader, builder)
         if (parse.reader.canRead()) {
             if (parse.exceptions.size == 1) throw parse.exceptions.values.iterator().next()

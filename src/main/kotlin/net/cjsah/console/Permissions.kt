@@ -12,16 +12,12 @@ class Permissions {
     private val list = HashMap<String, WBList>()
     private val permissions = HashMap<PermissionType, List<Long>>()
 
-    fun init() {
-        load()
-    }
-
     fun reload() {
         list.clear()
         load()
     }
 
-    private fun load() {
+    fun load() {
         Util.fromJson(ConsoleFiles.PERMISSIONS.file).entrySet().forEach { kv ->
             if (kv.key == "person") {
                 permissions[PermissionType.OWNER] = kv.value.asJsonObject.get("owner").asJsonArray.map { it.asLong }

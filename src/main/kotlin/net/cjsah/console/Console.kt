@@ -5,6 +5,7 @@ package net.cjsah.console
 import kotlinx.coroutines.runBlocking
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
+import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.plugin.Plugin
 import net.cjsah.console.plugin.PluginLoader
 import net.mamoe.mirai.Bot
@@ -13,14 +14,18 @@ import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.util.jar.Manifest
 import kotlin.concurrent.thread
 
 object Console {
-    private lateinit var bot: Bot
-    private var exit = false
+    @JvmField val version: String = Console.javaClass.classLoader.getResource("META-INF/MANIFEST.MF")
+        .openStream().use { Manifest(it) }.mainAttributes.getValue("Implementation-Version")
     @JvmField val logger: Logger = LogManager.getLogger("控制台")
     @JvmField val permissions: Permissions = Permissions()
     @JvmField val plugins: MutableMap<String, Plugin> = HashMap()
+    private lateinit var bot: Bot
+    private var exit = false
+    private var freezed = false
 
     @JvmStatic
     internal fun start(id: Long, password: String, login: Boolean = true) {
@@ -44,7 +49,7 @@ object Console {
 
         if (login) {
             if (bot.isOnline) logger.info("登录成功")
-            else throw RuntimeException("登陆失败")
+            else throw ConsoleException("登陆失败")
         }
 
         ConsoleEvents.register()
@@ -84,6 +89,15 @@ object Console {
     @JvmStatic
     fun getBot(): Bot {
         return bot
+    }
+
+    fun freeze() {
+        if (freezed) throw ConsoleException("控制台已冻结")
+        freezed = true
+    }
+
+    fun isFreezed(): Boolean {
+        return freezed
     }
 
 }

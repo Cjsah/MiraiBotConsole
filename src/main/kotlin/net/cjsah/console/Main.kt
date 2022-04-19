@@ -12,11 +12,11 @@ fun main() {
         return
     }
 
-    Console.permissions.init()
-
+    Console.permissions.load()
     ConsoleCommand.register()
+    Console.freeze()
 
-    Console.start(config.getLong("account"), config.getString("password"))
+    Console.start(config.getLong("account"), config.getString("password"), false)
 
 }
 

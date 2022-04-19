@@ -40,4 +40,9 @@ object BuiltExceptions {
     @JvmField val FRIEND_NOT_FOUND = Para1CommandException { friend: Any -> "机器人并没有此好友 '$friend'" }
     @JvmField val PLUGIN_NOT_FOUND = Para1CommandException { plugin: Any -> "没有找到此插件: '$plugin'" }
 
+    @JvmField val PLUGIN_UNKNOWN_EXCEPTION: OtherException = OtherException { PluginException("未知错误") }
+
+    fun interface OtherException {
+        fun create(): RuntimeException
+    }
 }

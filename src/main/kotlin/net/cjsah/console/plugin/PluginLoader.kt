@@ -5,6 +5,8 @@ import net.cjsah.console.Console
 import net.cjsah.console.Console.logger
 import net.cjsah.console.ConsoleFiles
 import net.cjsah.console.Util
+import net.cjsah.console.command.CommandManager
+import net.cjsah.console.exceptions.BuiltExceptions.PLUGIN_UNKNOWN_EXCEPTION
 import net.cjsah.console.exceptions.PluginException
 import java.io.File
 import java.io.InputStreamReader
@@ -16,8 +18,10 @@ object PluginLoader {
 
     fun onBotStarted() = Console.plugins.values.forEach { it.onBotStarted() }
 
-
-    fun onBotStopped() = Console.plugins.values.forEach { it.onBotStopped() }
+    fun onBotStopped() = Console.plugins.values.forEach {
+        CommandManager.deregister(it)
+        it.onBotStopped()
+    }
 
     fun onPluginUnload() = Console.plugins.entries.removeAll { (_, plugin) ->
         plugin.onPluginUnload()
@@ -58,10 +62,37 @@ object PluginLoader {
         val info = PluginInformation(json)
         if (Console.plugins.containsKey(info.id))
             throw PluginException("插件 $file [${info.name} (${info.id}) v${info.version}] 无法加载, 已有同名插件 ${Console.plugins[info.id]}")
+        if (!info.isAvailableVersion())
+            throw PluginException("插件 $file [${info.name} (${info.id}) v${info.version}] 无法加载, 插件版本与控制台版本不一致")
         val clazz = classLoader.loadClass(info.main)
         val plugin = clazz.getDeclaredConstructor().newInstance() as Plugin
         plugin.init(info)
         return plugin
     }
 
+    private fun PluginInformation.isAvailableVersion(): Boolean {
+        if (this.depends.containsKey("console")) {
+            val consoleVersions = Console.version.split(".").map { it.toInt() }
+            val pluginVersion = this.depends["console"]!!
+            val pluginPrefix = pluginVersion.substring(0, 1)
+            val pluginSuffix = pluginVersion.substring(pluginVersion.length - 1, pluginVersion.length)
+            val pluginVersions = pluginVersion.substring(1, pluginVersion.length - 1).split(".").map { it.toInt() }
+            val prefixRule: (Int, Int) -> Boolean = when (pluginPrefix) {
+                "[" -> { a, b -> a >= b }
+                "(" -> { a, b -> a > b }
+                else -> throw PLUGIN_UNKNOWN_EXCEPTION.create()
+            }
+            val suffixRule: (Int, Int) -> Boolean = when (pluginSuffix) {
+                "]" -> { a, b -> a <= b }
+                ")" -> { a, b -> a < b }
+                else -> throw PLUGIN_UNKNOWN_EXCEPTION.create()
+            }
+            for (index in pluginVersions.indices) {
+                if (!(prefixRule(pluginVersions[index], consoleVersions[index]) &&
+                      suffixRule(pluginVersions[index], consoleVersions[index])))
+                    return false
+            }
+            return true
+        } else return true
+    }
 }

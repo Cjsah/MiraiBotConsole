@@ -1,9 +1,12 @@
 package net.cjsah.console.command.tree
 
+import net.cjsah.console.Console
 import net.cjsah.console.command.StringReader
 import net.cjsah.console.command.builder.ArgumentBuilder
 import net.cjsah.console.command.context.ContextBuilder
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.exceptions.Para0CommandException
+import net.cjsah.console.plugin.Plugin
 
 class RootCommandNode : CommandNode("", null, {true})  {
     override fun getName() = ""
@@ -11,6 +14,17 @@ class RootCommandNode : CommandNode("", null, {true})  {
     override fun getUsageText() = ""
 
     override fun isValidInput(input: String) = false
+
+    fun addChild(plugin: Plugin, node: CommandNode) {
+        node.setPlugin(plugin)
+        super.addChild(node)
+    }
+
+    override fun addChild(node: CommandNode) {
+        if (Console.isFreezed())
+            throw Para0CommandException("在根节点中注册指令请使用 addChild(Lnet/cjsah/console/plugin/Plugin;Lnet/cjsah/console/command/tree/CommandNode;)V 方法").create()
+        super.addChild(node)
+    }
 
     @Throws(CommandException::class)
     override fun parse(reader: StringReader, builder: ContextBuilder) {

@@ -5,12 +5,10 @@ package net.cjsah.console.command.context
 import net.cjsah.console.command.Command
 import net.cjsah.console.command.Dispatcher
 import net.cjsah.console.command.source.CommandSource
-import net.cjsah.console.command.tree.CommandNode
 
 class ContextBuilder(
     private val dispatcher: Dispatcher,
     private val source: CommandSource<*>,
-    private val rootNode: CommandNode,
     start: Int
 ) {
     private val arguments: MutableMap<String, ParsedNode<*>> = LinkedHashMap()
@@ -37,7 +35,7 @@ class ContextBuilder(
     }
 
     fun copy(): ContextBuilder {
-        val builder = ContextBuilder(dispatcher, source, rootNode, range.start)
+        val builder = ContextBuilder(dispatcher, source, range.start)
         builder.command = command
         builder.arguments.putAll(arguments)
         builder.range = range

@@ -6,6 +6,7 @@ import net.cjsah.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.console.command.builder.RequiredArgumentBuilder
 import net.cjsah.console.command.source.CommandSource
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.plugin.Plugin
 import java.util.function.Consumer
 
 object CommandManager {
@@ -13,14 +14,14 @@ object CommandManager {
     private val DISPATCHER = Dispatcher()
 
     @JvmStatic
-    fun literal(literal: String): LiteralArgumentBuilder {
-        return LiteralArgumentBuilder.literal(literal)
-    }
+    fun literal(literal: String): LiteralArgumentBuilder =
+        LiteralArgumentBuilder.literal(literal)
+
 
     @JvmStatic
-    fun <T> argument(literal: String, type: Argument<T>): RequiredArgumentBuilder<T> {
-        return RequiredArgumentBuilder.argument(literal, type)
-    }
+    fun <T> argument(literal: String, type: Argument<T>): RequiredArgumentBuilder<T> =
+        RequiredArgumentBuilder.argument(literal, type)
+
 
     @JvmStatic
     fun execute(command: String, source: CommandSource<*>): Int {
@@ -35,8 +36,9 @@ object CommandManager {
     }
 
     @JvmStatic
-    fun register(command: Consumer<Dispatcher>) {
-        command.accept(DISPATCHER)
-    }
+    fun register(command: Consumer<Dispatcher>) = command.accept(DISPATCHER)
+
+    @JvmStatic
+    internal fun deregister(plugin: Plugin) = DISPATCHER.deregister(plugin)
 
 }

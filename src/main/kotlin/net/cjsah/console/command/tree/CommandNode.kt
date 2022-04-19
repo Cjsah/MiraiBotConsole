@@ -6,6 +6,7 @@ import net.cjsah.console.command.builder.ArgumentBuilder
 import net.cjsah.console.command.context.ContextBuilder
 import net.cjsah.console.command.source.CommandSource
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.plugin.Plugin
 import java.util.function.Predicate
 
 abstract class CommandNode(
@@ -16,6 +17,7 @@ abstract class CommandNode(
     private val children: MutableMap<String, CommandNode> = LinkedHashMap()
     private val literals: MutableMap<String, LiteralCommandNode> = LinkedHashMap()
     private val arguments: MutableMap<String, ArgumentCommandNode<*>> = LinkedHashMap()
+    private var plugin: Plugin? = null
 
     abstract fun getName(): String
 
@@ -50,9 +52,13 @@ abstract class CommandNode(
         return requirement.test(source)
     }
 
-    open fun addChild(node: CommandNode) {
-        if (node is RootCommandNode) throw UnsupportedOperationException("无法将 'RootCommandNode' 作为一个子节点添加到其他 'CommandNode'")
+    internal fun setPlugin(plugin: Plugin) {
+        this.plugin = plugin
+    }
 
+    open fun addChild(node: CommandNode) {
+        if (node is RootCommandNode)
+            throw UnsupportedOperationException("无法将 'RootCommandNode' 作为一个子节点添加到其他 'CommandNode'")
         children[node.getName()]?.let { child ->
             child.help = node.help
             node.command?.let { child.command = it }
@@ -64,6 +70,16 @@ abstract class CommandNode(
             } else if (node is ArgumentCommandNode<*>) {
                 arguments[node.getName()] = node
             }
+        }
+    }
+
+    open fun removeChild(plugin: Plugin) {
+        children.entries.removeIf {
+            if (it.value.plugin == plugin){
+                literals.remove(it.key)
+                arguments.remove(it.key)
+                true
+            } else false
         }
     }
 
