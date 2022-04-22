@@ -30,44 +30,35 @@ object PluginLoader {
 
     @Throws(Exception::class)
     fun loadPlugins() {
-        val jars = getPluginJars()
-        logger.info(if (jars.isEmpty()) "没有插件被加载" else "正在加载 ${jars.size} 个插件")
-        for (jar in jars) {
-            val plugin = getPlugin(jar)
-            Console.plugins[plugin.getInfo().id] = plugin
-            Console.permissions.addPlugin(plugin)
-            logger.info("插件 ${plugin.getInfo().name} ${plugin.getInfo().version} 已加载")
+        val jarFiles = getPluginJars()
+        logger.info(if (jarFiles.isEmpty()) "没有插件被加载" else "正在加载 ${jarFiles.size} 个插件")
+        jarFiles.forEach { file ->
+            getPlugin(file).let {
+                Console.plugins[it.getInfo().id] = it
+                Console.permissions.addPlugin(it)
+                logger.info("插件 ${it.getInfo().name} ${it.getInfo().version} 已加载")
+            }
         }
     }
 
-    fun getPlugin(id: String): Plugin? {
-        return Console.plugins[id]
-    }
+    fun getPlugin(id: String): Plugin? = Console.plugins[id]
 
-    private fun getPluginJars(): Collection<File> {
-        val files = ConsoleFiles.PLUGINS.file.listFiles() ?: return emptyList()
-        return files.filter { it.isFile && it.extension == "jar" }
-    }
+    private fun getPluginJars(): Collection<File> =
+        ConsoleFiles.PLUGINS.file.listFiles().filter { it.isFile && it.extension == "jar" }
 
     @Throws(Exception::class)
     private fun getPlugin(file: File): Plugin {
         val classLoader = URLClassLoader(arrayOf(file.toURI().toURL()))
-        val jarFile = JarFile(file)
-        val infoEntry = jarFile.getJarEntry("plugin.json")
-        val inputStream = jarFile.getInputStream(infoEntry)
+        val inputStream = JarFile(file).let { it.getInputStream(it.getJarEntry("plugin.json")) }
         val reader = InputStreamReader(inputStream, StandardCharsets.UTF_8)
-        val json: JsonObject = Util.GSON.fromJson(reader, JsonObject::class.java)
+        val info = PluginInformation(Util.GSON.fromJson(reader, JsonObject::class.java))
         inputStream.close()
         reader.close()
-        val info = PluginInformation(json)
         if (Console.plugins.containsKey(info.id))
             throw PluginException("插件 $file [${info.name} (${info.id}) v${info.version}] 无法加载, 已有同名插件 ${Console.plugins[info.id]}")
         if (!info.isAvailableVersion())
             throw PluginException("插件 $file [${info.name} (${info.id}) v${info.version}] 无法加载, 插件版本与控制台版本不一致")
-        val clazz = classLoader.loadClass(info.main)
-        val plugin = clazz.getDeclaredConstructor().newInstance() as Plugin
-        plugin.init(info)
-        return plugin
+        return (classLoader.loadClass(info.main).getDeclaredConstructor().newInstance() as Plugin).also { it.init(info) }
     }
 
     private fun PluginInformation.isAvailableVersion(): Boolean {

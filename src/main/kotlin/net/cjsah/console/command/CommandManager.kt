@@ -27,10 +27,8 @@ object CommandManager {
     fun execute(command: String, source: CommandSource<*>): Int {
         try {
             return DISPATCHER.execute(command, source)
-        } catch (e: CommandException) {
-            e.message?.let { logger.error(it) }
         } catch (e: Exception) {
-            e.printStackTrace()
+            e.message?.let { logger.error(it) }
         }
         return 0
     }

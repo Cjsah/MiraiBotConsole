@@ -120,14 +120,14 @@ class Dispatcher {
         return result
     }
 
-    private fun getHelp(result: MutableMap<String, String>, mem: String, node: CommandNode, source: CommandSource<*>, first: Boolean) {
-        var finalMem = mem
+    private fun getHelp(result: MutableMap<String, String>, prefix: String, node: CommandNode, source: CommandSource<*>, first: Boolean) {
+        var command = prefix
         if (!node.canUse(source)) return
-        finalMem += "${if (first) "" else " "}${node.getUsageText()}"
+        command += "${if (first) "" else " "}${node.getUsageText()}"
         if (node.getCommand() != null) {
-            result[finalMem] = node.getHelp()
+            result[command] = node.getHelp()
         }
-        node.getChildren().forEach { this.getHelp(result, finalMem, it, source, false) }
+        node.getChildren().forEach { this.getHelp(result, command, it, source, false) }
     }
 
 }

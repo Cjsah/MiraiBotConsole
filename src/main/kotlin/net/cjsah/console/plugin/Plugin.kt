@@ -19,9 +19,7 @@ abstract class Plugin {
         } else throw PluginException("插件已经初始化, 请勿再次初始化")
     }
 
-    fun getInfo(): PluginInformation {
-        return info
-    }
+    fun getInfo() = info
 
     /**
      * 插件加载时执行
