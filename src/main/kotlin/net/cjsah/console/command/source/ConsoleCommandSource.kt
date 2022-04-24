@@ -11,9 +11,9 @@ class ConsoleCommandSource : CommandSource<Console>(Console) {
 
     override fun canUse(plugin: Plugin) = true
 
-    override fun sendFeedBack(message: String) = sendFeedBack(message, Level.INFO)
+    override suspend fun sendFeedBack(message: String) = sendFeedBack(message, Level.INFO)
 
-    override fun sendFeedBack(message: String, level: Level) {
+    override suspend fun sendFeedBack(message: String, level: Level) {
         when (level) {
             Level.INFO -> logger.info(message)
             Level.WARN -> logger.warn(message)

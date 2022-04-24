@@ -1,6 +1,6 @@
 package net.cjsah.console
 
-fun main() {
+suspend fun main() {
     System.setProperty("mirai.no-desktop", "")
 
     val logger = Console.logger

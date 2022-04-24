@@ -2,7 +2,6 @@
 
 package net.cjsah.console
 
-import kotlinx.coroutines.runBlocking
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
 import net.cjsah.console.exceptions.ConsoleException
@@ -18,7 +17,7 @@ import java.util.jar.Manifest
 import kotlin.concurrent.thread
 
 object Console {
-    @JvmField val version: String = Console.javaClass.classLoader.getResource("META-INF/MANIFEST.MF")
+    @JvmField val version: String = Console.javaClass.classLoader.getResource("META-INF/MANIFEST.MF")!!
         .openStream().use { Manifest(it) }.mainAttributes.getValue("Implementation-Version")
     @JvmField val logger: Logger = LogManager.getLogger("控制台")
     @JvmField val permissions: Permissions = Permissions()
@@ -28,7 +27,7 @@ object Console {
     private var freezed = false
 
     @JvmStatic
-    internal fun start(id: Long, password: String, login: Boolean = true) {
+    internal suspend fun start(id: Long, password: String, login: Boolean = true) {
         logger.info("正在加载插件...")
         PluginLoader.loadPlugins()
 
@@ -43,11 +42,8 @@ object Console {
             loginSolver = Solver()
         }
 
-        runBlocking {
-            if (login) bot.alsoLogin()
-        }
-
         if (login) {
+            bot.alsoLogin()
             if (bot.isOnline) logger.info("登录成功")
             else throw ConsoleException("登陆失败")
         }

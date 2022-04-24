@@ -2,7 +2,6 @@
 
 package net.cjsah.console.command.source
 
-import kotlinx.coroutines.runBlocking
 import net.cjsah.console.Console
 import net.cjsah.console.Permissions
 import net.cjsah.console.Util.canUse
@@ -19,12 +18,12 @@ class GroupCommandSource(group: Group, private val sender: Member) : CommandSour
 
     fun memberCanUse(plugin: Plugin) = canUse(plugin, sender.id, true)
 
-    override fun sendFeedBack(message: String) {
-        runBlocking { getSource().sendMessage(message) }
+    override suspend fun sendFeedBack(message: String) {
+        getSource().sendMessage(message)
     }
 
-    override fun sendFeedBack(message: String, level: Level) {
-        Console.logger.warn("群组消息不应该使用日志形式发送")
-        runBlocking { getSource().sendMessage(message) }
+    override suspend fun sendFeedBack(message: String, level: Level) {
+        Console.logger.warn("群组消息不应该以日志形式发送")
+        getSource().sendMessage(message)
     }
 }

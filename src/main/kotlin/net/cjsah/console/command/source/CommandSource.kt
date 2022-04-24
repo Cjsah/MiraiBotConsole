@@ -1,5 +1,8 @@
+@file:JvmBlockingBridge
+
 package net.cjsah.console.command.source
 
+import me.him188.kotlin.jvm.blocking.bridge.JvmBlockingBridge
 import net.cjsah.console.Permissions.PermissionType
 import net.cjsah.console.exceptions.CommandException
 import net.cjsah.console.plugin.Plugin
@@ -12,10 +15,10 @@ abstract class CommandSource<T>(private val source: T) {
     abstract fun canUse(plugin: Plugin): Boolean
 
     @Throws(CommandException::class)
-    abstract fun sendFeedBack(message: String)
+    abstract suspend fun sendFeedBack(message: String)
 
     @Throws(CommandException::class)
-    abstract fun sendFeedBack(message: String, level: Level)
+    abstract suspend fun sendFeedBack(message: String, level: Level)
 
     open fun getSource(): T {
         return source
