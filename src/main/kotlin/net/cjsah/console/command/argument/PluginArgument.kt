@@ -6,7 +6,7 @@ import net.cjsah.console.command.StringReader
 import net.cjsah.console.command.context.CommandContext
 import net.cjsah.console.exceptions.BuiltExceptions
 import net.cjsah.console.plugin.Plugin
-import net.cjsah.console.plugin.PluginLoader
+import net.cjsah.console.plugin.PluginManager
 
 class PluginArgument private constructor() : Argument<Plugin> {
 
@@ -21,7 +21,7 @@ class PluginArgument private constructor() : Argument<Plugin> {
     override fun parse(reader: StringReader): Plugin {
         val start = reader.getCursor()
         val id = reader.readUnquotedString()
-        val plugin = PluginLoader.getPlugin(id)
+        val plugin = PluginManager.getPlugin(id)
         if (plugin == null) {
             reader.setCursor(start)
             throw BuiltExceptions.PLUGIN_NOT_FOUND.createWithContext(reader, id)

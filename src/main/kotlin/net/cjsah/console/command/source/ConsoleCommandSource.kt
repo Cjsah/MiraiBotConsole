@@ -1,7 +1,7 @@
 package net.cjsah.console.command.source
 
 import net.cjsah.console.Console
-import net.cjsah.console.Console.logger
+import net.cjsah.console.Logger
 import net.cjsah.console.Permissions
 import net.cjsah.console.plugin.Plugin
 import org.apache.logging.log4j.Level
@@ -15,10 +15,10 @@ class ConsoleCommandSource : CommandSource<Console>(Console) {
 
     override suspend fun sendFeedBack(message: String, level: Level) {
         when (level) {
-            Level.INFO -> logger.info(message)
-            Level.WARN -> logger.warn(message)
-            Level.ERROR -> logger.error(message)
-            Level.DEBUG -> logger.debug(message)
+            Level.INFO -> Logger.info(message)
+            Level.WARN -> Logger.warn(message)
+            Level.ERROR -> Logger.error(message)
+            Level.DEBUG -> Logger.debug(message)
         }
     }
 }

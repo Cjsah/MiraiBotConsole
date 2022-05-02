@@ -9,5 +9,5 @@ fun interface Command {
     }
 
     @Throws(CommandException::class)
-    fun run(context: CommandContext): Int
+    suspend fun run(context: CommandContext): Int
 }

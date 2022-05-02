@@ -1,3 +1,8 @@
 package net.cjsah.console.exceptions
 
-class ConsoleException(msg: String) : RuntimeException(msg)
+import net.cjsah.console.text.Text
+
+object ConsoleException {
+    fun <T> create(text: Text, exception: Class<T>): T =
+        exception.getConstructor(String::class.java).newInstance(text.toString())
+}

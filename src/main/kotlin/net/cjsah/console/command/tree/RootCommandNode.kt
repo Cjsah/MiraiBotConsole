@@ -20,12 +20,6 @@ class RootCommandNode : CommandNode("", null, {true})  {
         super.addChild(node)
     }
 
-    override fun addChild(node: CommandNode) {
-        if (Console.isFreezed())
-            throw Para0CommandException("在根节点中注册指令请使用 addChild(Lnet/cjsah/console/plugin/Plugin;Lnet/cjsah/console/command/tree/CommandNode;)V 方法").create()
-        super.addChild(node)
-    }
-
     @Throws(CommandException::class)
     override fun parse(reader: StringReader, builder: ContextBuilder) {
     }

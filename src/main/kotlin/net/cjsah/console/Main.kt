@@ -3,18 +3,20 @@ package net.cjsah.console
 suspend fun main() {
     System.setProperty("mirai.no-desktop", "")
 
-    val logger = Console.logger
+    Language.load()
+
     val config = Account.get()
 
     if (ConsoleFiles.init()) {
-        logger.info("初始化完成")
-        logger.info("请在${config.configFile.name}中填入你的QQ号和密码后重启Bot")
+        Logger.info("初始化完成")
+        Logger.info("请在${config.configFile.name}中填入你的QQ号和密码后重启Bot")
         return
     }
 
     Console.permissions.load()
     ConsoleCommand.register()
     Console.freeze()
+
 
     Console.start(config.getLong("account"), config.getString("password"), false)
 

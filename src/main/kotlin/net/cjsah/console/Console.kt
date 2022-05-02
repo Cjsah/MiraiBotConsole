@@ -2,24 +2,23 @@
 
 package net.cjsah.console
 
+import kotlinx.coroutines.runBlocking
 import net.cjsah.console.command.CommandManager
 import net.cjsah.console.command.source.ConsoleCommandSource
 import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.plugin.Plugin
-import net.cjsah.console.plugin.PluginLoader
+import net.cjsah.console.plugin.PluginManager
+import net.cjsah.console.text.TranslateText
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.utils.BotConfiguration
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import java.util.jar.Manifest
 import kotlin.concurrent.thread
 
 object Console {
     @JvmField val version: String = Console.javaClass.classLoader.getResource("META-INF/MANIFEST.MF")!!
         .openStream().use { Manifest(it) }.mainAttributes.getValue("Implementation-Version")
-    @JvmField val logger: Logger = LogManager.getLogger("控制台")
     @JvmField val permissions: Permissions = Permissions()
     @JvmField val plugins: MutableMap<String, Plugin> = HashMap()
     private lateinit var bot: Bot
@@ -28,10 +27,10 @@ object Console {
 
     @JvmStatic
     internal suspend fun start(id: Long, password: String, login: Boolean = true) {
-        logger.info("正在加载插件...")
-        PluginLoader.loadPlugins()
+        Logger.info(TranslateText("plugin.loading"))
+        PluginManager.loadPlugins()
 
-        if (login) logger.info("登录账号: $id")
+        if (login) Logger.info(TranslateText("bot.login", id))
 
         bot = BotFactory.newBot(id, password) {
             fileBasedDeviceInfo("$id.json")
@@ -44,22 +43,23 @@ object Console {
 
         if (login) {
             bot.alsoLogin()
-            if (bot.isOnline) logger.info("登录成功")
-            else throw ConsoleException("登陆失败")
+            if (bot.isOnline) Logger.info(TranslateText("bot.success"))
+            else throw ConsoleException.create(TranslateText("login.failed"), RuntimeException::class.java)
         }
 
         ConsoleEvents.register()
 
-        logger.info("正在启动所有插件...")
-        PluginLoader.onBotStarted()
+        Logger.info(TranslateText("plugin.starting"))
+        PluginManager.onBotStarted()
 
         thread(name = "指令进程") {
-            while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource()) }
-            logger.info("指令进程已结束")
+            runBlocking {
+                while (!exit) readLine()?.let { if (it != "") CommandManager.execute(it, ConsoleCommandSource()) }
+                Logger.info(TranslateText("command.stop"))
+            }
         }
 
-        logger.info("控制台已启动")
-
+        Logger.info(TranslateText("console.started"))
     }
 
     @JvmStatic
@@ -67,19 +67,19 @@ object Console {
         this.exit = true
 
         if (plugins.isNotEmpty()) {
-            logger.info("正在关闭所有插件...")
-            PluginLoader.onBotStopped()
+            Logger.info(TranslateText("plugin.stopping"))
+            PluginManager.onBotStopped()
         }
 
-        logger.info("QQ账号退出登陆...")
+        Logger.info(TranslateText("bot.logout"))
         bot.close()
 
         if (plugins.isNotEmpty()) {
-            logger.info("正在卸载所有插件...")
-            PluginLoader.onPluginUnload()
+            Logger.info(TranslateText("plugin.removing"))
+            PluginManager.onPluginUnload()
         }
 
-        logger.info("控制台退出...")
+        Logger.info(TranslateText("console.exit"))
     }
 
     @JvmStatic
@@ -87,12 +87,14 @@ object Console {
         return bot
     }
 
+    @JvmStatic
     fun freeze() {
-        if (freezed) throw ConsoleException("控制台已冻结")
+        if (freezed) throw ConsoleException.create(TranslateText("console.freezed"), RuntimeException::class.java)
         freezed = true
     }
 
-    fun isFreezed(): Boolean {
+    @JvmStatic
+    fun isFrozen(): Boolean {
         return freezed
     }
 

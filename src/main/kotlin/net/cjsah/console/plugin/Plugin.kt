@@ -3,7 +3,9 @@
 package net.cjsah.console.plugin
 
 import net.cjsah.console.ConsoleFiles
+import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.exceptions.PluginException
+import net.cjsah.console.text.TranslateText
 import java.io.File
 
 abstract class Plugin {
@@ -16,7 +18,7 @@ abstract class Plugin {
             if (info.hasConfig && (!getPluginDir().exists() || getPluginDir().isDirectory)) { getPluginDir().mkdirs() }
             onPluginLoad()
             init = true
-        } else throw PluginException("插件已经初始化, 请勿再次初始化")
+        } else throw ConsoleException.create(TranslateText("plugin.inited"), PluginException::class.java)
     }
 
     fun getInfo() = info
@@ -24,7 +26,7 @@ abstract class Plugin {
     /**
      * 插件加载时执行
      *
-     * 此时 [bot = null][net.cjsah.console.Console.bot]
+     * 此时 [bot][net.cjsah.console.Console.bot] = null
      */
     protected abstract fun onPluginLoad()
 
@@ -48,7 +50,7 @@ abstract class Plugin {
      * @return 配置文件夹
      */
     fun getPluginDir(): File {
-        if (!info.hasConfig) throw PluginException("此插件没有配置文件")
+        if (!info.hasConfig) throw ConsoleException.create(TranslateText("plugin.noconfig"), PluginException::class.java)
         return File(ConsoleFiles.PLUGINS.file, info.id)
     }
 

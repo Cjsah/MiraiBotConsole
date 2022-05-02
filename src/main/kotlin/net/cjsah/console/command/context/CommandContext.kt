@@ -4,6 +4,8 @@ package net.cjsah.console.command.context
 
 import net.cjsah.console.command.Command
 import net.cjsah.console.command.source.CommandSource
+import net.cjsah.console.exceptions.ConsoleException
+import net.cjsah.console.text.TranslateText
 
 class CommandContext(
     private val arguments: Map<String, ParsedNode<*>>,
@@ -11,12 +13,19 @@ class CommandContext(
     private val command: Command?
 ) {
     fun <V> getArgument(name: String, clazz: Class<V>): V {
-        val argument: ParsedNode<*> = arguments[name] ?: throw IllegalArgumentException("此命令中不存在参数 '$name'")
+        val argument: ParsedNode<*> = arguments[name] ?:
+        throw ConsoleException.create(
+            TranslateText("command.noargs", name),
+            IllegalArgumentException::class.java
+        )
         val result = argument.getResult()!!
         return if (ClassConversion[clazz].isAssignableFrom(result.javaClass)) {
             result as V
         } else {
-            throw IllegalArgumentException("参数 '" + name + "' 被定义为 " + result.javaClass.simpleName + ", 而不是 " + clazz)
+            throw ConsoleException.create(
+                TranslateText("command.args.invalid", name, result.javaClass.simpleName, clazz),
+                IllegalArgumentException::class.java
+            )
         }
     }
 

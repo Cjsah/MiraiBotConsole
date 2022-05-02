@@ -6,7 +6,9 @@ import net.cjsah.console.command.builder.ArgumentBuilder
 import net.cjsah.console.command.context.ContextBuilder
 import net.cjsah.console.command.source.CommandSource
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.plugin.Plugin
+import net.cjsah.console.text.TranslateText
 import java.util.function.Predicate
 
 abstract class CommandNode(
@@ -58,7 +60,10 @@ abstract class CommandNode(
 
     open fun addChild(node: CommandNode) {
         if (node is RootCommandNode)
-            throw UnsupportedOperationException("无法将 'RootCommandNode' 作为一个子节点添加到其他 'CommandNode'")
+            throw ConsoleException.create(
+                TranslateText("command.rootnode"),
+                UnsupportedOperationException::class.java
+            )
         children[node.getName()]?.let { child ->
             child.help = node.help
             node.command?.let { child.command = it }
@@ -102,7 +107,8 @@ abstract class CommandNode(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CommandNode) return false
-        return if (children !== other.children) false else !if (command != null) command !== other.command else other.command != null
+        return if (children !== other.children) false
+        else !if (command != null) command !== other.command else other.command != null
     }
 
     override fun compareTo(other: CommandNode): Int {

@@ -1,7 +1,9 @@
-@file:Suppress("PrivatePropertyName")
+@file:Suppress("PrivatePropertyName", "unused")
+@file:JvmBlockingBridge
 
 package net.cjsah.console.command
 
+import me.him188.kotlin.jvm.blocking.bridge.JvmBlockingBridge
 import net.cjsah.console.Console
 import net.cjsah.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.console.command.context.CommandContext
@@ -11,8 +13,10 @@ import net.cjsah.console.command.tree.CommandNode
 import net.cjsah.console.command.tree.RootCommandNode
 import net.cjsah.console.exceptions.BuiltExceptions
 import net.cjsah.console.exceptions.CommandException
+import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.exceptions.PluginException
 import net.cjsah.console.plugin.Plugin
+import net.cjsah.console.text.TranslateText
 
 class Dispatcher {
     companion object {
@@ -21,23 +25,24 @@ class Dispatcher {
     private val ROOTS = RootCommandNode()
 
     fun register(command: LiteralArgumentBuilder){
-        if (Console.isFreezed()) throw PluginException("此方法已被冻结, 请使用 register(Lnet/cjsah/console/plugin/Plugin;Lnet/cjsah/console/command/builder/LiteralArgumentBuilder;)V")
+        if (Console.isFrozen())
+            throw ConsoleException.create(TranslateText("command.reg.freezed"), PluginException::class.java)
         ROOTS.addChild(command.build())
     }
 
-    @Suppress("unused")
     fun register(plugin: Plugin, command: LiteralArgumentBuilder) = ROOTS.addChild(plugin, command.build())
 
     fun deregister(plugin: Plugin) = ROOTS.removeChild(plugin)
 
     @Throws(CommandException::class)
-    fun execute(input: String, source: CommandSource<*>): Int {
+    suspend fun execute(input: String, source: CommandSource<*>): Int {
         val reader = StringReader(input)
         val builder = ContextBuilder(this, source, reader.getCursor())
         val parse = parseNodes(ROOTS, reader, builder)
         if (parse.reader.canRead()) {
             if (parse.exceptions.size == 1) throw parse.exceptions.values.iterator().next()
-            else if (parse.context.getRange().isEmpty()) throw BuiltExceptions.DISPATCHER_UNKNOWN_COMMAND.createWithContext(reader)
+            else if (parse.context.getRange().isEmpty())
+                throw BuiltExceptions.DISPATCHER_UNKNOWN_COMMAND.createWithContext(reader)
             else throw BuiltExceptions.DISPATCHER_UNKNOWN_ARGUMENT.createWithContext(reader)
         }
         var result = 0
@@ -76,7 +81,8 @@ class Dispatcher {
                 } catch (e: CommandException) {
                     throw BuiltExceptions.DISPATCHER_PARSE_EXCEPTION.createWithContext(reader, e.localizedMessage)
                 }
-                if (reader.canRead() && reader.peek() != ARGUMENT_SEPARATOR) throw BuiltExceptions.DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR.createWithContext(reader)
+                if (reader.canRead() && reader.peek() != ARGUMENT_SEPARATOR)
+                    throw BuiltExceptions.DISPATCHER_EXPECTED_ARGUMENT_SEPARATOR.createWithContext(reader)
             } catch (e: CommandException) {
                 exceptions[child] = e
                 reader.setCursor(cursor)

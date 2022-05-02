@@ -236,7 +236,8 @@ class StringReader(private val string: String) {
 
     @Throws(CommandException::class)
     fun expect(c: Char) {
-        if (!canRead() || peek() != c) throw BuiltExceptions.READER_EXPECTED_SYMBOL.createWithContext(this, c.toString())
+        if (!canRead() || peek() != c)
+            throw BuiltExceptions.READER_EXPECTED_SYMBOL.createWithContext(this, c.toString())
         skip()
     }
 

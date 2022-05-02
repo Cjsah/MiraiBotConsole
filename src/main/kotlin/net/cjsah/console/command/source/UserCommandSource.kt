@@ -1,10 +1,12 @@
 package net.cjsah.console.command.source
 
 import net.cjsah.console.Console
+import net.cjsah.console.Logger
 import net.cjsah.console.Permissions
 import net.cjsah.console.Util.canUse
 import net.cjsah.console.Util.hasPermission
 import net.cjsah.console.plugin.Plugin
+import net.cjsah.console.text.TranslateText
 import net.mamoe.mirai.contact.User
 import org.apache.logging.log4j.Level
 
@@ -20,7 +22,7 @@ class UserCommandSource(user: User) : CommandSource<User>(user) {
     }
 
     override suspend fun sendFeedBack(message: String, level: Level) {
-        Console.logger.warn("好友消息不应该以日志形式发送")
+        Logger.warn(TranslateText("message.logger.user"))
         getSource().sendMessage(message)
     }
 }

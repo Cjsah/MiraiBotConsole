@@ -6,8 +6,8 @@ plugins {
     id "me.him188.kotlin-jvm-blocking-bridge" version "2.0.0-162.1"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 group = mvn_group
 version = console_version

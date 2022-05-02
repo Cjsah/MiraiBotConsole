@@ -1,11 +1,10 @@
 package net.cjsah.console.command
 
-import net.cjsah.console.Console.logger
+import net.cjsah.console.Logger
 import net.cjsah.console.command.argument.Argument
 import net.cjsah.console.command.builder.LiteralArgumentBuilder
 import net.cjsah.console.command.builder.RequiredArgumentBuilder
 import net.cjsah.console.command.source.CommandSource
-import net.cjsah.console.exceptions.CommandException
 import net.cjsah.console.plugin.Plugin
 import java.util.function.Consumer
 
@@ -24,11 +23,11 @@ object CommandManager {
 
 
     @JvmStatic
-    fun execute(command: String, source: CommandSource<*>): Int {
+    suspend fun execute(command: String, source: CommandSource<*>): Int {
         try {
             return DISPATCHER.execute(command, source)
         } catch (e: Exception) {
-            e.message?.let { logger.error(it) }
+            e.message?.let { Logger.error(it) }
         }
         return 0
     }

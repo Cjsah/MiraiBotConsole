@@ -3,7 +3,9 @@
 package net.cjsah.console.plugin
 
 import com.google.gson.JsonObject
+import net.cjsah.console.exceptions.ConsoleException
 import net.cjsah.console.exceptions.PluginException
+import net.cjsah.console.text.TranslateText
 
 class PluginInformation(val information: JsonObject) {
     val contacts: MutableMap<String, String> = HashMap()
@@ -18,14 +20,18 @@ class PluginInformation(val information: JsonObject) {
     val authors: List<String> = this.information["authors"].asJsonArray.map { it.asString }
 
     init {
-        if (!"""[a-z_][a-z\d_-]*""".toRegex().matches(id)) throw PluginException("插件id不符合命名规范!")
+        if (!"""[a-z_][a-z\d_-]*""".toRegex().matches(id))
+            throw ConsoleException.create(TranslateText("plugin.convention"), PluginException::class.java)
         this.information["contact"].asJsonObject.entrySet().forEach { (key, value) ->
             contacts[key] = value.asString
         }
         if (this.information.has("depends")) {
             this.information["depends"].asJsonObject.entrySet().forEach { (key, value) ->
                 if (!"""[\[(][\d.]+,[\d.]+[])]""".toRegex().matches(key))
-                    throw PluginException("插件 [${this.name} (${this.id}) v${this.version}] 中的依赖 $key 不符合版本格式规范 [\\[(][\\d.]+,[\\d.]+[\\])] ")
+                    throw ConsoleException.create(
+                        TranslateText("plugin.convention.denpend", this.name, this.id, this.version, key),
+                        PluginException::class.java
+                    )
                 depends[key] = value.asString
             }
         }
