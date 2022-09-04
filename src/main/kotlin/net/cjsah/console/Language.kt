@@ -6,7 +6,7 @@ import java.net.JarURLConnection
 
 object Language {
     @JvmStatic
-    private var language: String = "en_us"
+    private var language: String = "zh_cn"
     @JvmStatic
     private val translate = mutableMapOf<String, MutableMap<String, String>>()
 
@@ -51,6 +51,5 @@ object Language {
                 }
             }
         }
-        println(translate)
     }
 }
